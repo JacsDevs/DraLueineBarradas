@@ -1,0 +1,122 @@
+.footer {
+  background-color: var(--primary);
+  color: #ffffff;
+  padding: 60px 20px 30px;
+  font-family: "Montserrat", sans-serif;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 40px;
+}
+
+/* Logo */
+.footer-logo img{
+  width: 350px;
+  margin-bottom: 20px;
+}
+
+.footer-logo span {
+  display: block;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Texto institucional */
+.footer-brand p {
+  max-width: 500px;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  opacity: 0.9;
+}
+
+.footer-brand small {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.footer-right {
+  display: flex;
+  justify-content: space-between;
+}
+/* Links */
+.footer-links h4,
+.footer-contact h4 {
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.footer-links ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 14px;
+  opacity: 0.85;
+  transition: opacity 0.3s;
+}
+
+.footer-links a:hover {
+  opacity: 1;
+}
+
+/* Contato */
+.footer-contact p {
+  font-size: 14px;
+  margin-bottom: 10px;
+  opacity: 0.9;
+}
+
+.footer-location {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+/* Divisor */
+.footer-divider {
+  max-width: 1200px;
+  margin: 40px auto 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Rodapé inferior */
+.footer-bottom {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .footer-right {
+    justify-content: space-evenly;
+  }
+}

@@ -1,0 +1,120 @@
+.blog-section {
+  padding: 80px 20px;
+  background: #fafafa;
+}
+
+.blog-title {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 48px;
+  color: #1f2937;
+}
+
+/* Wrapper garante que sombra não seja cortada */
+.carousel-wrapper {
+  overflow: hidden;
+  padding: 20px 0;
+}
+
+/* Track animado */
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+/* Cada página */
+.carousel-page {
+  min-width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  padding: 0 12px;
+}
+
+/* CARD */
+.blog-card {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 360px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.blog-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 16px 16px 0 0;
+}
+
+.blog-content {
+  padding: 20px;
+}
+
+.blog-content h3 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #111827;
+}
+
+.blog-content p {
+  font-size: 0.95rem;
+  color: #4b5563;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.blog-link {
+  font-weight: 600;
+  color: #7c2d12;
+  text-decoration: none;
+}
+
+.blog-link:hover {
+  text-decoration: underline;
+}
+
+/* INDICADOR EM LINHAS */
+.carousel-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.indicator-line {
+  width: 32px;
+  height: 4px;
+  border-radius: 2px;
+  background: #d1d5db;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, width 0.3s ease;
+}
+
+.indicator-line.active {
+  background: #7c2d12;
+  width: 48px;
+}
+
+/* melhora experiência de swipe */
+.carousel-wrapper {
+  touch-action: pan-y;
+}
+
+/* MOBILE */
+@media (max-width: 767px) {
+  .carousel-page {
+    justify-content: center;
+  }
+
+  .blog-card {
+    max-width: 90%;
+  }
+}
