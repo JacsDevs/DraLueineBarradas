@@ -18,7 +18,28 @@ export default function Home(){
         <title>Dra. Lueine Barradas | Médica Cardiologista em Bragança - Pará</title>
         <meta name="description" content="Atendimento médico humanizado em Bragança, PA. Especialista em saúde cardiovascular, check-ups e prevenção. Agende sua consulta com a Dra. Lueine Barradas."/>
         <meta name="keywords" content="Cardiologista Bragança PA, Médica Bragança Pará, Check-up cardiológico, Hipertensão, Dra Lueine Barradas" />
-        
+        <script type="application/ld+json">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "MedicalBusiness",
+              "name": "Dra. Lueine Barradas",
+              "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Av. Nazeazeno Ferreira, 60",
+                "addressLocality": "Bragança",
+                "addressRegion": "PA",
+                "addressCountry": "BR"
+              },
+              "geo": {
+                "@type": "GeoCoordinates",
+                "latitude": -1.0488685, 
+                "longitude": -46.7686801
+              },
+              "telephone": "+5591985807373"
+            }
+          `}
+        </script>
       </Helmet>
 
       <section id="inicio" className="hero">
