@@ -79,9 +79,12 @@ export default function BlogSection() {
   }
 
   return (
-    <section className="blog-section">
-      <h2 className="blog-title">Para leitura</h2>
-
+    <section id="blog" className="blog-section">
+      <header className="label-container">
+        <span className="label">ARTIGOS</span>
+        <h2 className="blog-title">Para leitura</h2>
+      </header>
+      
       <div
         className="carousel-wrapper"
         onTouchStart={handleTouchStart}

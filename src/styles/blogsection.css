@@ -1,19 +1,19 @@
 .blog-section {
-  padding: 80px 20px;
-  background: #fafafa;
+  padding: 80px 0px;
 }
 
 .blog-title {
   text-align: center;
-  font-size: 2rem;
-  margin-bottom: 48px;
-  color: #1f2937;
+}
+
+.label-container {
+  text-align: center;
 }
 
 /* Wrapper garante que sombra não seja cortada */
 .carousel-wrapper {
   overflow: hidden;
-  padding: 20px 0;
+  padding: 48px 0;
 }
 
 /* Track animado */
@@ -25,10 +25,10 @@
 /* Cada página */
 .carousel-page {
   min-width: 100%;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  padding: 0 12px;
+  padding: 0 26px;
 }
 
 /* CARD */
@@ -36,8 +36,8 @@
   background: #fff;
   border-radius: 16px;
   width: 100%;
-  max-width: 360px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  max-width: none;
+  box-shadow: 0 10px 25px rgba(0,0,0,.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -111,10 +111,23 @@
 /* MOBILE */
 @media (max-width: 767px) {
   .carousel-page {
-    justify-content: center;
+    grid-template-columns: 1fr;
+  }
+
+  .blog-section {
+    padding: 80px 0px;
   }
 
   .blog-card {
     max-width: 90%;
+    margin: 0 auto;
+  }
+
+  .carousel-wrapper {
+    padding: 40px 0;
+  }
+
+  .carousel-indicator {
+    margin: 0px;
   }
 }

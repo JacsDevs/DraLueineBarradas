@@ -35,11 +35,13 @@
   gap: 24px;
 }
 
-.menu a {
-  text-decoration: none;
+.menu button {
+  background: none;
   color: #FFF;
   font-weight: 500;
-  position: relative;
+  border: none;
+  cursor: pointer;
+  font: inherit;
 }
 
 .menu a::after {

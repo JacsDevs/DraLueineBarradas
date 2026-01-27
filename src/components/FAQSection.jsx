@@ -31,11 +31,16 @@ export default function FAQSection() {
   }
 
   return (
-    <section className="faq">
+    <section id="faq" className="faq">
       <div className="faq-container">
         {/* LADO ESQUERDO */}
         <div className="faq-info">
-          <h2>Perguntas frequentes</h2>
+
+          <header className="section-header">
+            <span className="label">FAQ</span>
+            <h2>Perguntas frequentes</h2>
+          </header>
+
           <p>
             Não encontrou a resposta que procurava?
             <br />
@@ -45,9 +50,7 @@ export default function FAQSection() {
           <a
             href="#"
             className="faq-button"
-          >
-            <span>💬</span> Enviar mensagem
-          </a>
+          >Enviar mensagem</a>
         </div>
 
         {/* LADO DIREITO */}
