@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
-import "../styles/BlogSection.css"
+import "../styles/blogsection.css"
 import imagem from "../assets/imagem1.jpg"
 
 export default function BlogSection() {
