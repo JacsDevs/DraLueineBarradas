@@ -15,8 +15,8 @@ export default function WhatsAppButton({
       rel="noopener noreferrer"
       className={className}
     >
-      <FaWhatsapp size={18} />
       {text}
+      <FaWhatsapp size={20} />
     </a>
   );
 }

@@ -33,6 +33,8 @@
 
 /* CARD */
 .blog-card {
+  display: flex;
+  flex-direction: column;
   background: #fff;
   border-radius: 16px;
   width: 100%;
@@ -61,6 +63,11 @@
   font-size: 1.2rem;
   margin-bottom: 10px;
   color: #111827;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  min-height: 3rem; /
 }
 
 .blog-content p {
@@ -68,12 +75,19 @@
   color: #4b5563;
   line-height: 1.5;
   margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  min-height: 4.5rem;
+  flex-grow: 1;
 }
 
 .blog-link {
   font-weight: 600;
   color: #7c2d12;
   text-decoration: none;
+  margin-top: auto;
 }
 
 .blog-link:hover {

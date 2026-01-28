@@ -1,0 +1,285 @@
+/* =========================
+   ADMIN PANEL
+========================= */
+
+.admin-wrapper {
+  max-width: 900px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.08);
+  padding: 30px;
+}
+
+/* HEADER */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.admin-header h2 {
+  margin: 0;
+}
+
+.admin-logout {
+  background: transparent;
+  border: 1px solid var(--secondary);
+  color: var(--secondary);
+  padding: 10px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.admin-logout:hover {
+  background: var(--secondary);
+  color: #fff;
+}
+
+/* USER PROFILE */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.user-profile input[type="text"] {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  width: 150px;
+}
+
+.user-profile input[type="file"] {
+  font-size: 12px;
+}
+
+.user-profile .admin-btn {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+/* Avatar */
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--secondary);
+}
+
+.avatar-placeholder {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* LOGIN */
+.admin-login {
+  max-width: 400px;
+  margin: 120px auto;
+  background: #fff;
+  padding: 40px;
+  border-radius: 18px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.1);
+  text-align: center;
+}
+
+.admin-login h3 {
+  margin-bottom: 30px;
+}
+
+.admin-login input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.admin-login button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 999px;
+  border: none;
+  background: var(--secondary);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* FORM */
+.post-form {
+  margin-top: 30px;
+}
+
+.post-form h3 {
+  margin-bottom: 20px;
+}
+
+.post-form input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.admin-btn {
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.admin-btn.primary {
+  background: var(--secondary);
+  color: #fff;
+}
+
+.admin-btn.cancel {
+  background: #ccc;
+  color: #333;
+}
+
+/* POSTS LIST */
+.posts-management {
+  margin-top: 40px;
+}
+
+.posts-management h3 {
+  margin-bottom: 20px;
+}
+
+.admin-post-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.admin-post-item span {
+  font-weight: 500;
+}
+
+.admin-post-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.admin-post-actions button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.admin-post-actions .edit {
+  color: var(--secondary);
+}
+
+.admin-post-actions .delete {
+  color: #c0392b;
+}
+
+/* REACT QUILL */
+.ql-toolbar {
+  border-radius: 12px 12px 0 0;
+}
+
+.ql-container {
+  border-radius: 0 0 12px 12px;
+  min-height: 200px;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-name {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.edit-profile-link {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  color: var(--secondary);
+  cursor: pointer;
+  text-align: left;
+}
+
+.edit-profile-link:hover {
+  text-decoration: underline;
+}
+
+.user-info input[type="text"] {
+  width: 180px;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.profile-actions .admin-btn {
+  padding: 6px 14px;
+  font-size: 12px;
+}
+
+.admin-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+
+/* RESPONSIVO */
+@media (max-width: 768px) {
+  .admin-wrapper {
+    padding: 20px;
+  }
+
+  .admin-header {
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .user-profile input[type="text"] {
+    width: 100%;
+  }
+}

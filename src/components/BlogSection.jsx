@@ -1,82 +1,64 @@
-import { useEffect, useRef, useState } from "react"
-import { Link } from "react-router-dom"
-import "../styles/blogsection.css"
-import imagem from "../assets/imagem1.jpg"
+import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { db } from "../services/firebase";
+import "../styles/blogsection.css";
 
 export default function BlogSection() {
-  const posts = [
-    {
-      id: 1,
-      title: "Melhora a harmonia facial",
-      excerpt:
-        "A rinoplastia pode equilibrar proporções, suavizar traços e valorizar a beleza natural do rosto.",
-      image: imagem,
-      slug: "melhora-harmonia-facial",
-    },
-    {
-      id: 2,
-      title: "Corrige desvios e melhora a respiração",
-      excerpt:
-        "Além da estética, a cirurgia pode corrigir o desvio de septo.",
-      image: imagem,
-      slug: "respiracao-e-desvio-de-septo",
-    },
-    {
-      id: 3,
-      title: "Eleva a autoestima e a confiança",
-      excerpt:
-        "Sentir-se bem com a própria imagem reflete na autoestima.",
-      image: imagem,
-      slug: "autoestima-e-confianca",
-    },
-    {
-      id: 4,
-      title: "Eleva a autoestima e a confiança",
-      excerpt:
-        "Sentir-se bem com a própria imagem reflete na autoestima.",
-      image: imagem,
-      slug: "autoestima-e-confianca",
-    },
-  ]
+  const [posts, setPosts] = useState([]);
+  const [itemsPerPage, setItemsPerPage] = useState(3);
+  const [page, setPage] = useState(0);
 
-  const [itemsPerPage, setItemsPerPage] = useState(3)
-  const [page, setPage] = useState(0)
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
-  const touchStartX = useRef(0)
-  const touchEndX = useRef(0)
+  /* ========== BUSCAR POSTS ========== */
+  useEffect(() => {
+    async function fetchPosts() {
+      const q = query(collection(db, "posts"), orderBy("date", "desc"));
+      const snapshot = await getDocs(q);
+      const list = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      setPosts(list);
+    }
+    fetchPosts();
+  }, []);
 
+  /* ========== RESPONSIVO ========== */
   useEffect(() => {
     const handleResize = () => {
-      setItemsPerPage(window.innerWidth < 768 ? 1 : 3)
-      setPage(0)
-    }
+      setItemsPerPage(window.innerWidth < 768 ? 1 : 3);
+      setPage(0);
+    };
 
-    handleResize()
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-  const totalPages = Math.ceil(posts.length / itemsPerPage)
+  const totalPages = Math.ceil(posts.length / itemsPerPage);
 
+  /* ========== SWIPE MOBILE ========== */
   const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX
-  }
+    touchStartX.current = e.touches[0].clientX;
+  };
 
   const handleTouchMove = (e) => {
-    touchEndX.current = e.touches[0].clientX
-  }
+    touchEndX.current = e.touches[0].clientX;
+  };
 
   const handleTouchEnd = () => {
-    const distance = touchStartX.current - touchEndX.current
-
+    const distance = touchStartX.current - touchEndX.current;
     if (Math.abs(distance) > 50) {
       if (distance > 0 && page < totalPages - 1) {
-        setPage(page + 1)
+        setPage(page + 1);
       } else if (distance < 0 && page > 0) {
-        setPage(page - 1)
+        setPage(page - 1);
       }
     }
-  }
+  };
 
   return (
     <section id="blog" className="blog-section">
@@ -84,7 +66,7 @@ export default function BlogSection() {
         <span className="label">ARTIGOS</span>
         <h2 className="blog-title">Para leitura</h2>
       </header>
-      
+
       <div
         className="carousel-wrapper"
         onTouchStart={handleTouchStart}
@@ -98,26 +80,16 @@ export default function BlogSection() {
           {Array.from({ length: totalPages }).map((_, index) => (
             <div className="carousel-page" key={index}>
               {posts
-                .slice(
-                  index * itemsPerPage,
-                  index * itemsPerPage + itemsPerPage
-                )
-                .map((post) => (
-                  <article className="blog-card" key={post.id}>
-                    <img
-                      src={post.image}
-                      alt={post.title}
-                      className="blog-image"
-                    />
-
+                .slice(index * itemsPerPage, index * itemsPerPage + itemsPerPage)
+                .map(post => (
+                  <article className="blog-card">
+                    {post.featuredImage && (
+                      <img src={post.featuredImage} alt={post.title} className="blog-image" />
+                    )}
                     <div className="blog-content">
                       <h3>{post.title}</h3>
-                      <p>{post.excerpt}</p>
-
-                      <Link
-                        to={`/blog/${post.slug}`}
-                        className="blog-link"
-                      >
+                      <p>{post.summary}</p>
+                      <Link to={`/post/${post.id}`} className="blog-link">
                         Ler mais →
                       </Link>
                     </div>
@@ -140,5 +112,5 @@ export default function BlogSection() {
         ))}
       </div>
     </section>
-  )
+  );
 }
