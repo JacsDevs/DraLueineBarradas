@@ -7,12 +7,12 @@ export default function FAQSection() {
     {
       question: "Quais são os métodos de pagamento aceitos?",
       answer:
-        "Resposta"
+        "Aceitamos Pix, cartão de crédito, cartão de débito e dinheiro, para sua maior comodidade."
     },
     {
       question: "Quando tempo dura a consulta?",
       answer:
-        "Resposta"
+        "A consulta tem duração aproximada de 60 minutos, pois envolve uma avaliação clínica detalhada, incluindo histórico médico, fatores de risco cardiovasculares, hábitos de vida e definição de um plano de cuidado individualizado."
     },
     {
       question: "Tenho direito a ter consulta após a consulta médica?",
@@ -20,9 +20,9 @@ export default function FAQSection() {
         "Resposta"
     },
     {
-      question: "A Dra. Lueine fornece contato de telefone para dúvidas? ",
+      question: "Há contato telefônico após a consulta?",
       answer:
-        "Resposta"
+        "O contato é realizado exclusivamente para orientações administrativas e esclarecimento de dúvidas pontuais, quando necessário. Demandas clínicas são avaliadas em consulta, garantindo segurança e qualidade do cuidado."
     },
   ];
 

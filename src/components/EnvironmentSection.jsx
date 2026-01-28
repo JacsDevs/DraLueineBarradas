@@ -15,18 +15,15 @@ export default function EnvironmentSection() {
           <header className="section-header">
             <span className='label'>NOSSO AMBIENTE</span>
             <h2>
-              Um espaço pensado para cuidar de você em todos os detalhes
+              Cuidado começa pelo ambiente
             </h2>
           </header>
           
           <p>
-            Cada detalhe do nosso consultório foi planejado para que a sua 
-            experiência <strong>seja segura, confortável e reservada.</strong>
+            Um consultório moderno, climatizado e acolhedor, pensado para garantir <strong>conforto, privacidade e tranquilidade.</strong>
           </p>
           <p>
-            Ambiente moderno, climatizado e acolhedor, com estacionamento no local, 
-            recepção ampla e salas de atendimento privativas e equipadas para 
-            consultas e procedimentos.
+            Aqui, cada atendimento acontece de forma individualizada, em um espaço reservado, preparado para consultas clínicas e um acompanhamento médico atento aos detalhes.
           </p>
           <WhatsAppButton
             className="about-button"

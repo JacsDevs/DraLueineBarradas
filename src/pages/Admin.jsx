@@ -197,6 +197,9 @@ export default function Admin() {
       container: [
         [{ header: [1, 2, 3, false] }],
         ["bold", "italic", "underline", "strike"],
+        [{ script: "sub" }, { script: "super" }],
+        ["blockquote"],
+        [{ align: [] }],
         [{ list: "ordered" }, { list: "bullet" }],
         ["link", "image", "video"],
         ["clean"]
@@ -207,7 +210,7 @@ export default function Admin() {
 
   const quillFormats = [
     "header", "bold", "italic", "underline", "strike",
-    "list", "bullet", "link", "image", "video"
+    "list", "bullet", "script", "blockquote", "align", "link", "image", "video"
   ];
 
   /* ================= POSTS ================= */

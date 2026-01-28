@@ -15,9 +15,9 @@ export default function Home(){
     <main>
 
       <Helmet>
-        <title>Dra. Lueine Barradas | Médica Cardiologista</title>
-        <meta name="description" content="Atendimento médico humanizado em Bragança, PA. Especialista em saúde cardiovascular, check-ups e prevenção. Agende sua consulta com a Dra. Lueine Barradas."/>
-        <meta name="keywords" content="Cardiologista Bragança PA, Médica Bragança Pará, Check-up cardiológico, Hipertensão, Dra Lueine Barradas" />
+        <title>Dra. Lueine Barradas | Clínica Geral | Cardiologia Clínica</title>
+        <meta name="description" content="Atendimento médico humanizado em Bragança, PA. Agende sua consulta com a Dra. Lueine Barradas."/>
+        <meta name="keywords" content="Cardiologia Clínica, Bragança PA, Médica Bragança Pará, Check-up cardiológico, Hipertensão, Dra Lueine Barradas" />
         <script type="application/ld+json">
           {`
             {
@@ -89,7 +89,7 @@ export default function Home(){
               <p>CRM PA 18364</p>
 
               <ul>
-                <li><b>Área de atuação:</b> Cardiologia</li>
+                <li><b>Área de atuação:</b> Clínica Geral | Cardiologia Clínica</li>
                 <li><b>Foco:</b> Prevenção e cuidado integral</li>
                 <li><b>Experiência:</b> Atendimento clínico humanizado</li>
               </ul>
