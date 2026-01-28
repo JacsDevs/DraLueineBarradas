@@ -15,7 +15,7 @@ export default function Home(){
     <main>
 
       <Helmet>
-        <title>Dra. Lueine Barradas | Médica Cardiologista em Bragança - Pará</title>
+        <title>Dra. Lueine Barradas | Médica Cardiologista</title>
         <meta name="description" content="Atendimento médico humanizado em Bragança, PA. Especialista em saúde cardiovascular, check-ups e prevenção. Agende sua consulta com a Dra. Lueine Barradas."/>
         <meta name="keywords" content="Cardiologista Bragança PA, Médica Bragança Pará, Check-up cardiológico, Hipertensão, Dra Lueine Barradas" />
         <script type="application/ld+json">
@@ -266,7 +266,7 @@ export default function Home(){
         <article className="procedure-step">
 
           {/* IMAGEM */}
-          <div className="procedure-image">
+          <div className="procedure-image" alt="Consulta médica com avaliação cardiovascular">
             <img src={imagem1} />
           </div>
 
@@ -366,7 +366,7 @@ export default function Home(){
         <div className="map-wrapper">
           <iframe
             title="Mapa consultório"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.1498290488926!2d-46.77125592417375!3d-1.0488539354144943!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92aed980f8c377f7%3A0x14025d174ba7fb3!2sDra%20Lueine%20Barradas!5e0!3m2!1spt-BR!2sbr!4v1768520805311!5m2!1spt-BR!2sbr"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.1498290488926!2d-46.77125592417375!3d-1.0488539354144943!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92aed980f8c377f7%3A0x14025d174ba7fb3!2sDra%20Lueine%20Barradas!5e0!3m2!1spt-BR!2sbr!4v1769569385545!5m2!1spt-BR!2sbr"
             loading="lazy">
           </iframe>
 
