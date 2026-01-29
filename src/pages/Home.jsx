@@ -5,11 +5,11 @@ import DraLueine from "../assets/lueine-barradas.webp"
 import BlogSection from "../components/BlogSection"
 import TestimonialsSection from "../components/TestimonialsSection";
 import EnvironmentSection from "../components/EnvironmentSection";
-import { PiClockThin, PiMapPinAreaThin, PiPhoneThin, PiStethoscopeFill, PiHeart } from "react-icons/pi";
+import { PiClock, PiMapPinAreaThin, PiPhone, PiMapPinArea } from "react-icons/pi";
 import WhatsAppButton from "../components/WhatsAppButton";
 import { Helmet } from "react-helmet-async";
 import { LuStethoscope, LuHeartPulse, LuActivity, LuClipboardCheck, LuShieldBan, LuGauge, LuHeart,
-  LuHeartCrack, LuScale, LuTestTubeDiagonal, LuDroplet, LuMoon, LuCigaretteOff
+  LuHeartCrack, LuScale, LuTestTubeDiagonal, LuDroplet, LuMoon, LuCigaretteOff, LuWaves
  } from "react-icons/lu";
 
 
@@ -212,7 +212,7 @@ export default function Home(){
 
           <article className="card">
             <div className="card-icon-container">
-              <PiStethoscopeFill className="icon"/>
+              <LuWaves className="icon"/>
             </div>
             <h3>Arritmias Cardíacas</h3>
             <p>
@@ -421,7 +421,9 @@ export default function Home(){
             </header>
 
             <div className="contact-card">
-              <PiClockThin className="icon" />
+              <div className="card-icon-container">
+                <PiClock className="icon" />
+              </div>
               <div>
                 <strong>Horário de funcionamento:</strong>
                 <p>Segunda a Sexta | 08h às 18h</p>
@@ -429,7 +431,9 @@ export default function Home(){
             </div>
 
             <div className="contact-card">
-              <PiMapPinAreaThin className="icon" />
+              <div className="card-icon-container">
+                <PiMapPinArea className="icon" />
+              </div>
               <div>
                 <strong>Endereço</strong>
                 <p>
@@ -439,7 +443,9 @@ export default function Home(){
             </div>
 
             <div className="contact-card">
-              <PiPhoneThin className="icon" />
+              <div className="card-icon-container">
+                <PiPhone className="icon" />
+              </div>
               <div>
                 <strong>Telefone</strong>
                 <p>

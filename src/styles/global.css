@@ -294,6 +294,10 @@ p {
   justify-content: center;
 }
 
+.contact-card .card-icon-container {
+  margin: 0;
+}
+
 .card .icon {
   font-size: 20px;
   color: var(--secondary);
@@ -350,8 +354,8 @@ p {
 }
 
 .icon {
-  font-size: 34px;
-  color: var(--primary);
+  font-size: 24px;
+  color: var(--secondary);
   flex-shrink: 0;
 }
 
