@@ -62,7 +62,6 @@
 .blog-content h3 {
   font-size: 1.2rem;
   margin-bottom: 10px;
-  color: #111827;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -85,7 +84,7 @@
 
 .blog-link {
   font-weight: 600;
-  color: #7c2d12;
+  color: var(--secondary);
   text-decoration: none;
   margin-top: auto;
 }
@@ -95,11 +94,11 @@
 }
 
 /* INDICADOR EM LINHAS */
-.carousel-indicator {
+.blog-section .carousel-indicator {
   display: flex;
   justify-content: center;
   gap: 12px;
-  margin-top: 32px;
+  margin: 0;
 }
 
 .indicator-line {

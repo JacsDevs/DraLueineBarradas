@@ -5,9 +5,12 @@ import DraLueine from "../assets/lueine-barradas.webp"
 import BlogSection from "../components/BlogSection"
 import TestimonialsSection from "../components/TestimonialsSection";
 import EnvironmentSection from "../components/EnvironmentSection";
-import { IoLocationSharp, IoTimeOutline, IoLocationOutline } from "react-icons/io5";
+import { PiClockThin, PiMapPinAreaThin, PiPhoneThin, PiStethoscopeFill, PiHeart } from "react-icons/pi";
 import WhatsAppButton from "../components/WhatsAppButton";
 import { Helmet } from "react-helmet-async";
+import { LuStethoscope, LuHeartPulse, LuActivity, LuClipboardCheck, LuShieldBan, LuGauge, LuHeart,
+  LuHeartCrack, LuScale, LuTestTubeDiagonal, LuDroplet, LuMoon, LuCigaretteOff
+ } from "react-icons/lu";
 
 
 export default function Home(){
@@ -62,7 +65,7 @@ export default function Home(){
 
             <div className="hero-actions">
               <div className="hero-location">
-                <IoLocationSharp size={16} color="#FFF" />
+                <PiMapPinAreaThin size={16} color="#FFF" />
                 <span>Atendimento em Bragança - PA</span>
               </div>
               <div>
@@ -109,6 +112,9 @@ export default function Home(){
 
         <div className="cards-grid">
           <article className="card">
+            <div className="card-icon-container">
+              <LuStethoscope className="icon"/>
+            </div>
             <h3>Consulta de rotina</h3>
             <p>
               Atendimento clínico integral, com foco na prevenção, no acompanhamento contínuo
@@ -117,6 +123,9 @@ export default function Home(){
           </article>
 
           <article className="card">
+            <div className="card-icon-container">
+              <LuHeartPulse className="icon"/>
+            </div>
             <h3>Check-up Cardiológico</h3>
             <p>
               Avaliação completa da saúde cardiovascular, com análise de fatores de risco,
@@ -125,6 +134,9 @@ export default function Home(){
           </article>
 
           <article className="card">
+            <div className="card-icon-container">
+              <LuActivity className="icon"/>
+            </div>
             <h3>Avaliação e Liberação para Atividade Física</h3>
             <p>
               Avaliação clínica e cardiovascular para liberação segura da prática de atividade
@@ -133,6 +145,9 @@ export default function Home(){
           </article>
 
           <article className="card">
+            <div className="card-icon-container">
+              <LuClipboardCheck className="icon"/>
+            </div>
             <h3>Consultas Pré-operatórias</h3>
             <p>
               Avaliação clínica e cardiovascular para liberação cirúrgica, com estratificação
@@ -141,6 +156,9 @@ export default function Home(){
           </article>
 
           <article className="card">
+            <div className="card-icon-container">
+              <LuShieldBan className="icon"/>
+            </div>
             <h3>Prevenção de Doenças Cardiovasculares</h3>
             <p>
               Acompanhamento direcionado à redução de risco cardiovascular, com controle de
@@ -149,6 +167,9 @@ export default function Home(){
           </article>
 
           <article className="card">
+            <div className="card-icon-container">
+              <LuGauge className="icon"/>
+            </div>
             <h3>Hipertensão Arterial</h3>
             <p>
               Diagnóstico, acompanhamento e controle da pressão arterial, com plano terapêutico
@@ -157,6 +178,9 @@ export default function Home(){
           </article>
 
           <article className="card">
+            <div className="card-icon-container">
+              <LuHeart className="icon"/>
+            </div>
             <h3>Doença Arterial Coronariana</h3>
             <p>
               Avaliação e acompanhamento clínico de pacientes com doença arterial coronariana,
@@ -165,6 +189,9 @@ export default function Home(){
           </article>
 
           <article className="card">
+            <div className="card-icon-container">
+              <LuHeartCrack className="icon"/>
+            </div>
             <h3>Infarto Agudo do Miocárdio</h3>
             <p>
               Seguimento clínico e prevenção secundária em pacientes com histórico de infarto,
@@ -173,6 +200,9 @@ export default function Home(){
           </article>
 
           <article className="card">
+            <div className="card-icon-container">
+              <LuHeartPulse className="icon"/>
+            </div>
             <h3>Insuficiência Cardíaca</h3>
             <p>
               Acompanhamento clínico de pacientes com insuficiência cardíaca,
@@ -181,6 +211,9 @@ export default function Home(){
           </article>
 
           <article className="card">
+            <div className="card-icon-container">
+              <PiStethoscopeFill className="icon"/>
+            </div>
             <h3>Arritmias Cardíacas</h3>
             <p>
               Avaliação clínica de alterações do ritmo cardíaco, com investigação,
@@ -189,6 +222,9 @@ export default function Home(){
           </article>
 
           <article className="card">
+            <div className="card-icon-container">
+              <LuScale className="icon"/>
+            </div>
             <h3>Obesidade e Síndrome Metabólica</h3>
             <p>
               Abordagem clínica integrada para obesidade e síndrome metabólica, 
@@ -197,6 +233,9 @@ export default function Home(){
           </article>
 
           <article className="card">
+            <div className="card-icon-container">
+              <LuTestTubeDiagonal className="icon"/>
+            </div>
             <h3>Colesterol e Triglicerídeos Elevados</h3>
             <p>
               Avaliação e controle das dislipidemias, com orientação 
@@ -205,6 +244,9 @@ export default function Home(){
           </article>
 
           <article className="card">
+            <div className="card-icon-container">
+              <LuDroplet className="icon"/>
+            </div>
             <h3>Diabetes Mellitus</h3>
             <p>
               Acompanhamento clínico do diabetes, com foco no controle glicêmico, 
@@ -213,6 +255,9 @@ export default function Home(){
           </article>
 
           <article className="card">
+            <div className="card-icon-container">
+              <LuMoon className="icon"/>
+            </div>
             <h3>Avaliação do Sono e Apneia do Sono</h3>
             <p>
               Avaliação clínica do sono e acompanhamento de pacientes com suspeita ou diagnóstico de apneia do sono.
@@ -220,6 +265,9 @@ export default function Home(){
           </article>
 
           <article className="card">
+            <div className="card-icon-container">
+              <LuCigaretteOff className="icon"/>
+            </div>
             <h3>Tratamento do Tabagismo</h3>
             <p>
               Acompanhamento médico para cessação do tabagismo, com estratégias
@@ -357,31 +405,31 @@ export default function Home(){
       <EnvironmentSection/>
 
       <section id="contato" className="contact">
+        <div className="contact-grid">
+          <div className="map-wrapper">
+            <iframe
+              title="Mapa consultório"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.1498290488926!2d-46.77125592417375!3d-1.0488539354144943!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92aed980f8c377f7%3A0x14025d174ba7fb3!2sDra%20Lueine%20Barradas!5e0!3m2!1spt-BR!2sbr!4v1769569385545!5m2!1spt-BR!2sbr"
+              loading="lazy">
+            </iframe>
+          </div>
 
-        <header className="section-header">
-          <span className="label">CONTATO</span>
-          <h2>Entre em contato conosco</h2>
-        </header>
+          <div className="map-text">
+            <header className="section-header">
+              <span className="label">CONTATO</span>
+              <h2>Entre em contato conosco</h2>
+            </header>
 
-        <div className="map-wrapper">
-          <iframe
-            title="Mapa consultório"
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.1498290488926!2d-46.77125592417375!3d-1.0488539354144943!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92aed980f8c377f7%3A0x14025d174ba7fb3!2sDra%20Lueine%20Barradas!5e0!3m2!1spt-BR!2sbr!4v1769569385545!5m2!1spt-BR!2sbr"
-            loading="lazy">
-          </iframe>
-
-          {/* Wrapper dos cards */}
-          <div className="contact-cards">
             <div className="contact-card">
-              <IoTimeOutline size={28} />
+              <PiClockThin className="icon" />
               <div>
-                <strong>Segunda a Sexta</strong>
-                <p>08h até às 18h</p>
+                <strong>Horário de funcionamento:</strong>
+                <p>Segunda a Sexta | 08h às 18h</p>
               </div>
             </div>
 
             <div className="contact-card">
-              <IoLocationOutline size={28} />
+              <PiMapPinAreaThin className="icon" />
               <div>
                 <strong>Endereço</strong>
                 <p>
@@ -389,11 +437,20 @@ export default function Home(){
                 </p>
               </div>
             </div>
+
+            <div className="contact-card">
+              <PiPhoneThin className="icon" />
+              <div>
+                <strong>Telefone</strong>
+                <p>
+                  (91) 98580-7373
+                </p>
+              </div>
+            </div>
+
+            <WhatsAppButton className="about-button"/>
           </div>
 
-          <a href="#" className="contact-button">
-            Agendar Avaliação →
-          </a>
         </div>
       </section>
 

@@ -15,11 +15,6 @@ export default function FAQSection() {
         "A consulta tem duração aproximada de 60 minutos, pois envolve uma avaliação clínica detalhada, incluindo histórico médico, fatores de risco cardiovasculares, hábitos de vida e definição de um plano de cuidado individualizado."
     },
     {
-      question: "Tenho direito a ter consulta após a consulta médica?",
-      answer:
-        "Resposta"
-    },
-    {
       question: "Há contato telefônico após a consulta?",
       answer:
         "O contato é realizado exclusivamente para orientações administrativas e esclarecimento de dúvidas pontuais, quando necessário. Demandas clínicas são avaliadas em consulta, garantindo segurança e qualidade do cuidado."

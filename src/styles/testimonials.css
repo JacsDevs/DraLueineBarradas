@@ -85,7 +85,7 @@
   display: flex;
   justify-content: center;
   gap: 12px;
-  margin: 30px 0 50px;
+  margin: 0 0 50px;
 }
 
 .indicator-line {
