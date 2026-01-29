@@ -1,5 +1,6 @@
 import FAQSection from "../components/FAQSection";
-import imagem1 from "../assets/imagem1.jpg"
+import avaliacaomedica1 from "../assets/avaliacao-medica-1.webp"
+import avaliacaomedica2 from "../assets/avaliacao-medica-2.webp"
 import dralueinebarradas from "../assets/dralueinebarradas.webp"
 import DraLueine from "../assets/lueine-barradas.webp"
 import BlogSection from "../components/BlogSection"
@@ -306,7 +307,7 @@ export default function Home(){
 
           {/* IMAGEM */}
           <div className="procedure-image">
-            <img src={imagem1} alt="Consulta médica com avaliação cardiovascular"/>
+            <img src={avaliacaomedica1} alt="Consulta médica com avaliação cardiovascular"/>
           </div>
 
         </article>
@@ -315,7 +316,7 @@ export default function Home(){
 
           {/* IMAGEM */}
           <div className="procedure-image" alt="Consulta médica com avaliação cardiovascular">
-            <img src={imagem1} />
+            <img src={avaliacaomedica2} />
           </div>
 
           {/* TEXTO */}

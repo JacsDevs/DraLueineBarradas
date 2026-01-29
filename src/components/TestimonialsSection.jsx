@@ -115,7 +115,7 @@ export default function TestimonialsSection() {
         ))}
       </div>
 
-      <a href="#" className="testimonial-button">
+      <a href="https://maps.app.goo.gl/e5MtxNupxjszhWMD6" className="testimonial-button">
         Escrever Avaliação →
       </a>
     </section>

@@ -118,7 +118,7 @@
 }
 
 .testimonial-button:hover {
-  background: #148b8b;
+  background: var(--primary);
 }
 
 /* MOBILE */

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import WhatsAppButton from "./WhatsAppButton";
 
 export default function FAQSection() {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -42,10 +43,11 @@ export default function FAQSection() {
             Entre em contato pelo WhatsApp para um atendimento personalizado.
           </p>
 
-          <a
-            href="#"
+          <WhatsAppButton
             className="faq-button"
-          >Enviar mensagem</a>
+            text="Enviar mensagem"
+            message = "Olá Dra. Lueine, estou com dúvidas."
+          />
         </div>
 
         {/* LADO DIREITO */}
