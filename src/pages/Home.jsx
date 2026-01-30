@@ -10,7 +10,7 @@ import { PiClock, PiMapPinAreaThin, PiPhone, PiMapPinArea } from "react-icons/pi
 import WhatsAppButton from "../components/WhatsAppButton";
 import { Helmet } from "react-helmet-async";
 import { LuStethoscope, LuHeartPulse, LuActivity, LuClipboardCheck, LuShieldBan, LuGauge, LuHeart,
-  LuHeartCrack, LuScale, LuTestTubeDiagonal, LuDroplet, LuMoon, LuCigaretteOff, LuWaves
+  LuHeartCrack, LuScale, LuTestTubeDiagonal, LuDroplet, LuMoon, LuCigaretteOff, LuWaves, LuChevronsDown
  } from "react-icons/lu";
 
 
@@ -101,7 +101,9 @@ export default function Home(){
 
         </div>
 
-        <div className="hero-scroll">⌄</div>
+        <div className="hero-scroll">
+          <LuChevronsDown />
+        </div>
       </section>
 
       <section id="servicos">

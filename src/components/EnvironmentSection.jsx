@@ -35,6 +35,9 @@ export default function EnvironmentSection() {
             Um consultório moderno, climatizado e acolhedor, pensado para garantir
             <strong> conforto, privacidade e tranquilidade.</strong>
           </p>
+          <p>
+            Aqui, cada atendimento acontece de forma individualizada, em um espaço reservado, preparado para consultas clínicas e um acompanhamento médico atento aos detalhes.
+          </p>
 
           <WhatsAppButton className="about-button" />
         </div>

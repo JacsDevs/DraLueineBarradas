@@ -18,7 +18,19 @@ export default function PostDetail() {
     load();
   }, [id]);
 
-  if (!post) return <p>Carregando...</p>;
+  if (!post) {
+    return (
+      <>
+        <div className="skeleton skeleton-img" />
+        <section className="post-detail">
+          <div className="skeleton skeleton-title" />
+          <div className="skeleton skeleton-text" />
+          <div className="skeleton skeleton-text" />
+          <div className="skeleton skeleton-text" style={{ width: '60%' }} />
+        </section>
+      </>
+    );
+  }
 
   const shareUrl = window.location.href;
 

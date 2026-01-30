@@ -1,5 +1,6 @@
 import { useState } from "react";
 import WhatsAppButton from "./WhatsAppButton";
+import { LuChevronDown } from "react-icons/lu";
 
 export default function FAQSection() {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -60,7 +61,9 @@ export default function FAQSection() {
             >
               <div className="faq-question">
                 <span>{item.question}</span>
-                <span className="arrow">⌄</span>
+                <div className="arrow">
+                  <LuChevronDown />
+                </div>
               </div>
 
               <div className="faq-answer">
