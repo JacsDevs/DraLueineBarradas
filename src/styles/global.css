@@ -2,7 +2,9 @@
 
 :root {
   --primary:#4F2C1D;
-  --secondary:#8B1E1E;
+  --secondary:#2d0414;
+  /*--primary:#4F2C1D;
+    --secondary:#8B1E1E;*/
   --background:#FFFFFF;
 }
 
@@ -82,7 +84,7 @@ p {
 
 /* TEXTO */
 .hero-label {
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: 3px;
   color: #FFF;
   font-weight: 600;
@@ -93,6 +95,9 @@ p {
   font-size: 44px;
   line-height: 1.2;
   margin: 20px 0;
+  background: linear-gradient(45deg, #eee0c4, #b09f80);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .hero-text h1 span {
@@ -161,14 +166,14 @@ p {
 .hero-card {
   position: absolute;
   bottom: 30px;
-  right: 0px;
+  right: 30px;
   background: rgba(0,0,0,.5);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   padding: 20px;
   border-radius: 16px;
-  width: 300px;
-  box-shadow: 0 20px 40px rgba(0,0,0,.5);
+  width: 375px;
+  box-shadow: 0 20px 30px rgba(0,0,0,.4);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
@@ -178,7 +183,7 @@ p {
 }
 
 .hero-card p {
-  font-size: 13px;
+  font-size: 14px;
   opacity: .8;
   margin-bottom: 10px;
   color: #fff;
@@ -235,7 +240,7 @@ p {
     right: 20px;
     bottom: 20px;
     padding: 10px;
-    width: 220px;
+    width: 235px;
   }
 
   .hero-card strong {
@@ -287,6 +292,7 @@ p {
 }
 
 .card-icon-container {
+  min-width: 40px;
   width: 40px;
   height: 40px;
   background: #8b1e1e1a;
@@ -334,7 +340,7 @@ p {
 
 .map-wrapper iframe{
   width:100%;
-  height:420px;
+  height:400px;
   border:0;
   filter:grayscale(20%);
 }
@@ -345,7 +351,6 @@ p {
   padding:14px 0px;
   border-radius:14px;
   align-items:center;
-  max-width:300px;
 }
 
 .contact-card strong{
@@ -390,6 +395,10 @@ p {
     left:20px;
     right:auto;
     bottom:80px;
+  }
+
+  .contact-card{
+    max-width:300px;
   }
 }
 

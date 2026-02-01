@@ -1,7 +1,7 @@
 import { FaWhatsapp } from "react-icons/fa";
 
 export default function WhatsAppButton({
-  text = "Fale pelo WhatsApp",
+  text = "Agende sua consulta",
   className = "",
   phone = "5591985807373",
   message = "Olá Dra. Lueine, gostaria de agendar uma consulta."

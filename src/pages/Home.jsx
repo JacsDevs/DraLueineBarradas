@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import FAQSection from "../components/FAQSection";
 import avaliacaomedica1 from "../assets/avaliacao-medica-1.webp"
 import avaliacaomedica2 from "../assets/avaliacao-medica-2.webp"
@@ -15,6 +16,25 @@ import { LuStethoscope, LuHeartPulse, LuActivity, LuClipboardCheck, LuShieldBan,
 
 
 export default function Home(){
+
+  useEffect(() => {
+    // A função que rola até a seção logo após a renderização
+    const sectionId = new URL(window.location.href).hash.substring(1); // Extrai o hash da URL
+    if (sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        const headerOffset = 90;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      }
+    }
+  }, []);
+  
   return(
     <main>
 
@@ -94,8 +114,8 @@ export default function Home(){
 
               <ul>
                 <li><b>Área de atuação:</b> Clínica Geral | Cardiologia Clínica</li>
-                <li><b>Foco:</b> Prevenção e cuidado integral</li>
-                <li><b>Experiência:</b> Atendimento clínico humanizado</li>
+                <li><b>Foco:</b> Prevenção cardiovascular e cuidado integral</li>
+                <li><b>Experiência:</b> Atendimento clínico humanizado e individualizado</li>
               </ul>
             </aside>
 

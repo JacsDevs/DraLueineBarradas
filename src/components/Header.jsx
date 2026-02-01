@@ -1,25 +1,32 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "../styles/header.css";
-import logo from "../assets/logo.svg";
+import logo from "../assets/logo-secundaria-branca.svg";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleScrollTo = (id) => {
-    const element = document.getElementById(id);
-    if (!element) return;
+    if (window.location.pathname !== '/') {
+      // Navega para a página inicial
+      navigate('/');
+    } else {
+      // Rola para a seção, se já estiver na home
+      const element = document.getElementById(id);
+      if (!element) return;
 
-    const headerOffset = 90; // altura do header
-    const elementPosition = element.getBoundingClientRect().top;
-    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      const headerOffset = 90;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
 
-    window.scrollTo({
-      top: offsetPosition,
-      behavior: "smooth",
-    });
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+    }
 
-    setOpen(false); // fecha menu mobile
+    setOpen(false); // Fecha o menu mobile
   };
 
   return (
@@ -43,6 +50,7 @@ export default function Header() {
           <button onClick={() => handleScrollTo("servicos")}>Serviços</button>
           <button onClick={() => handleScrollTo("consulta")}>Consulta</button>
           <button onClick={() => handleScrollTo("sobre")}>Sobre</button>
+          <button onClick={() => handleScrollTo("blog")}>Artigos</button>
           <button onClick={() => handleScrollTo("contato")}>Contato</button>
         </div>
       </nav>
