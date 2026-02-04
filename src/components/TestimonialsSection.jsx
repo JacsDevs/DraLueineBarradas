@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react"
+import { FaRegStar } from "react-icons/fa";
 import "../styles/testimonials.css"
 
 export default function TestimonialsSection() {
@@ -116,7 +117,8 @@ export default function TestimonialsSection() {
       </div>
 
       <a href="https://maps.app.goo.gl/e5MtxNupxjszhWMD6" className="testimonial-button">
-        Escrever Avaliação →
+        Escrever Avaliação
+        <FaRegStar size={20} />
       </a>
     </section>
   )

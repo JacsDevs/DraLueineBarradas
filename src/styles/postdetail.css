@@ -15,6 +15,7 @@
 /* Container principal */
 .post-detail {
   max-width: 890px;
+  min-height: 100vh;
   margin: 40px auto 60px;
   display: flex;
   flex-direction: column;
@@ -103,7 +104,7 @@
 
 /* Imagens dentro do conteúdo */
 .post-detail .content img {
-  max-width: 100%;
+  width: 100%;
   height: auto;
   margin: 16px 0;
   border-radius: 12px;
@@ -198,5 +199,9 @@
 
   .post-detail .share-buttons {
     flex-wrap: wrap;
+  }
+
+  .post-detail {
+    gap: 0;
   }
 }

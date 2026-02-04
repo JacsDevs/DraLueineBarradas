@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useEffect, useState } from "react";
-import { FaFacebookF, FaTwitter, FaLinkedinIn } from "react-icons/fa"; // ícones
+import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp, FaInstagram } from "react-icons/fa"; // ícones
 import "../styles/postdetail.css";
 
 export default function PostDetail() {
@@ -33,6 +33,7 @@ export default function PostDetail() {
   }
 
   const shareUrl = window.location.href;
+  const shareText = encodeURIComponent(`Confira este post: ${post.title}`);
 
   const formattedDate = new Date(post.date.seconds * 1000).toLocaleDateString(
     "pt-BR",
@@ -45,7 +46,6 @@ export default function PostDetail() {
 
   return (
     <>
-      {/* Imagem de destaque em largura total */}
       {post.featuredImage && (
         <div className="featured-image-full">
           <img src={post.featuredImage} alt={post.title} />
@@ -78,6 +78,13 @@ export default function PostDetail() {
         </div>
 
         <div className="share-buttons">
+          <a
+            href={`https://api.whatsapp.com/send?text=${shareText}%20${encodeURIComponent(shareUrl)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FaWhatsapp /> WhatsApp
+          </a>
           <a
             href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
               shareUrl

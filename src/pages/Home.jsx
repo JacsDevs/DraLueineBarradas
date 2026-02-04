@@ -19,7 +19,7 @@ export default function Home(){
 
   useEffect(() => {
     // A função que rola até a seção logo após a renderização
-    const sectionId = new URL(window.location.href).hash.substring(1); // Extrai o hash da URL
+    const sectionId = new URL(window.location.href).hash.substring(1);
     if (sectionId) {
       const element = document.getElementById(sectionId);
       if (element) {
@@ -34,7 +34,7 @@ export default function Home(){
       }
     }
   }, []);
-  
+
   return(
     <main>
 
@@ -135,167 +135,212 @@ export default function Home(){
 
         <div className="cards-grid">
           <article className="card">
-            <div className="card-icon-container">
-              <LuStethoscope className="icon"/>
+            <div className="header-card">
+              <div className="card-icon-container">
+                <LuStethoscope className="icon"/>
+              </div>
+              <h3>Consulta de rotina</h3>
             </div>
-            <h3>Consulta de rotina</h3>
             <p>
               Atendimento clínico integral, com foco na prevenção, no acompanhamento contínuo
               e no cuidado individualizado em todas as fases da vida.
             </p>
+            <WhatsAppButton className="card-button"/>
           </article>
 
           <article className="card">
-            <div className="card-icon-container">
-              <LuHeartPulse className="icon"/>
+            <div className="header-card">
+              <div className="card-icon-container">
+                <LuHeartPulse className="icon"/>
+              </div>
+              <h3>Check-up Cardiológico</h3>
             </div>
-            <h3>Check-up Cardiológico</h3>
             <p>
               Avaliação completa da saúde cardiovascular, com análise de fatores de risco,
               histórico clínico e solicitação de exames conforme indicação individual.
             </p>
+            <WhatsAppButton className="card-button"/>
           </article>
 
           <article className="card">
-            <div className="card-icon-container">
-              <LuActivity className="icon"/>
+            <div className="header-card">
+              <div className="card-icon-container">
+                <LuActivity className="icon"/>
+              </div>
+              <h3>Avaliação e Liberação para Atividade Física</h3>
             </div>
-            <h3>Avaliação e Liberação para Atividade Física</h3>
             <p>
               Avaliação clínica e cardiovascular para liberação segura da prática de atividade
               física, considerando idade, histórico de saúde e exames complementares.
             </p>
+            <WhatsAppButton className="card-button"/>
           </article>
 
           <article className="card">
-            <div className="card-icon-container">
-              <LuClipboardCheck className="icon"/>
+            <div className="header-card">
+              <div className="card-icon-container">
+                <LuClipboardCheck className="icon"/>
+              </div>
+              <h3>Consultas Pré-operatórias</h3>
             </div>
-            <h3>Consultas Pré-operatórias</h3>
             <p>
               Avaliação clínica e cardiovascular para liberação cirúrgica, com estratificação
               de risco e orientações pré e pós-operatórias.
             </p>
+            <WhatsAppButton className="card-button"/>
           </article>
 
           <article className="card">
-            <div className="card-icon-container">
-              <LuShieldBan className="icon"/>
+            <div className="header-card">
+              <div className="card-icon-container">
+                <LuShieldBan className="icon"/>
+              </div>
+              <h3>Prevenção de Doenças Cardiovasculares</h3>
             </div>
-            <h3>Prevenção de Doenças Cardiovasculares</h3>
             <p>
               Acompanhamento direcionado à redução de risco cardiovascular, com controle de
               hipertensão, diabetes, colesterol, obesidade e hábitos de vida.
             </p>
+            <WhatsAppButton className="card-button"/>
           </article>
 
           <article className="card">
-            <div className="card-icon-container">
-              <LuGauge className="icon"/>
+            <div className="header-card">
+              <div className="card-icon-container">
+                <LuGauge className="icon"/>
+              </div>
+              <h3>Hipertensão Arterial</h3>
             </div>
-            <h3>Hipertensão Arterial</h3>
             <p>
               Diagnóstico, acompanhamento e controle da pressão arterial, com plano terapêutico
               individualizado e monitoramento contínuo.
             </p>
+            <WhatsAppButton className="card-button"/>
           </article>
 
           <article className="card">
-            <div className="card-icon-container">
-              <LuHeart className="icon"/>
+            <div className="header-card">
+              <div className="card-icon-container">
+                <LuHeart className="icon"/>
+              </div>
+              <h3>Doença Arterial Coronariana</h3>
             </div>
-            <h3>Doença Arterial Coronariana</h3>
             <p>
               Avaliação e acompanhamento clínico de pacientes com doença arterial coronariana,
               com foco em controle de fatores de risco e prevenção de eventos.
             </p>
+            <WhatsAppButton className="card-button"/>
           </article>
 
           <article className="card">
-            <div className="card-icon-container">
-              <LuHeartCrack className="icon"/>
+            <div className="header-card">
+              <div className="card-icon-container">
+                <LuHeartCrack className="icon"/>
+              </div>
+              <h3>Infarto Agudo do Miocárdio</h3>
             </div>
-            <h3>Infarto Agudo do Miocárdio</h3>
             <p>
               Seguimento clínico e prevenção secundária em pacientes com histórico de infarto,
               com foco em segurança, controle de risco e qualidade de vida.
             </p>
+            <WhatsAppButton className="card-button"/>
           </article>
 
           <article className="card">
-            <div className="card-icon-container">
-              <LuHeartPulse className="icon"/>
+            <div className="header-card">
+              <div className="card-icon-container">
+                <LuHeartPulse className="icon"/>
+              </div>
+              <h3>Insuficiência Cardíaca</h3>
             </div>
-            <h3>Insuficiência Cardíaca</h3>
             <p>
               Acompanhamento clínico de pacientes com insuficiência cardíaca,
               com orientação terapêutica, controle de sintomas e monitoramento contínuo.
             </p>
+            <WhatsAppButton className="card-button"/>
           </article>
 
           <article className="card">
-            <div className="card-icon-container">
-              <LuWaves className="icon"/>
+            <div className="header-card">
+              <div className="card-icon-container">
+                <LuWaves className="icon"/>
+              </div>
+              <h3>Arritmias Cardíacas</h3>
             </div>
-            <h3>Arritmias Cardíacas</h3>
             <p>
               Avaliação clínica de alterações do ritmo cardíaco, com investigação,
               acompanhamento e orientação conforme cada caso.
             </p>
+            <WhatsAppButton className="card-button"/>
           </article>
 
           <article className="card">
-            <div className="card-icon-container">
-              <LuScale className="icon"/>
+            <div className="header-card">
+              <div className="card-icon-container">
+                <LuScale className="icon"/>
+              </div>
+              <h3>Obesidade e Síndrome Metabólica</h3>
             </div>
-            <h3>Obesidade e Síndrome Metabólica</h3>
             <p>
               Abordagem clínica integrada para obesidade e síndrome metabólica, 
               com foco em saúde, mudança de hábitos e acompanhamento contínuo.
             </p>
+            <WhatsAppButton className="card-button"/>
           </article>
 
           <article className="card">
-            <div className="card-icon-container">
-              <LuTestTubeDiagonal className="icon"/>
+            <div className="header-card">
+              <div className="card-icon-container">
+                <LuTestTubeDiagonal className="icon"/>
+              </div>
+              <h3>Colesterol e Triglicerídeos Elevados</h3>
             </div>
-            <h3>Colesterol e Triglicerídeos Elevados</h3>
             <p>
               Avaliação e controle das dislipidemias, com orientação 
               individualizada e prevenção de doenças cardiovasculares.
             </p>
+            <WhatsAppButton className="card-button"/>
           </article>
 
           <article className="card">
-            <div className="card-icon-container">
-              <LuDroplet className="icon"/>
+            <div className="header-card">
+              <div className="card-icon-container">
+                <LuDroplet className="icon"/>
+              </div>
+              <h3>Diabetes Mellitus</h3>
             </div>
-            <h3>Diabetes Mellitus</h3>
             <p>
               Acompanhamento clínico do diabetes, com foco no controle glicêmico, 
               prevenção de complicações e promoção da saúde.
             </p>
+            <WhatsAppButton className="card-button"/>
           </article>
 
           <article className="card">
-            <div className="card-icon-container">
-              <LuMoon className="icon"/>
+            <div className="header-card">
+              <div className="card-icon-container">
+                <LuMoon className="icon"/>
+              </div>
+              <h3>Avaliação do Sono e Apneia do Sono</h3>
             </div>
-            <h3>Avaliação do Sono e Apneia do Sono</h3>
             <p>
               Avaliação clínica do sono e acompanhamento de pacientes com suspeita ou diagnóstico de apneia do sono.
             </p>
+            <WhatsAppButton className="card-button"/>
           </article>
 
           <article className="card">
-            <div className="card-icon-container">
-              <LuCigaretteOff className="icon"/>
+            <div className="header-card">
+              <div className="card-icon-container">
+                <LuCigaretteOff className="icon"/>
+              </div>
+              <h3>Tratamento do Tabagismo</h3>
             </div>
-            <h3>Tratamento do Tabagismo</h3>
             <p>
               Acompanhamento médico para cessação do tabagismo, com estratégias
               individualizadas e foco na redução de riscos à saúde.
             </p>
+            <WhatsAppButton className="card-button"/>
           </article>
         </div>
       </section>
