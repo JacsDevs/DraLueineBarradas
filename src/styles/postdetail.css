@@ -208,7 +208,9 @@
   }
 
   .post-detail .share-buttons a {
-    padding: 10px 12px;
+    padding: 10px 14px;
     font-size: 12px;
   }
+
+  .skeleton-img { height: 280px; }
 }
