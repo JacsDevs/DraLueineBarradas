@@ -199,7 +199,7 @@
 
   .post-detail .share-buttons {
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 8px;
     margin-bottom: 15px;
   }
 
@@ -208,7 +208,7 @@
   }
 
   .post-detail .share-buttons a {
-    padding: 8px 10px;
+    padding: 10px 12px;
     font-size: 12px;
   }
 }
