@@ -8,12 +8,23 @@ import "../styles/postdetail.css";
 export default function PostDetail() {
   const { id } = useParams();
   const [post, setPost] = useState(null);
+  const [author, setAuthor] = useState({ displayName: "", photoURL: "" });
 
   useEffect(() => {
     async function load() {
-      const ref = doc(db, "posts", id);
-      const snapshot = await getDoc(ref);
-      setPost(snapshot.data());
+      const postRef = doc(db, "posts", id);
+      const postSnap = await getDoc(postRef);
+      if (!postSnap.exists()) return;
+      const postData = postSnap.data();
+      setPost(postData);
+
+      if (postData.authorId) {
+        const userRef = doc(db, "admuser", postData.authorId);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          setAuthor(userSnap.data());
+        }
+      }
     }
     load();
   }, [id]);
@@ -58,12 +69,10 @@ export default function PostDetail() {
 
         <div className="meta">
           <div className="author">
-            {post.authorPhoto && (
-              <img
-                src={post.authorPhoto}
-                alt="Autor"
-                className="author-photo"
-              />
+            {author.photoURL ? (
+              <img src={author.photoURL} alt={author.displayName} className="author-photo" />
+            ) : (
+              <div className="author-photo-placeholder">U</div>
             )}
 
             <div className="author-info">

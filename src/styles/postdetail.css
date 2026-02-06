@@ -26,7 +26,7 @@
 /* Título principal */
 .post-detail h1 {
   font-size: 42px;
-  color: var(--primary);
+  color: var(--secondary);
   line-height: 1.2;
   margin-bottom: 16px;
 }
@@ -106,7 +106,6 @@
 .post-detail .content img {
   width: 100%;
   height: auto;
-  margin: 16px 0;
   border-radius: 12px;
 }
 
@@ -146,19 +145,18 @@
   background-color: #f9f9f9;
   padding: 16px 20px;
   margin: 24px 0;
-  font-style: italic;
   color: #555;
   border-radius: 8px;
   position: relative;
 }
 
-.post-detail .content blockquote::before {
-  content: "“";
-  font-size: 36px;
-  position: absolute;
-  left: 12px;
-  top: -8px;
-  color: var(--primary);
+.content ul {
+  margin: 0 16px 20px;
+}
+
+.content a:link {
+  text-decoration: none;
+  color: #1351b4;
 }
 
 .post-detail .content blockquote p {

@@ -59,6 +59,7 @@ footer p {
 .footer-links ul {
   list-style: none;
   padding: 0;
+  font-size: 15px;
 }
 
 .footer-links li {
@@ -124,6 +125,7 @@ footer p {
 .footer-bottom p {
   font-size: 12px;
   margin-bottom: 0;
+  opacity: 80%;
 }
 
 .footer-icons {
