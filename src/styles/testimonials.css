@@ -58,10 +58,16 @@
 }
 
 .avatar {
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  background: #ddd;
+  background: #e5e7eb;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0,0,0,.08);
+  border: 2px solid #fff;
 }
 
 .testimonial-header strong {
