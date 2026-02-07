@@ -469,12 +469,26 @@
 }
 
 .ql-toolbar {
+  position: sticky;
+  top: 8px;
+  z-index: 2;
+  background: #fff;
   border-radius: 12px 12px 0 0;
+  box-shadow: none;
 }
 
 .ql-container {
   border-radius: 0 0 12px 12px;
   min-height: 200px;
+}
+
+.quill-editor.is-stuck .ql-toolbar {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+}
+
+.quill-sticky-sentinel {
+  height: 1px;
 }
 
 /* UTIL */

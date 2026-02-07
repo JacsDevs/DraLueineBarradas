@@ -82,29 +82,38 @@ export default function BlogSection() {
             <div className="carousel-page" key={index}>
               {posts
                 .slice(index * itemsPerPage, index * itemsPerPage + itemsPerPage)
-                .map(post => (
-                  <article className="blog-card" key={post.id}>
-                    {post.featuredImage && (
-                      <img
-                        src={post.featuredImage}
-                        alt={post.title}
-                        className="blog-image"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    )}
-                    <div className="blog-content">
-                      <h3>{post.title}</h3>
-                      <p>{post.summary}</p>
-                      <Link
-                        to={`/post/${buildPostSlugId({ title: post.title, id: post.id, slug: post.slug })}`}
-                        className="blog-link"
-                      >
-                        Ler mais â†’
-                      </Link>
-                    </div>
-                  </article>
-                ))}
+                .map(post => {
+                  const postUrl = `/post/${buildPostSlugId({
+                    title: post.title,
+                    id: post.id,
+                    slug: post.slug
+                  })}`;
+
+                  return (
+                    <article className="blog-card" key={post.id}>
+                      {post.featuredImage && (
+                        <img
+                          src={post.featuredImage}
+                          alt={post.title}
+                          className="blog-image"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      )}
+                      <div className="blog-content">
+                        <h3>
+                          <Link to={postUrl} className="blog-title-link">
+                            {post.title}
+                          </Link>
+                        </h3>
+                        <p>{post.summary}</p>
+                        <Link to={postUrl} className="blog-link">
+                          Ler mais
+                        </Link>
+                      </div>
+                    </article>
+                  );
+                })}
             </div>
           ))}
         </div>
@@ -117,7 +126,7 @@ export default function BlogSection() {
             key={i}
             className={`indicator-line ${i === page ? "active" : ""}`}
             onClick={() => setPage(i)}
-            aria-label={`PÃ¡gina ${i + 1}`}
+            aria-label={`Página ${i + 1}`}
           />
         ))}
       </div>

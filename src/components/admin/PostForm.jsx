@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import ReactQuill from "react-quill";
 import TextareaAutosize from "react-textarea-autosize";
 import "react-quill/dist/quill.snow.css";
@@ -21,6 +22,24 @@ export default function PostForm({
   quillModules,
   quillFormats
 }) {
+  const [isQuillStuck, setIsQuillStuck] = useState(false);
+  const quillStickySentinelRef = useRef(null);
+
+  useEffect(() => {
+    const sentinel = quillStickySentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsQuillStuck(!entry.isIntersecting);
+      },
+      { root: null, threshold: [1], rootMargin: "-8px 0px 0px 0px" }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="post-form">
       <h3>{isEditing ? "Editar Post" : "Novo Post"}</h3>
@@ -43,7 +62,16 @@ export default function PostForm({
       </div>
 
       <label>Texto do post:</label>
-      <ReactQuill className="quill-editor" ref={quillRef} theme="snow" value={content} onChange={onContentChange} modules={quillModules} formats={quillFormats} />
+      <div ref={quillStickySentinelRef} className="quill-sticky-sentinel" aria-hidden="true" />
+      <ReactQuill
+        className={`quill-editor${isQuillStuck ? " is-stuck" : ""}`}
+        ref={quillRef}
+        theme="snow"
+        value={content}
+        onChange={onContentChange}
+        modules={quillModules}
+        formats={quillFormats}
+      />
 
       {uploading && <p>Enviando mídia...</p>}
 

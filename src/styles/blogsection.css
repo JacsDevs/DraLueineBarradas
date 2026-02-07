@@ -64,6 +64,15 @@
   min-height: 3rem; /
 }
 
+.blog-title-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.blog-title-link:hover {
+  text-decoration: underline;
+}
+
 .blog-content p {
   font-size: 0.95rem;
   color: #4b5563;
