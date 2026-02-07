@@ -14,23 +14,17 @@ export default function PostDetail() {
 
   useEffect(() => {
     async function load() {
-      try {
-        const postRef = doc(db, "posts", id);
-        const postSnap = await getDoc(postRef);
-        if (!postSnap.exists()) return;
-        const postData = postSnap.data();
-        setPost(postData);
+      const postRef = doc(db, "posts", id);
+      const postSnap = await getDoc(postRef);
+      if (!postSnap.exists()) return;
+      const postData = postSnap.data();
+      setPost(postData);
 
-        if (postData.authorId) {
-          const userRef = doc(db, "admuser", postData.authorId);
-          const userSnap = await getDoc(userRef);
-          if (userSnap.exists()) {
-            setAuthor(userSnap.data());
-          }
-        }
-      } finally {
-        if (typeof document !== "undefined") {
-          document.dispatchEvent(new Event("prerender-ready"));
+      if (postData.authorId) {
+        const userRef = doc(db, "admuser", postData.authorId);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+          setAuthor(userSnap.data());
         }
       }
     }
