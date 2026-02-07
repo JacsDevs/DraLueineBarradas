@@ -167,8 +167,12 @@
 .user-profile {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 18px;
   flex-wrap: wrap;
+}
+
+.user-profile.editing {
+  align-items: flex-start;
 }
 
 .avatar {
@@ -179,16 +183,55 @@
   border: 2px solid var(--secondary);
 }
 
-.avatar-placeholder {
+.avatar-wrapper {
+  position: relative;
   width: 50px;
   height: 50px;
-  border-radius: 50%;
-  background: #ccc;
+  flex: 0 0 auto;
+}
+
+.avatar-fallback {
+  background: #e6e7ea;
+  color: #9aa0a6;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.avatar-fallback svg {
+  width: 28px;
+  height: 28px;
+  fill: currentColor;
+}
+
+.avatar-action {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
   color: #fff;
-  font-weight: bold;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.avatar-action.remove {
+  background: #c0392b;
+}
+
+.avatar-action.add {
+  background: var(--secondary);
+}
+
+.avatar-input {
+  display: none;
 }
 
 .user-info {

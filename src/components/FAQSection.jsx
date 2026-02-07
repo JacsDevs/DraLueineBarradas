@@ -57,16 +57,28 @@ export default function FAQSection() {
             <div
               key={index}
               className={`faq-item ${activeIndex === index ? "active" : ""}`}
-              onClick={() => toggle(index)}
             >
-              <div className="faq-question">
+              <button
+                type="button"
+                className="faq-question"
+                onClick={() => toggle(index)}
+                aria-expanded={activeIndex === index}
+                aria-controls={`faq-answer-${index}`}
+                id={`faq-question-${index}`}
+              >
                 <span>{item.question}</span>
-                <div className="arrow">
+                <span className="arrow" aria-hidden="true">
                   <LuChevronDown />
-                </div>
-              </div>
+                </span>
+              </button>
 
-              <div className="faq-answer">
+              <div
+                className="faq-answer"
+                id={`faq-answer-${index}`}
+                role="region"
+                aria-labelledby={`faq-question-${index}`}
+                aria-hidden={activeIndex !== index}
+              >
                 <p>{item.answer}</p>
               </div>
             </div>

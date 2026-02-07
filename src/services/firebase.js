@@ -4,12 +4,12 @@ import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDi8vIOxGVabZgG6xkCo6WCwgg5KHEPY74",
-  authDomain: "papo-de-quadrilha.firebaseapp.com",
-  projectId: "papo-de-quadrilha",
-  storageBucket: "papo-de-quadrilha.firebasestorage.app",
-  messagingSenderId: "369004277262",
-  appId: "1:369004277262:web:e2c28cb5eeebdb226c165f"
+  apiKey: "AIzaSyD7GTDzLO4JfMSw3Sw1XQcpJsGFWpkSUuk",
+  authDomain: "dra-lueine-barradas.firebaseapp.com",
+  projectId: "dra-lueine-barradas",
+  storageBucket: "dra-lueine-barradas.firebasestorage.app",
+  messagingSenderId: "1010406146962",
+  appId: "1:1010406146962:web:ffded9bc70de18b5f8b74b",
 };
 
 const app = initializeApp(firebaseConfig);

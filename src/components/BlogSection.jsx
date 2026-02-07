@@ -15,13 +15,19 @@ export default function BlogSection() {
   /* ========== BUSCAR POSTS ========== */
   useEffect(() => {
     async function fetchPosts() {
-      const q = query(collection(db, "posts"), orderBy("date", "desc"));
-      const snapshot = await getDocs(q);
-      const list = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setPosts(list);
+      try {
+        const q = query(collection(db, "posts"), orderBy("date", "desc"));
+        const snapshot = await getDocs(q);
+        const list = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setPosts(list);
+      } finally {
+        if (typeof document !== "undefined") {
+          document.dispatchEvent(new Event("prerender-ready"));
+        }
+      }
     }
     fetchPosts();
   }, []);
@@ -82,9 +88,15 @@ export default function BlogSection() {
               {posts
                 .slice(index * itemsPerPage, index * itemsPerPage + itemsPerPage)
                 .map(post => (
-                  <article className="blog-card">
+                  <article className="blog-card" key={post.id}>
                     {post.featuredImage && (
-                      <img src={post.featuredImage} alt={post.title} className="blog-image" />
+                      <img
+                        src={post.featuredImage}
+                        alt={post.title}
+                        className="blog-image"
+                        loading="lazy"
+                        decoding="async"
+                      />
                     )}
                     <div className="blog-content">
                       <h3>{post.title}</h3>

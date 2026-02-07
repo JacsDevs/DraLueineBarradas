@@ -42,6 +42,11 @@ export default function Home(){
         <title>Dra. Lueine Barradas | Clínica Geral | Cardiologia Clínica</title>
         <meta name="description" content="Atendimento médico humanizado em Bragança, PA. Agende sua consulta com a Dra. Lueine Barradas."/>
         <meta name="keywords" content="Cardiologia Clínica, Bragança PA, Médica Bragança Pará, Check-up cardiológico, Hipertensão, Dra Lueine Barradas" />
+        <link rel="canonical" href="https://dralueinebarradas.com.br/" />
+        <meta property="og:title" content="Dra. Lueine Barradas | Clínica Geral | Cardiologia Clínica" />
+        <meta property="og:description" content="Atendimento médico humanizado em Bragança, PA. Agende sua consulta com a Dra. Lueine Barradas." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://dralueinebarradas.com.br/" />
         <script type="application/ld+json">
           {`
             {
@@ -374,7 +379,12 @@ export default function Home(){
 
           {/* IMAGEM */}
           <div className="procedure-image">
-            <img src={avaliacaomedica1} alt="Consulta médica com avaliação cardiovascular"/>
+            <img
+              src={avaliacaomedica1}
+              alt="Consulta médica com avaliação cardiovascular"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
 
         </article>
@@ -382,8 +392,13 @@ export default function Home(){
         <article className="procedure-step">
 
           {/* IMAGEM */}
-          <div className="procedure-image" alt="Consulta médica com avaliação cardiovascular">
-            <img src={avaliacaomedica2} />
+          <div className="procedure-image">
+            <img
+              src={avaliacaomedica2}
+              alt="Consulta médica com avaliação cardiovascular"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
 
           {/* TEXTO */}
@@ -421,7 +436,12 @@ export default function Home(){
 
           {/* IMAGEM */}
           <div className="about-image">
-            <img src={DraLueine} alt="Dra. Lueine Barradas" />
+            <img
+              src={DraLueine}
+              alt="Dra. Lueine Barradas"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
 
           {/* TEXTO */}
@@ -437,7 +457,12 @@ export default function Home(){
             </div>
 
             <div className="about-image-mobile">
-              <img src={DraLueine} alt="Dra. Lueine Barradas" />
+              <img
+                src={DraLueine}
+                alt="Dra. Lueine Barradas"
+                loading="lazy"
+                decoding="async"
+              />
             </div>
 
             <p>

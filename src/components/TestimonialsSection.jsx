@@ -3,32 +3,124 @@ import { FaRegStar } from "react-icons/fa";
 import "../styles/testimonials.css"
 
 export default function TestimonialsSection() {
-  const testimonials = [
+  const fallbackTestimonials = [
     {
       id: 1,
       name: "Paciente XXX",
       text:
-        "Atendimento extremamente atencioso e humanizado. Me senti acolhida desde o início da consulta.",
+        "Atendimento extremamente atencioso e humanizado. Me senti acolhida desde o inÃ­cio da consulta.",
+      rating: 5,
     },
     {
       id: 2,
       name: "Paciente XXX",
       text:
-        "Profissional excelente, muito cuidadosa e detalhista. A consulta foi completa e me trouxe muita segurança.",
+        "Profissional excelente, muito cuidadosa e detalhista. A consulta foi completa e me trouxe muita seguranÃ§a.",
+      rating: 5,
     },
     {
       id: 3,
       name: "Paciente XXX",
       text:
-        "Atendimento diferenciado, com foco na prevenção e no cuidado individual. Recomendo com total confiança.",
+        "Atendimento diferenciado, com foco na prevenÃ§Ã£o e no cuidado individual. Recomendo com total confianÃ§a.",
+      rating: 5,
     },
   ]
+
+  const [testimonials, setTestimonials] = useState(fallbackTestimonials)
+  const [placeUrl, setPlaceUrl] = useState("https://maps.app.goo.gl/e5MtxNupxjszhWMD6")
+  const [loading, setLoading] = useState(true)
 
   const [itemsPerPage, setItemsPerPage] = useState(3)
   const [page, setPage] = useState(0)
 
   const touchStartX = useRef(0)
   const touchEndX = useRef(0)
+
+  useEffect(() => {
+    const apiKey = import.meta.env.VITE_GOOGLE_API_KEY
+    const placeId = import.meta.env.VITE_PLACE_ID
+
+    if (!apiKey || !placeId) {
+      setLoading(false)
+      return
+    }
+
+    const loadGoogleMapsScript = () =>
+      new Promise((resolve, reject) => {
+        if (window.google?.maps?.places) {
+          resolve()
+          return
+        }
+
+        const existing = document.getElementById("google-maps-js")
+        if (existing) {
+          existing.addEventListener("load", resolve)
+          existing.addEventListener("error", reject)
+          return
+        }
+
+        const script = document.createElement("script")
+        script.id = "google-maps-js"
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`
+        script.async = true
+        script.defer = true
+        script.onload = resolve
+        script.onerror = reject
+        document.head.appendChild(script)
+      })
+
+    const loadReviews = async () => {
+      try {
+        await loadGoogleMapsScript()
+        if (!window.google?.maps?.places) {
+          setLoading(false)
+          return
+        }
+
+        const service = new window.google.maps.places.PlacesService(
+          document.createElement("div")
+        )
+
+        service.getDetails(
+          {
+            placeId,
+            fields: ["reviews", "url"],
+          },
+          (place, status) => {
+            if (
+              status === window.google.maps.places.PlacesServiceStatus.OK &&
+              place?.reviews?.length
+            ) {
+              const mapped = place.reviews
+                .filter((review) => review?.text)
+                .map((review, index) => ({
+                  id: review.time || index,
+                  name: review.author_name || "Paciente",
+                  text: review.text,
+                  rating: review.rating || 5,
+                  avatar: review.profile_photo_url || "",
+                }))
+
+              if (mapped.length > 0) {
+                setTestimonials(mapped)
+              }
+            }
+
+            if (place?.url) {
+              setPlaceUrl(place.url)
+            }
+
+            setLoading(false)
+          }
+        )
+      } catch (error) {
+        setLoading(false)
+      }
+    }
+
+    loadReviews()
+  }, [])
 
   useEffect(() => {
     const handleResize = () => {
@@ -65,7 +157,6 @@ export default function TestimonialsSection() {
 
   return (
     <section id="depoimentos" className="testimonials">
-
       <header className="section-header">
         <span className="testimonials-label">DEPOIMENTOS</span>
         <h2>O que nossos pacientes dizem sobre nosso trabalho?</h2>
@@ -91,10 +182,21 @@ export default function TestimonialsSection() {
                 .map((item) => (
                   <div className="testimonial-card" key={item.id}>
                     <div className="testimonial-header">
-                      <div className="avatar"></div>
+                      <div
+                        className="avatar"
+                        style={
+                          item.avatar
+                            ? { backgroundImage: `url(${item.avatar})` }
+                            : undefined
+                        }
+                      ></div>
                       <div>
                         <strong>{item.name}</strong>
-                        <div className="stars">★★★★★</div>
+                        <div className="stars">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <span key={i}>{i < item.rating ? "★" : "☆"}</span>
+                          ))}
+                        </div>
                       </div>
                     </div>
                     <p>{item.text}</p>
@@ -116,8 +218,8 @@ export default function TestimonialsSection() {
         ))}
       </div>
 
-      <a href="https://maps.app.goo.gl/e5MtxNupxjszhWMD6" className="testimonial-button">
-        Escrever Avaliação
+      <a href={placeUrl} className="testimonial-button">
+        {loading ? "Carregando avaliaÃ§Ãµes..." : "Escrever AvaliaÃ§Ã£o"}
         <FaRegStar size={20} />
       </a>
     </section>

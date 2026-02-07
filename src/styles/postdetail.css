@@ -122,6 +122,20 @@
   object-fit: cover;
 }
 
+.author-photo-placeholder {
+  background: #e6e7ea;
+  color: #9aa0a6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.author-photo-placeholder svg {
+  width: 26px;
+  height: 26px;
+  fill: currentColor;
+}
+
 .author-info {
   display: flex;
   flex-direction: column;

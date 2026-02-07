@@ -464,15 +464,21 @@ p {
 .faq-item {
   border-bottom: 1px solid #eee;
   padding: 22px 0;
-  cursor: pointer;
+  cursor: default;
 }
 
 .faq-question {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  text-align: left;
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-weight: 600;
   color: #222;
+  cursor: pointer;
 }
 
 .faq-question .arrow {
@@ -500,6 +506,12 @@ p {
   font-size: 14px;
   line-height: 1.6;
   color: #555;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid #b08968;
+  outline-offset: 3px;
 }
 
 /* RESPONSIVO */
