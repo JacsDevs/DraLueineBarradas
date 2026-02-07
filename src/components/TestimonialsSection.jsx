@@ -219,7 +219,7 @@ export default function TestimonialsSection() {
       </div>
 
       <a href={placeUrl} className="testimonial-button">
-        {loading ? "Carregando avaliaÃ§Ãµes..." : "Escrever AvaliaÃ§Ã£o"}
+        {loading ? "Carregando avaliações..." : "Escrever Avaliação"}
         <FaRegStar size={20} />
       </a>
     </section>
