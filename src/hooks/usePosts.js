@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { serverTimestamp } from "firebase/firestore";
 import { uploadFileOptimized } from "../services/admin/uploads";
+import { slugify } from "../utils/slugify";
 import { fetchPosts as fetchPostsService, savePost as savePostService, deletePost as deletePostService, deleteFeaturedImage } from "../services/admin/posts";
 
 export function usePosts({ user, userProfile, setUploading }) {
@@ -120,6 +121,7 @@ export function usePosts({ user, userProfile, setUploading }) {
         ...(summary && { summary }),
         ...(updatedContent && { content: updatedContent }),
         ...(url && { featuredImage: url }),
+        ...(title && { slug: slugify(title) }),
         authorId: user.uid,
         authorName: userProfile.displayName || user.email,
         date: serverTimestamp()

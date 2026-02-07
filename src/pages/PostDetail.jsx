@@ -2,23 +2,25 @@ import { useParams } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useEffect, useState } from "react";
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp } from "react-icons/fa"; // ícones
+import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp } from "react-icons/fa"; // Ã­cones
 import "../styles/postdetail.css";
 import { Helmet } from "react-helmet-async";
+import { buildPostSlugId, extractIdFromSlugId } from "../utils/slugify";
 
 export default function PostDetail() {
-  const { id } = useParams();
+  const { slugId } = useParams();
   const [post, setPost] = useState(null);
   const [author, setAuthor] = useState({ displayName: "", photoURL: "" });
   const [shareUrl, setShareUrl] = useState("");
 
   useEffect(() => {
     async function load() {
+      const id = extractIdFromSlugId(slugId);
       const postRef = doc(db, "posts", id);
       const postSnap = await getDoc(postRef);
       if (!postSnap.exists()) return;
       const postData = postSnap.data();
-      setPost(postData);
+      setPost({ id, ...postData });
 
       if (postData.authorId) {
         const userRef = doc(db, "admuser", postData.authorId);
@@ -29,11 +31,11 @@ export default function PostDetail() {
       }
     }
     load();
-  }, [id]);
+  }, [slugId]);
 
   useEffect(() => {
     setShareUrl(window.location.href);
-  }, [id]);
+  }, [slugId]);
 
   if (!post) {
     return (
@@ -43,14 +45,15 @@ export default function PostDetail() {
           <div className="skeleton skeleton-title" />
           <div className="skeleton skeleton-text" />
           <div className="skeleton skeleton-text" />
-          <div className="skeleton skeleton-text" style={{ width: '60%' }} />
+          <div className="skeleton skeleton-text" style={{ width: "60%" }} />
         </section>
       </>
     );
   }
 
   const baseUrl = "https://dralueinebarradas.com.br";
-  const canonicalUrl = shareUrl || `${baseUrl}/post/${id}`;
+  const slugPath = buildPostSlugId({ title: post.title, id: post.id, slug: post.slug });
+  const canonicalUrl = shareUrl || `${baseUrl}/post/${slugPath}`;
   const shareText = encodeURIComponent(`Confira este post: ${post.title}`);
   const rawDescription = post.summary || post.content || "";
   const metaDescription = rawDescription
@@ -134,7 +137,7 @@ export default function PostDetail() {
             {author.photoURL ? (
               <img src={author.photoURL} alt={author.displayName} className="author-photo" />
             ) : (
-              <div className="author-photo author-photo-placeholder" aria-label="Avatar genérico">
+              <div className="author-photo author-photo-placeholder" aria-label="Avatar genÃ©rico">
                 <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
                   <circle cx="32" cy="24" r="14" />
                   <path d="M12 58c4-12 16-18 20-18s16 6 20 18" />

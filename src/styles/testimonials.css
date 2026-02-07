@@ -124,7 +124,8 @@
 }
 
 .testimonial-button:hover {
-  background: var(--primary);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,.1);
 }
 
 /* MOBILE */
@@ -136,5 +137,13 @@
   .testimonial-card {
     max-width: 90%;
     margin: 0 auto;
+  }
+
+  .testimonial-card:hover {
+    transform: none;
+  }
+
+  .testimonials {
+    padding: 60px 0;
   }
 }

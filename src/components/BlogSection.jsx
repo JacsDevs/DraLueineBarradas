@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "../services/firebase";
+import { buildPostSlugId } from "../utils/slugify";
 import "../styles/blogsection.css";
 
 export default function BlogSection() {
@@ -95,8 +96,11 @@ export default function BlogSection() {
                     <div className="blog-content">
                       <h3>{post.title}</h3>
                       <p>{post.summary}</p>
-                      <Link to={`/post/${post.id}`} className="blog-link">
-                        Ler mais →
+                      <Link
+                        to={`/post/${buildPostSlugId({ title: post.title, id: post.id, slug: post.slug })}`}
+                        className="blog-link"
+                      >
+                        Ler mais â†’
                       </Link>
                     </div>
                   </article>
@@ -113,7 +117,7 @@ export default function BlogSection() {
             key={i}
             className={`indicator-line ${i === page ? "active" : ""}`}
             onClick={() => setPage(i)}
-            aria-label={`Página ${i + 1}`}
+            aria-label={`PÃ¡gina ${i + 1}`}
           />
         ))}
       </div>
