@@ -340,7 +340,17 @@
   }
 
   .related-grid {
-    grid-template-columns: 1fr;
+    display: flex;
+    overflow-x: auto;
+    gap: 16px;
+    padding-bottom: 10px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .related-card {
+    flex: 0 0 70%;
+    scroll-snap-align: start;
   }
 
   .skeleton-img { height: 280px; }
