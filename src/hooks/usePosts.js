@@ -123,8 +123,6 @@ export function usePosts({ user, userProfile, setUploading }) {
         ...(url && { featuredImage: url }),
         ...(title && { slug: slugify(title) }),
         authorId: user.uid,
-        authorName: userProfile.displayName || user.email,
-        authorPhotoURL: userProfile.photoURL || user.photoURL || "",
         date: serverTimestamp()
       };
 

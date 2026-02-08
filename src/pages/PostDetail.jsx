@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { collection, doc, getDoc, getDocs, orderBy, query, limit } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useEffect, useState } from "react";
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp } from "react-icons/fa"; // Ã­cones
+import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp } from "react-icons/fa"; // í­cones
 import "../styles/postdetail.css";
 import { Helmet } from "react-helmet-async";
 import { buildPostSlugId, extractIdFromSlugId } from "../utils/slugify";
@@ -22,13 +22,6 @@ export default function PostDetail() {
       if (!postSnap.exists()) return;
       const postData = postSnap.data();
       setPost({ id, ...postData });
-
-      if (postData?.authorName || postData?.authorPhotoURL) {
-        setAuthor({
-          displayName: postData.authorName || "",
-          photoURL: postData.authorPhotoURL || ""
-        });
-      }
 
       if (postData.authorId) {
         const userRef = doc(db, "users", postData.authorId);
@@ -91,7 +84,7 @@ export default function PostDetail() {
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 155);
-  const authorName = post.authorName || author.displayName || "Dra. Lueine Barradas";
+  const authorName = author.displayName || "Dra. Lueine Barradas";
   const publishedIso = post?.date?.seconds
     ? new Date(post.date.seconds * 1000).toISOString()
     : null;
