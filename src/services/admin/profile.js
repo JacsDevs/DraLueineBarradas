@@ -8,7 +8,7 @@ export async function uploadProfileAvatar({ user, file }) {
   const url = await uploadFileOptimized(
     file,
     `users/${user.uid}/avatar_${Date.now()}.webp`,
-    { maxWidth: 150, maxHeight: 150, maxSizeMB: 10, isImage: true }
+    { maxWidth: 80, maxHeight: 80, maxSizeMB: 10, isImage: true }
   );
 
   await updateProfile(user, { photoURL: url });

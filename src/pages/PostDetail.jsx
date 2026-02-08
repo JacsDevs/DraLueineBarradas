@@ -34,7 +34,11 @@ export default function PostDetail() {
         const userRef = doc(db, "users", postData.authorId);
         const userSnap = await getDoc(userRef);
         if (userSnap.exists()) {
-          setAuthor(userSnap.data());
+          const userData = userSnap.data() || {};
+          setAuthor(current => ({
+            displayName: userData.displayName || current.displayName || "",
+            photoURL: userData.photoURL || current.photoURL || ""
+          }));
         }
       }
     }
