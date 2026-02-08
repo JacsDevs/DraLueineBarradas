@@ -1,5 +1,5 @@
-import { useParams } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
+import { Link, useParams } from "react-router-dom";
+import { collection, doc, getDoc, getDocs, orderBy, query, limit } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useEffect, useState } from "react";
 import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp } from "react-icons/fa"; // Ã­cones
@@ -12,6 +12,7 @@ export default function PostDetail() {
   const [post, setPost] = useState(null);
   const [author, setAuthor] = useState({ displayName: "", photoURL: "" });
   const [shareUrl, setShareUrl] = useState("");
+  const [relatedPosts, setRelatedPosts] = useState([]);
 
   useEffect(() => {
     async function load() {
@@ -36,6 +37,24 @@ export default function PostDetail() {
   useEffect(() => {
     setShareUrl(window.location.href);
   }, [slugId]);
+
+  useEffect(() => {
+    async function fetchRelatedPosts() {
+      if (!post?.id) {
+        setRelatedPosts([]);
+        return;
+      }
+      const q = query(collection(db, "posts"), orderBy("date", "desc"), limit(6));
+      const snapshot = await getDocs(q);
+      const list = snapshot.docs.map(docItem => ({
+        id: docItem.id,
+        ...docItem.data()
+      }));
+      const filtered = list.filter(item => item.id !== post.id).slice(0, 3);
+      setRelatedPosts(filtered);
+    }
+    fetchRelatedPosts();
+  }, [post?.id]);
 
   if (!post) {
     return (
@@ -128,80 +147,117 @@ export default function PostDetail() {
         </div>
       )}
 
-      <article className="post-detail" aria-live="polite">
-        <h1>{post.title}</h1>
-        <p className="description">{post.summary}</p>
+      <div className="post-body">
+        <article className="post-detail" aria-live="polite">
+          <h1>{post.title}</h1>
+          <p className="description">{post.summary}</p>
 
-        <div className="meta">
-          <div className="author">
-            {author.photoURL ? (
-              <img src={author.photoURL} alt={author.displayName} className="author-photo" />
-            ) : (
-              <div className="author-photo author-photo-placeholder" aria-label="Avatar genÃ©rico">
-                <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
-                  <circle cx="32" cy="24" r="14" />
-                  <path d="M12 58c4-12 16-18 20-18s16 6 20 18" />
-                </svg>
+          <div className="meta">
+            <div className="author">
+              {author.photoURL ? (
+                <img src={author.photoURL} alt={author.displayName} className="author-photo" />
+              ) : (
+                <div className="author-photo author-photo-placeholder" aria-label="Avatar genérico">
+                  <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+                    <circle cx="32" cy="24" r="14" />
+                    <path d="M12 58c4-12 16-18 20-18s16 6 20 18" />
+                  </svg>
+                </div>
+              )}
+
+              <div className="author-info">
+                <span className="author-name">
+                  Publicado por {post.authorName}
+                </span>
+                <span className="author-date">
+                  em {formattedDate}
+                </span>
               </div>
-            )}
-
-            <div className="author-info">
-              <span className="author-name">
-                Publicado por {post.authorName}
-              </span>
-              <span className="author-date">
-                em {formattedDate}
-              </span>
             </div>
           </div>
-        </div>
-
-        <div className="share-buttons">
-          <a
-            href={`https://api.whatsapp.com/send?text=${shareText}%20${encodeURIComponent(canonicalUrl)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Compartilhar no WhatsApp"
-          >
-            <FaWhatsapp /> WhatsApp
-          </a>
-          <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-              canonicalUrl
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Compartilhar no Facebook"
-          >
-            <FaFacebookF /> Facebook
-          </a>
-          <a
-            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
-              canonicalUrl
-            )}&text=${encodeURIComponent(post.title)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Compartilhar no Twitter"
-          >
-            <FaTwitter /> Twitter
-          </a>
-          <a
-            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-              canonicalUrl
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Compartilhar no LinkedIn"
-          >
-            <FaLinkedinIn /> LinkedIn
-          </a>
-        </div>
-
-        <div
-          className="content"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        ></div>
-      </article>
+          <div
+            className="content"
+            dangerouslySetInnerHTML={{ __html: post.content }}
+          ></div>
+        </article>
+        <section className="post-infos">
+          <aside className="share-aside" aria-label="Compartilhar">
+            <h2 className="share-title">Compartilhe</h2>
+            <div className="share-buttons">
+              <a
+                href={`https://api.whatsapp.com/send?text=${shareText}%20${encodeURIComponent(canonicalUrl)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Compartilhar no WhatsApp"
+              >
+                <FaWhatsapp />
+              </a>
+              <a
+                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+                  canonicalUrl
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Compartilhar no Facebook"
+              >
+                <FaFacebookF />
+              </a>
+              <a
+                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+                  canonicalUrl
+                )}&text=${encodeURIComponent(post.title)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Compartilhar no Twitter"
+              >
+                <FaTwitter />
+              </a>
+              <a
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+                  canonicalUrl
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Compartilhar no LinkedIn"
+              >
+                <FaLinkedinIn />
+              </a>
+            </div>
+          </aside>
+          {relatedPosts.length > 0 && (
+            <div className="related-posts" aria-label="Outros posts">
+              <h2 className="share-title">Outros posts</h2>
+              <div className="related-grid">
+                {relatedPosts.map(item => {
+                  const postUrl = `/post/${buildPostSlugId({
+                    title: item.title,
+                    id: item.id,
+                    slug: item.slug
+                  })}`;
+                  return (
+                    <article className="related-card" key={item.id}>
+                      {item.featuredImage && (
+                        <img
+                          src={item.featuredImage}
+                          alt={item.title}
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      )}
+                      <div className="related-content">
+                        <h3>
+                          <Link to={postUrl}>{item.title}</Link>
+                        </h3>
+                        <p>{item.summary}</p>
+                      </div>
+                    </article>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </section>
+      </div>
     </>
   );
 }

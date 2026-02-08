@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../services/firebase";
 import { useNavigate } from "react-router-dom";
 import "../styles/admin.css";
@@ -9,6 +9,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [resetLoading, setResetLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -20,9 +21,27 @@ export default function Login() {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/admin");
     } catch (err) {
-      alert("Email ou senha inválidos");
+      alert("Email ou senha inválidos. Tente novamente.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handlePasswordReset() {
+    if (resetLoading) return;
+    if (!email) {
+      alert("Informe o email cadastrado para recuperar a senha.");
+      return;
+    }
+
+    try {
+      setResetLoading(true);
+      await sendPasswordResetEmail(auth, email);
+      alert("Enviamos um link de recuperaçãoo para o seu email.");
+    } catch (err) {
+      alert("Não foi possível enviar o link. Verifique o email e tente novamente.");
+    } finally {
+      setResetLoading(false);
     }
   }
 
@@ -63,7 +82,17 @@ export default function Login() {
         >
           {loading ? <span className="loader"></span> : "Entrar"}
         </button>
+
+        <button
+          type="button"
+          className="admin-forgot"
+          onClick={handlePasswordReset}
+          disabled={resetLoading}
+        >
+          {resetLoading ? "Enviando..." : "Esqueci minha senha"}
+        </button>
       </div>
     </div>
   );
 }
+
