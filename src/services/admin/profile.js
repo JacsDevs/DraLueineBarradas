@@ -18,7 +18,7 @@ export async function uploadProfileAvatar({ user, file }) {
 export async function saveUserProfile({ user, userProfile }) {
   await updateProfile(user, { displayName: userProfile.displayName, photoURL: userProfile.photoURL });
   await setDoc(
-    doc(db, "admuser", user.uid),
+    doc(db, "users", user.uid),
     {
       displayName: userProfile.displayName,
       photoURL: userProfile.photoURL,

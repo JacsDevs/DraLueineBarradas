@@ -23,8 +23,15 @@ export default function PostDetail() {
       const postData = postSnap.data();
       setPost({ id, ...postData });
 
+      if (postData?.authorName || postData?.authorPhotoURL) {
+        setAuthor({
+          displayName: postData.authorName || "",
+          photoURL: postData.authorPhotoURL || ""
+        });
+      }
+
       if (postData.authorId) {
-        const userRef = doc(db, "admuser", postData.authorId);
+        const userRef = doc(db, "users", postData.authorId);
         const userSnap = await getDoc(userRef);
         if (userSnap.exists()) {
           setAuthor(userSnap.data());
@@ -167,7 +174,7 @@ export default function PostDetail() {
 
               <div className="author-info">
                 <span className="author-name">
-                  Publicado por {post.authorName}
+                  Publicado por {authorName}
                 </span>
                 <span className="author-date">
                   em {formattedDate}

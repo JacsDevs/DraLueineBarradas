@@ -317,6 +317,7 @@
 
   .post-body {
     grid-template-columns: 1fr;
+    margin: 20px auto 40px;
     gap: 20px;
   }
 
@@ -349,7 +350,7 @@
   }
 
   .related-card {
-    flex: 0 0 70%;
+    flex: 0 0 60%;
     scroll-snap-align: start;
   }
 

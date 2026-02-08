@@ -1,10 +1,13 @@
 import { db, storage } from "../firebase";
-import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc, query, where } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
 
-export async function fetchPosts() {
-  const snapshot = await getDocs(collection(db, "posts"));
-  return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+export async function fetchPosts({ userId } = {}) {
+  const baseRef = collection(db, "posts");
+  const ref = userId ? query(baseRef, where("authorId", "==", userId)) : baseRef;
+  const snapshot = await getDocs(ref);
+  const list = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+  return list.sort((a, b) => (b.date?.seconds || 0) - (a.date?.seconds || 0));
 }
 
 export async function savePost({ isEditingId, data }) {

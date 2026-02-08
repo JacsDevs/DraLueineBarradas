@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
-import { auth } from "../services/firebase";
+import { auth, db } from "../services/firebase";
 import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 import { saveUserProfile as saveUserProfileService, uploadProfileAvatar, deleteProfileAvatar } from "../services/admin/profile";
 
 export function useAuthProfile({ setUploading }) {
@@ -14,10 +15,31 @@ export function useAuthProfile({ setUploading }) {
   const [pendingAvatarPreview, setPendingAvatarPreview] = useState("");
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => {
+    const unsub = onAuthStateChanged(auth, async (u) => {
       if (!u) return;
       setUser(u);
-      setUserProfile({ displayName: u.displayName || "", photoURL: u.photoURL || "" });
+      const authProfile = { displayName: u.displayName || "", photoURL: u.photoURL || "" };
+
+      try {
+        const userSnap = await getDoc(doc(db, "users", u.uid));
+        if (userSnap.exists()) {
+          const data = userSnap.data() || {};
+          const mergedProfile = {
+            displayName: data.displayName || authProfile.displayName,
+            photoURL: data.photoURL || authProfile.photoURL
+          };
+          setUserProfile(mergedProfile);
+          setOriginalProfile(mergedProfile);
+          return;
+        }
+
+        await saveUserProfileService({ user: u, userProfile: authProfile });
+      } catch (err) {
+        console.warn("Falha ao carregar perfil do Firestore:", err);
+      }
+
+      setUserProfile(authProfile);
+      setOriginalProfile(authProfile);
     });
     return () => unsub();
   }, []);
@@ -78,6 +100,7 @@ export function useAuthProfile({ setUploading }) {
       }
 
       await saveUserProfileService({ user, userProfile: nextProfile });
+      setOriginalProfile(nextProfile);
 
       if (pendingAvatarRemoval && avatarToRemove && avatarToRemove !== nextProfile.photoURL) {
         await deleteProfileAvatar(avatarToRemove);

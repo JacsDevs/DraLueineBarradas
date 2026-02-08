@@ -59,13 +59,13 @@ export function usePosts({ user, userProfile, setUploading }) {
 
   const fetchPosts = useCallback(async () => {
     try {
-      const list = await fetchPostsService();
+      const list = await fetchPostsService({ userId: user?.uid });
       setPosts(list);
     } catch (e) {
       console.error(e);
       alert("Erro ao carregar posts");
     }
-  }, []);
+  }, [user?.uid]);
 
   const handleFeaturedImageSelect = useCallback((e) => {
     const file = e.target.files[0];
@@ -124,6 +124,7 @@ export function usePosts({ user, userProfile, setUploading }) {
         ...(title && { slug: slugify(title) }),
         authorId: user.uid,
         authorName: userProfile.displayName || user.email,
+        authorPhotoURL: userProfile.photoURL || user.photoURL || "",
         date: serverTimestamp()
       };
 
