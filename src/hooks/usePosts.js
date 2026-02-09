@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { serverTimestamp } from "firebase/firestore";
 import { uploadFileOptimized } from "../services/admin/uploads";
 import { slugify } from "../utils/slugify";
@@ -15,6 +15,18 @@ export function usePosts({ user, userProfile, setUploading }) {
 
   const [featuredImage, setFeaturedImage] = useState("");
   const [featuredFile, setFeaturedFile] = useState(null);
+  const featuredPreviewRef = useRef("");
+
+  const revokeFeaturedPreview = useCallback(() => {
+    if (featuredPreviewRef.current) {
+      URL.revokeObjectURL(featuredPreviewRef.current);
+      featuredPreviewRef.current = "";
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => revokeFeaturedPreview();
+  }, [revokeFeaturedPreview]);
 
   const dataUrlToBlob = useCallback((dataUrl) => {
     const [header, base64] = dataUrl.split(",");
@@ -71,10 +83,12 @@ export function usePosts({ user, userProfile, setUploading }) {
     const file = e.target.files[0];
     if (!file) return;
 
+    revokeFeaturedPreview();
     const objectUrl = URL.createObjectURL(file);
+    featuredPreviewRef.current = objectUrl;
     setFeaturedImage(objectUrl);
     setFeaturedFile(file);
-  }, []);
+  }, [revokeFeaturedPreview]);
 
   const handleSavePost = useCallback(async () => {
     if (!user) return;
@@ -137,7 +151,7 @@ export function usePosts({ user, userProfile, setUploading }) {
       setUploading(false);
       setFeaturedFile(null);
     }
-  }, [user, isEditing, title, summary, content, featuredFile, featuredImage, posts, userProfile, setUploading, fetchPosts, uploadEmbeddedMedia]);
+  }, [user, isEditing, title, summary, content, featuredFile, featuredImage, posts, userProfile, setUploading, fetchPosts, uploadEmbeddedMedia, revokeFeaturedPreview]);
 
   const handleDelete = useCallback(async (id) => {
     const post = posts.find(p => p.id === id);
@@ -155,6 +169,7 @@ export function usePosts({ user, userProfile, setUploading }) {
   }, [posts, fetchPosts]);
 
   const startEdit = useCallback((post) => {
+    revokeFeaturedPreview();
     setIsEditing(post.id);
     setTitle(post.title);
     setSummary(post.summary);
@@ -162,9 +177,10 @@ export function usePosts({ user, userProfile, setUploading }) {
     setFeaturedImage(post.featuredImage || "");
     setFeaturedFile(null);
     setShowForm(true);
-  }, []);
+  }, [revokeFeaturedPreview]);
 
   const resetForm = useCallback(() => {
+    revokeFeaturedPreview();
     setIsEditing(null);
     setTitle("");
     setSummary("");
@@ -172,7 +188,7 @@ export function usePosts({ user, userProfile, setUploading }) {
     setFeaturedImage("");
     setFeaturedFile(null);
     setShowForm(false);
-  }, []);
+  }, [revokeFeaturedPreview]);
 
   return {
     posts,

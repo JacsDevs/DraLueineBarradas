@@ -12,7 +12,7 @@ export default function FAQSection() {
         "Aceitamos Pix, cartão de crédito, cartão de débito e dinheiro, para sua maior comodidade."
     },
     {
-      question: "Quando tempo dura a consulta?",
+      question: "Quanto tempo dura a consulta?",
       answer:
         "A consulta tem duração aproximada de 60 minutos, pois envolve uma avaliação clínica detalhada, incluindo histórico médico, fatores de risco cardiovasculares, hábitos de vida e definição de um plano de cuidado individualizado."
     },

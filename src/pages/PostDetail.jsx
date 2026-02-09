@@ -2,10 +2,12 @@ import { Link, useParams } from "react-router-dom";
 import { collection, doc, getDoc, getDocs, orderBy, query, limit } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useEffect, useState } from "react";
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp } from "react-icons/fa"; // Ã­Â­cones
+import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp } from "react-icons/fa"; // ícones
 import "../styles/postdetail.css";
 import { Helmet } from "react-helmet-async";
 import { buildPostSlugId, extractIdFromSlugId } from "../utils/slugify";
+
+const buildSrcSet = (src) => (src ? `${src} 1x, ${src} 2x` : undefined);
 
 export default function PostDetail() {
   const { slugId } = useParams();
@@ -147,7 +149,12 @@ export default function PostDetail() {
 
       {post.featuredImage && (
         <div className="featured-image-full">
-          <img src={post.featuredImage} alt={post.title} />
+          <img
+            src={post.featuredImage}
+            srcSet={buildSrcSet(post.featuredImage)}
+            sizes="100vw"
+            alt={post.title}
+          />
         </div>
       )}
 
@@ -161,7 +168,7 @@ export default function PostDetail() {
               {author.photoURL ? (
                 <img src={author.photoURL} alt={author.displayName} className="author-photo" />
               ) : (
-                <div className="author-photo author-photo-placeholder" aria-label="Avatar genÃ©rico">
+                <div className="author-photo author-photo-placeholder" aria-label="Avatar genérico">
                   <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
                     <circle cx="32" cy="24" r="14" />
                     <path d="M12 58c4-12 16-18 20-18s16 6 20 18" />
@@ -243,6 +250,8 @@ export default function PostDetail() {
                       {item.featuredImage && (
                         <img
                           src={item.featuredImage}
+                          srcSet={buildSrcSet(item.featuredImage)}
+                          sizes="(max-width: 768px) 100vw, 33vw"
                           alt={item.title}
                           loading="lazy"
                           decoding="async"

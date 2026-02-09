@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { buildPostSlugId } from "../utils/slugify";
 import "../styles/blogsection.css";
+
+const buildSrcSet = (src) => (src ? `${src} 1x, ${src} 2x` : undefined);
 
 export default function BlogSection() {
   const [posts, setPosts] = useState([]);
@@ -16,7 +18,7 @@ export default function BlogSection() {
   /* ========== BUSCAR POSTS ========== */
   useEffect(() => {
     async function fetchPosts() {
-      const q = query(collection(db, "posts"), orderBy("date", "desc"));
+      const q = query(collection(db, "posts"), orderBy("date", "desc"), limit(6));
       const snapshot = await getDocs(q);
       const list = snapshot.docs.map(doc => ({
         id: doc.id,
@@ -96,6 +98,8 @@ export default function BlogSection() {
                         {post.featuredImage && (
                           <img
                             src={post.featuredImage}
+                            srcSet={buildSrcSet(post.featuredImage)}
+                            sizes="(max-width: 768px) 90vw, 30vw"
                             alt={post.title}
                             className="blog-image"
                             loading="lazy"
@@ -132,7 +136,7 @@ export default function BlogSection() {
               key={i}
               className={`indicator-line ${i === page ? "active" : ""}`}
               onClick={() => setPage(i)}
-              aria-label={`PÃ¡gina ${i + 1}`}
+              aria-label={`Página ${i + 1}`}
             />
           ))}
         </div>
@@ -140,4 +144,3 @@ export default function BlogSection() {
     </section>
   );
 }
-

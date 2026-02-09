@@ -157,9 +157,9 @@ p {
 }
 
 .hero-image img {
-  max-width: 100%;
+  width: auto;
   max-height: 90vh;
-  height: auto;
+  height: 770px;
 }
 
 /* CARD */
@@ -167,9 +167,9 @@ p {
   position: absolute;
   bottom: 30px;
   right: 30px;
-  background: rgba(0,0,0,.5);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(0,0,0,.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   padding: 20px;
   border-radius: 16px;
   width: 375px;
@@ -202,7 +202,7 @@ p {
 /* SCROLL */
 .hero-scroll {
   position: absolute;
-  bottom: 20px;
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
   font-size: 22px;
@@ -217,6 +217,11 @@ p {
 
 /* RESPONSIVO */
 @media (max-width: 768px) {
+  .hero-image img {
+    max-width: 100%;
+    max-height: 90vh;
+    height: auto;
+  }
   .hero-container {
     grid-template-columns: 1fr;
     text-align: center;

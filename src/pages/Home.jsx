@@ -14,11 +14,11 @@ import { LuStethoscope, LuHeartPulse, LuActivity, LuClipboardCheck, LuShieldBan,
   LuHeartCrack, LuScale, LuTestTubeDiagonal, LuDroplet, LuMoon, LuCigaretteOff, LuWaves, LuChevronsDown
  } from "react-icons/lu";
 
+const buildSrcSet = (src) => (src ? `${src} 1x, ${src} 2x` : undefined);
 
 export default function Home(){
 
   useEffect(() => {
-    // A função que rola até a seção logo após a renderização
     const sectionId = new URL(window.location.href).hash.substring(1);
     if (sectionId) {
       const element = document.getElementById(sectionId);
@@ -39,33 +39,117 @@ export default function Home(){
     <main>
 
       <Helmet>
-        <title>Dra. Lueine Barradas | Clínica Geral | Cardiologia Clínica</title>
-        <meta name="description" content="Atendimento médico humanizado em Bragança, PA. Agende sua consulta com a Dra. Lueine Barradas."/>
-        <meta name="keywords" content="Cardiologia Clínica, Bragança PA, Médica Bragança Pará, Check-up cardiológico, Hipertensão, Dra Lueine Barradas" />
+        <title>Dra. Lueine Barradas | Clínica Geral e Cardiologia Clínica em Bragança, PA</title>
+        <meta
+          name="description"
+          content="Clínica geral e cardiologia clínica em Bragança, Pará. Consultas cardiológicas, check-up e prevenção cardiovascular com a Dra. Lueine Barradas."
+        />
+        <meta
+          name="keywords"
+          content="cardiologia em Bragança Pará, médica em Bragança, clínica geral, consulta cardiológica, check-up cardiológico, hipertensão, prevenção cardiovascular, Dra. Lueine Barradas"
+        />
+        <meta name="author" content="Dra. Lueine Barradas" />
+        <meta name="robots" content="index,follow" />
+        <meta name="geo.region" content="BR-PA" />
+        <meta name="geo.placename" content="Bragança" />
+        <meta name="geo.position" content="-1.0488685;-46.7686801" />
+        <meta name="ICBM" content="-1.0488685, -46.7686801" />
         <link rel="canonical" href="https://dralueinebarradas.com.br/" />
-        <meta property="og:title" content="Dra. Lueine Barradas | Clínica Geral | Cardiologia Clínica" />
-        <meta property="og:description" content="Atendimento médico humanizado em Bragança, PA. Agende sua consulta com a Dra. Lueine Barradas." />
+        <meta property="og:locale" content="pt_BR" />
+        <meta property="og:site_name" content="Dra. Lueine Barradas" />
+        <meta property="og:title" content="Dra. Lueine Barradas | Clínica Geral e Cardiologia Clínica em Bragança, PA" />
+        <meta
+          property="og:description"
+          content="Clínica geral e cardiologia clínica em Bragança, Pará. Consultas cardiológicas, check-up e prevenção cardiovascular com a Dra. Lueine Barradas."
+        />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://dralueinebarradas.com.br/" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Dra. Lueine Barradas | Clínica Geral e Cardiologia Clínica em Bragança, PA" />
+        <meta
+          name="twitter:description"
+          content="Clínica geral e cardiologia clínica em Bragança, Pará. Consultas cardiológicas, check-up e prevenção cardiovascular com a Dra. Lueine Barradas."
+        />
         <script type="application/ld+json">
           {`
             {
               "@context": "https://schema.org",
-              "@type": "MedicalBusiness",
-              "name": "Dra. Lueine Barradas",
-              "address": {
-                "@type": "PostalAddress",
-                "streetAddress": "Av. Nazeazeno Ferreira, 60",
-                "addressLocality": "Bragança",
-                "addressRegion": "PA",
-                "addressCountry": "BR"
-              },
-              "geo": {
-                "@type": "GeoCoordinates",
-                "latitude": -1.0488685, 
-                "longitude": -46.7686801
-              },
-              "telephone": "+5591985807373"
+              "@graph": [
+                {
+                  "@type": "MedicalClinic",
+                  "@id": "https://dralueinebarradas.com.br/#clinic",
+                  "name": "Dra. Lueine Barradas",
+                  "url": "https://dralueinebarradas.com.br/",
+                  "image": "https://dralueinebarradas.com.br/favicon.ico",
+                  "telephone": "+55 91 98580-7373",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "streetAddress": "Av. Nazeazeno Ferreira, 60",
+                    "addressLocality": "Bragança",
+                    "addressRegion": "PA",
+                    "addressCountry": "BR"
+                  },
+                  "geo": {
+                    "@type": "GeoCoordinates",
+                    "latitude": -1.0488685,
+                    "longitude": -46.7686801
+                  },
+                  "areaServed": {
+                    "@type": "City",
+                    "name": "Bragança",
+                    "addressRegion": "PA",
+                    "addressCountry": "BR"
+                  },
+                  "medicalSpecialty": ["Cardiology", "GeneralPractice"],
+                  "openingHoursSpecification": [
+                    {
+                      "@type": "OpeningHoursSpecification",
+                      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+                      "opens": "08:00",
+                      "closes": "18:00"
+                    }
+                  ]
+                },
+                {
+                  "@type": "Physician",
+                  "@id": "https://dralueinebarradas.com.br/#physician",
+                  "name": "Dra. Lueine Barradas",
+                  "url": "https://dralueinebarradas.com.br/",
+                  "image": "https://dralueinebarradas.com.br/favicon.ico",
+                  "medicalSpecialty": ["Cardiology", "GeneralPractice"],
+                  "worksFor": { "@id": "https://dralueinebarradas.com.br/#clinic" }
+                },
+                {
+                  "@type": "FAQPage",
+                  "@id": "https://dralueinebarradas.com.br/#faq",
+                  "mainEntity": [
+                    {
+                      "@type": "Question",
+                      "name": "Quais são os métodos de pagamento aceitos?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Aceitamos Pix, cartão de crédito, cartão de débito e dinheiro, para sua maior comodidade."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "Quanto tempo dura a consulta?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "A consulta tem duração aproximada de 60 minutos, pois envolve uma avaliação clínica detalhada, incluindo histórico médico, fatores de risco cardiovasculares, hábitos de vida e definição de um plano de cuidado individualizado."
+                      }
+                    },
+                    {
+                      "@type": "Question",
+                      "name": "Há contato telefônico após a consulta?",
+                      "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "O contato é realizado exclusivamente para orientações administrativas e esclarecimento de dúvidas pontuais, quando necessário. Demandas clínicas são avaliadas em consulta, garantindo segurança e qualidade do cuidado."
+                      }
+                    }
+                  ]
+                }
+              ]
             }
           `}
         </script>
@@ -106,7 +190,9 @@ export default function Home(){
           <div className="hero-image">
             <img
               src={dralueinebarradas}
-              alt="Dra. Lueine Barradas - Médica Cardiologista em Bragança Pará"
+              srcSet={buildSrcSet(dralueinebarradas)}
+              sizes="(max-width: 768px) 90vw, 45vw"
+              alt="Dra. Lueine Barradas - CRM PA 18364"
               loading="eager"
               fetchpriority="high"
               decoding="async"
@@ -189,7 +275,7 @@ export default function Home(){
               <h3>Consultas Pré-operatórias</h3>
             </div>
             <p>
-              Avaliação clínica e cardiovascular para liberação cirúrgica, com estratificação
+              Avaliação clínica e cardiovascular para liberação cirurgica, com estratificação
               de risco e orientações pré e pós-operatórias.
             </p>
             <WhatsAppButton className="card-button"/>
@@ -381,6 +467,8 @@ export default function Home(){
           <div className="procedure-image">
             <img
               src={avaliacaomedica1}
+              srcSet={buildSrcSet(avaliacaomedica1)}
+              sizes="(max-width: 768px) 90vw, 45vw"
               alt="Consulta médica com avaliação cardiovascular"
               loading="lazy"
               decoding="async"
@@ -395,6 +483,8 @@ export default function Home(){
           <div className="procedure-image">
             <img
               src={avaliacaomedica2}
+              srcSet={buildSrcSet(avaliacaomedica2)}
+              sizes="(max-width: 768px) 90vw, 45vw"
               alt="Consulta médica com avaliação cardiovascular"
               loading="lazy"
               decoding="async"
@@ -438,6 +528,8 @@ export default function Home(){
           <div className="about-image">
             <img
               src={DraLueine}
+              srcSet={buildSrcSet(DraLueine)}
+              sizes="(max-width: 768px) 90vw, 45vw"
               alt="Dra. Lueine Barradas"
               loading="lazy"
               decoding="async"
@@ -459,6 +551,8 @@ export default function Home(){
             <div className="about-image-mobile">
               <img
                 src={DraLueine}
+                srcSet={buildSrcSet(DraLueine)}
+                sizes="(max-width: 768px) 90vw, 45vw"
                 alt="Dra. Lueine Barradas"
                 loading="lazy"
                 decoding="async"
@@ -470,7 +564,7 @@ export default function Home(){
             </p>
 
             <p>
-              Atua em Bragança – Pará, acompanhando pacientes de forma individualizada, com um olhar atento não apenas para a doença, mas para a pessoa como um todo.
+              Atua em Bragança - Pará, acompanhando pacientes de forma individualizada, com um olhar atento não apenas para a doença, mas para a pessoa como um todo.
             </p>
 
             <p>

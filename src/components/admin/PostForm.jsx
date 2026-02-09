@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import ReactQuill from "react-quill";
+import { useEffect, useRef, useState, Suspense, lazy } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import "react-quill/dist/quill.snow.css";
+
+const ReactQuill = lazy(() => import("react-quill"));
 
 export default function PostForm({
   isEditing,
@@ -43,8 +44,8 @@ export default function PostForm({
   return (
     <div className="post-form">
       <h3>{isEditing ? "Editar Post" : "Novo Post"}</h3>
-      <label>Título do post:</label>
-      <TextareaAutosize className="auto-textarea" value={title} placeholder="Título" onChange={e => onTitleChange(e.target.value)} />
+      <label>T�tulo do post:</label>
+      <TextareaAutosize className="auto-textarea" value={title} placeholder="T�tulo" onChange={e => onTitleChange(e.target.value)} />
       <label>Resumo do post:</label>
       <TextareaAutosize className="auto-textarea" value={summary} placeholder="Resumo" onChange={e => onSummaryChange(e.target.value)} />
 
@@ -55,7 +56,7 @@ export default function PostForm({
           {featuredImage && (
             <div className="featured-preview">
               <img src={featuredImage} alt="Imagem de destaque" />
-              <button type="button" className="remove-featured" onClick={onRemoveFeatured} aria-label="Remover imagem de destaque">×</button>
+              <button type="button" className="remove-featured" onClick={onRemoveFeatured} aria-label="Remover imagem de destaque">�</button>
             </div>
           )}
         </div>
@@ -63,15 +64,17 @@ export default function PostForm({
 
       <label>Texto do post:</label>
       <div ref={quillStickySentinelRef} className="quill-sticky-sentinel" aria-hidden="true" />
-      <ReactQuill
-        className={`quill-editor${isQuillStuck ? " is-stuck" : ""}`}
-        ref={quillRef}
-        theme="snow"
-        value={content}
-        onChange={onContentChange}
-        modules={quillModules}
-        formats={quillFormats}
-      />
+      <Suspense fallback={<div className="quill-loading">Carregando editor...</div>}>
+        <ReactQuill
+          className={`quill-editor${isQuillStuck ? " is-stuck" : ""}`}
+          ref={quillRef}
+          theme="snow"
+          value={content}
+          onChange={onContentChange}
+          modules={quillModules}
+          formats={quillFormats}
+        />
+      </Suspense>
 
       {uploading && <p>Enviando mídia...</p>}
 

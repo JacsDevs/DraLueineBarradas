@@ -44,6 +44,12 @@ export function useAuthProfile({ setUploading }) {
     return () => unsub();
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (pendingAvatarPreview) URL.revokeObjectURL(pendingAvatarPreview);
+    };
+  }, [pendingAvatarPreview]);
+
   const clearPendingAvatar = useCallback(() => {
     if (pendingAvatarPreview) URL.revokeObjectURL(pendingAvatarPreview);
     setPendingAvatarPreview("");
