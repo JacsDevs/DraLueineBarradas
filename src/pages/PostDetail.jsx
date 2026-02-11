@@ -1,8 +1,8 @@
-import { Link, useParams } from "react-router-dom";
+ï»¿import { Link, useParams } from "react-router-dom";
 import { collection, doc, getDoc, getDocs, orderBy, query, limit } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useEffect, useState } from "react";
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp } from "react-icons/fa"; // ícones
+import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp } from "react-icons/fa"; // Ã­cones
 import "../styles/postdetail.css";
 import { Helmet } from "react-helmet-async";
 import { buildPostSlugId, extractIdFromSlugId } from "../utils/slugify";
@@ -168,7 +168,7 @@ export default function PostDetail() {
               {author.photoURL ? (
                 <img src={author.photoURL} alt={author.displayName} className="author-photo" />
               ) : (
-                <div className="author-photo author-photo-placeholder" aria-label="Avatar genérico">
+                <div className="author-photo author-photo-placeholder" aria-label="Avatar genÃ©rico">
                   <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
                     <circle cx="32" cy="24" r="14" />
                     <path d="M12 58c4-12 16-18 20-18s16 6 20 18" />
@@ -274,3 +274,7 @@ export default function PostDetail() {
     </>
   );
 }
+
+
+
+

@@ -38,6 +38,41 @@ export function usePosts({ user, userProfile, setUploading }) {
     return { blob: new Blob([bytes], { type: mime }), mime };
   }, []);
 
+  const cleanEditorHtml = useCallback((html) => {
+    if (!html) return html;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+
+    const removeEmptyParagraphs = () => {
+      const paragraphs = Array.from(doc.querySelectorAll("p"));
+      paragraphs.forEach((p) => {
+        const hasOnlyBreak = p.innerHTML.trim() === "<br>";
+        const hasNbsp = p.innerHTML.includes("&nbsp;");
+        const isEmpty = p.textContent.trim() === "" && !p.querySelector("img, video, iframe");
+        if ((hasOnlyBreak || isEmpty) && !hasNbsp) {
+          p.remove();
+        }
+      });
+    };
+
+    const removeEmptyBeforeHeadings = () => {
+      const headings = Array.from(doc.querySelectorAll("h1, h2, h3, h4, h5, h6"));
+      headings.forEach((heading) => {
+        let prev = heading.previousElementSibling;
+        while (prev && prev.tagName === "P" && prev.textContent.trim() === "" && !prev.querySelector("img, video, iframe")) {
+          const toRemove = prev;
+          prev = prev.previousElementSibling;
+          toRemove.remove();
+        }
+      });
+    };
+
+    removeEmptyParagraphs();
+    removeEmptyBeforeHeadings();
+
+    return doc.body.innerHTML;
+  }, []);
+
   const uploadEmbeddedMedia = useCallback(async (html) => {
     if (!html) return html;
     const parser = new DOMParser();
@@ -66,8 +101,11 @@ export function usePosts({ user, userProfile, setUploading }) {
       node.setAttribute("src", url);
     }
 
-    return doc.body.innerHTML;
-  }, [dataUrlToBlob]);
+    const cleaned = cleanEditorHtml(doc.body.innerHTML);
+
+    return cleaned;
+  }, [cleanEditorHtml, dataUrlToBlob]);
+
 
   const fetchPosts = useCallback(async () => {
     try {
@@ -173,11 +211,11 @@ export function usePosts({ user, userProfile, setUploading }) {
     setIsEditing(post.id);
     setTitle(post.title);
     setSummary(post.summary);
-    setContent(post.content);
+    setContent(cleanEditorHtml(post.content));
     setFeaturedImage(post.featuredImage || "");
     setFeaturedFile(null);
     setShowForm(true);
-  }, [revokeFeaturedPreview]);
+  }, [cleanEditorHtml, revokeFeaturedPreview]);
 
   const resetForm = useCallback(() => {
     revokeFeaturedPreview();

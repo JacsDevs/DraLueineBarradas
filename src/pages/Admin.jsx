@@ -50,7 +50,17 @@ export default function Admin() {
     fetchPosts
   } = usePosts({ user, userProfile, setUploading });
 
-  const { quillRef, quillModules, quillFormats } = useQuillUpload({ setUploading });
+  const {
+    quillRef,
+    quillModules,
+    quillFormats,
+    mediaModal,
+    closeModal,
+    submitModal,
+    updateField,
+    updateFile,
+    updateSourceType
+  } = useQuillUpload({ setUploading });
 
   useEffect(() => {
     if (user) fetchPosts();
@@ -103,6 +113,12 @@ export default function Admin() {
           quillRef={quillRef}
           quillModules={quillModules}
           quillFormats={quillFormats}
+          mediaModal={mediaModal}
+          onMediaClose={closeModal}
+          onMediaSubmit={submitModal}
+          onMediaFieldChange={updateField}
+          onMediaFileChange={updateFile}
+          onMediaSourceTypeChange={updateSourceType}
         />
       )}
 

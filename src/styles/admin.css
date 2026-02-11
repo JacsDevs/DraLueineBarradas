@@ -491,6 +491,184 @@
   height: 1px;
 }
 
+.ql-editor .ql-button-link {
+  background: var(--secondary);
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.ql-editor .ql-button-link:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+.ql-editor .quill-figure {
+  margin: 16px 0;
+}
+
+.ql-editor .quill-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.ql-editor .quill-figure figcaption {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #666;
+}
+
+.ql-editor h2,
+.ql-editor h3 {
+  line-height: 1.4;
+}
+
+.ql-editor p {
+  margin-bottom: 18px;
+}
+
+.ql-editor ul,
+.ql-editor ol {
+  margin: 0 16px 18px;
+}
+
+.ql-editor iframe {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
+.ql-editor .quill-spacer {
+  height: 18px;
+}
+
+/* Override Quill reset for spacing */
+.quill-editor .ql-editor p,
+.quill-editor .ql-editor ol,
+.quill-editor .ql-editor ul,
+.quill-editor .ql-editor pre,
+.quill-editor .ql-editor blockquote,
+.quill-editor .ql-editor h1,
+.quill-editor .ql-editor h2,
+.quill-editor .ql-editor h3,
+.quill-editor .ql-editor h4,
+.quill-editor .ql-editor h5,
+.quill-editor .ql-editor h6 {
+  padding: 0;
+}
+
+.quill-editor .ql-editor p {
+  margin: 0 0 18px;
+}
+
+.quill-editor .ql-editor ul,
+.quill-editor .ql-editor ol {
+  margin: 0 16px 18px;
+}
+
+.quill-editor .ql-editor ul {
+  font-size: 15px;
+}
+
+.quill-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 50;
+}
+
+.quill-modal {
+  width: 100%;
+  max-width: 520px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px 22px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.quill-modal h4 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--secondary);
+}
+
+.quill-modal-tabs {
+  display: inline-flex;
+  gap: 8px;
+}
+
+.quill-tab {
+  border: 1px solid #ddd;
+  background: #f5f5f5;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.quill-tab.is-active {
+  background: var(--secondary);
+  color: #fff;
+  border-color: var(--secondary);
+}
+
+.quill-modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #444;
+}
+
+.quill-modal-field input[type="text"],
+.quill-modal-field input[type="url"] {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+}
+
+.quill-modal-field input[type="file"] {
+  font-size: 12px;
+}
+
+.quill-modal-error {
+  font-size: 12px;
+  color: #c0392b;
+}
+
+.quill-modal-error.form-error {
+  background: #fdecea;
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+
+.quill-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.quill-modal-actions .admin-btn {
+  width: auto;
+  margin-top: 0;
+}
+
 /* UTIL */
 .loading-text {
   padding: 20px;
