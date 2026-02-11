@@ -136,6 +136,7 @@ p {
 .hero-btn.primary:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(0,0,0,.1);
+  background: #25d366;
 }
 
 .hero-location {
@@ -292,7 +293,6 @@ p {
 .card-button {
   background-color: var(--secondary);
   margin-top: auto;
-  
   color: white;
   padding: 10px 15px;
   border-radius: 999px;
@@ -300,6 +300,11 @@ p {
   font-weight: 600;
   display: inline-flex;
   gap: 10px;
+  transition: .3s;
+}
+
+.card-button:hover {
+  background: #25d366;
 }
 
 .card-icon-h3 {
@@ -457,6 +462,7 @@ p {
 .faq-button:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(0,0,0,.1);
+  background: #25d366;
 }
 
 /* LISTA */
@@ -699,6 +705,7 @@ button:focus-visible {
 .about-button:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(0,0,0,.1);
+  background: #25d366;
 }
 
 /* RESPONSIVO */

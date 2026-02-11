@@ -17,7 +17,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
 }
 
 /* Título principal */
@@ -70,7 +70,12 @@
   align-items: start;
 }
 
+.share-inline {
+  display: none;
+}
+
 .share-aside {
+  display: block;
 }
 
 .share-title {
@@ -79,13 +84,14 @@
   margin-bottom: 12px;
 }
 
-.post-infos .share-buttons {
+.share-buttons {
   display: flex;
   flex-direction: row;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
-.post-infos .share-buttons a {
+.share-buttons a {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -93,14 +99,26 @@
   background: var(--secondary);
   color: #fff;
   text-decoration: none;
-  padding: 10px 14px;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 9px 10px;
+  border-radius: 999px;
+  font-size: 18px;
   transition: 0.3s;
 }
 
-.post-infos .share-buttons a:hover {
-  background: var(--primary);
+.share-buttons a[aria-label*="WhatsApp"]:hover {
+  background: #25d366;
+}
+
+.share-buttons a[aria-label*="Facebook"]:hover {
+  background: #1f74de;
+}
+
+.share-buttons a[aria-label*="Twitter"]:hover {
+  background: #000;
+}
+
+.share-buttons a[aria-label*="LinkedIn"]:hover {
+  background: #0e76a8;
 }
 
 /* Conteúdo do post */
@@ -222,6 +240,7 @@
   border: 1px solid #ebe7e1;
   border-radius: 16px;
   padding: 18px 20px;
+  margin-bottom: 20px;
 }
 
 .post-toc .toc-title {
@@ -284,6 +303,13 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
+  transition: .3s;
+}
+
+.post-detail .content .ql-button-link:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,.1);
+  background: #25d366;
 }
 
 .content a:link {
@@ -419,7 +445,16 @@
     position: static;
   }
 
-  .post-detail .share-buttons {
+  .share-inline {
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  .share-aside {
+    display: none;
+  }
+
+  .share-inline .share-buttons {
     flex-direction: row;
     flex-wrap: wrap;
     gap: 8px;
@@ -429,9 +464,9 @@
     gap: 0;
   }
 
-  .post-detail .share-buttons a {
-    padding: 10px 14px;
-    font-size: 12px;
+  .share-inline .share-buttons a {
+    padding: 9px 10px;
+    font-size: 14px;
   }
 
   .related-grid {
@@ -450,3 +485,4 @@
 
   .skeleton-img { height: 280px; }
 }
+

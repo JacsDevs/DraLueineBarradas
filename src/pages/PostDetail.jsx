@@ -2,7 +2,8 @@
 import { collection, doc, getDoc, getDocs, orderBy, query, limit } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { useEffect, useMemo, useState } from "react";
-import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp } from "react-icons/fa"; // ícones
+import { FaFacebookF, FaLinkedinIn, FaWhatsapp } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import "../styles/postdetail.css";
 import { Helmet } from "react-helmet-async";
 import { buildPostSlugId, extractIdFromSlugId } from "../utils/slugify";
@@ -153,6 +154,52 @@ export default function PostDetail() {
       })
     : "";
 
+  const ShareButtons = ({ withTitle = false, className = "" }) => (
+    <div className={className}>
+      {withTitle && <h2 className="share-title">Compartilhe</h2>}
+      <div className="share-buttons">
+        <a
+          href={`https://api.whatsapp.com/send?text=${shareText}%20${encodeURIComponent(canonicalUrl)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Compartilhar no WhatsApp"
+        >
+          <FaWhatsapp />
+        </a>
+        <a
+          href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+            canonicalUrl
+          )}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Compartilhar no Facebook"
+        >
+          <FaFacebookF />
+        </a>
+        <a
+          href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
+            canonicalUrl
+          )}&text=${encodeURIComponent(post.title)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Compartilhar no Twitter"
+        >
+          <FaXTwitter />
+        </a>
+        <a
+          href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+            canonicalUrl
+          )}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Compartilhar no LinkedIn"
+        >
+          <FaLinkedinIn />
+        </a>
+      </div>
+    </div>
+  );
+
   return (
     <>
       <Helmet>
@@ -200,7 +247,7 @@ export default function PostDetail() {
               {author.photoURL ? (
                 <img src={author.photoURL} alt={author.displayName} className="author-photo" />
               ) : (
-                <div className="author-photo author-photo-placeholder" aria-label="Avatar genérico">
+                <div className="author-photo author-photo-placeholder" aria-label="Avatar gen�rico">
                   <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
                     <circle cx="32" cy="24" r="14" />
                     <path d="M12 58c4-12 16-18 20-18s16 6 20 18" />
@@ -218,6 +265,7 @@ export default function PostDetail() {
               </div>
             </div>
           </div>
+          <ShareButtons className="share-inline" />
           {tocItems.length > 0 && (
             <nav className="post-toc" aria-label="O que há no texto">
               <h2 className="toc-title">O que há no texto?</h2>
@@ -237,47 +285,7 @@ export default function PostDetail() {
         </article>
         <section className="post-infos">
           <aside className="share-aside" aria-label="Compartilhar">
-            <h2 className="share-title">Compartilhe</h2>
-            <div className="share-buttons">
-              <a
-                href={`https://api.whatsapp.com/send?text=${shareText}%20${encodeURIComponent(canonicalUrl)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Compartilhar no WhatsApp"
-              >
-                <FaWhatsapp />
-              </a>
-              <a
-                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-                  canonicalUrl
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Compartilhar no Facebook"
-              >
-                <FaFacebookF />
-              </a>
-              <a
-                href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(
-                  canonicalUrl
-                )}&text=${encodeURIComponent(post.title)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Compartilhar no Twitter"
-              >
-                <FaTwitter />
-              </a>
-              <a
-                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-                  canonicalUrl
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Compartilhar no LinkedIn"
-              >
-                <FaLinkedinIn />
-              </a>
-            </div>
+            <ShareButtons withTitle />
           </aside>
           {relatedPosts.length > 0 && (
             <div className="related-posts" aria-label="Outros posts">
