@@ -1,13 +1,20 @@
 ﻿import { Link, useParams } from "react-router-dom";
 import { collection, doc, getDoc, getDocs, orderBy, query, limit } from "firebase/firestore";
 import { db } from "../services/firebase";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaFacebookF, FaTwitter, FaLinkedinIn, FaWhatsapp } from "react-icons/fa"; // ícones
 import "../styles/postdetail.css";
 import { Helmet } from "react-helmet-async";
 import { buildPostSlugId, extractIdFromSlugId } from "../utils/slugify";
 
 const buildSrcSet = (src) => (src ? `${src} 1x, ${src} 2x` : undefined);
+const slugifyHeading = (text) => text
+  .toLowerCase()
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .replace(/[^a-z0-9\s-]/g, "")
+  .trim()
+  .replace(/\s+/g, "-");
 
 export default function PostDetail() {
   const { slugId } = useParams();
@@ -61,6 +68,31 @@ export default function PostDetail() {
     }
     fetchRelatedPosts();
   }, [post?.id]);
+
+  const { contentHtml, tocItems } = useMemo(() => {
+    if (!post?.content) return { contentHtml: "", tocItems: [] };
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(post.content, "text/html");
+    const headings = Array.from(doc.querySelectorAll("h2, h3, h4"));
+    const counts = new Map();
+    const items = headings.map((heading) => {
+      const text = (heading.textContent || "").trim();
+      if (!text) return null;
+      const base = slugifyHeading(text) || "secao";
+      const count = counts.get(base) ?? 0;
+      const id = count ? `${base}-${count}` : base;
+      counts.set(base, count + 1);
+      heading.setAttribute("id", id);
+      return {
+        id,
+        text,
+        level: Number(heading.tagName.slice(1))
+      };
+    }).filter(Boolean);
+
+    return { contentHtml: doc.body.innerHTML, tocItems: items };
+  }, [post?.content]);
 
   if (!post) {
     return (
@@ -186,9 +218,21 @@ export default function PostDetail() {
               </div>
             </div>
           </div>
+          {tocItems.length > 0 && (
+            <nav className="post-toc" aria-label="O que há no texto">
+              <h2 className="toc-title">O que há no texto?</h2>
+              <ul className="toc-list">
+                {tocItems.map((item) => (
+                  <li key={item.id} className={`toc-item level-${item.level}`}>
+                    <a href={`#${item.id}`}>{item.text}</a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          )}
           <div
             className="content"
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: contentHtml || post.content }}
           ></div>
         </article>
         <section className="post-infos">

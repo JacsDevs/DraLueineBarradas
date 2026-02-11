@@ -114,15 +114,24 @@
 .post-detail .content h2 {
   font-size: 28px;
   line-height: 1.4;
+  scroll-margin-top: 110px;
 }
 
 .post-detail .content h3 {
   font-size: 20px;
   line-height: 1.4;
+  scroll-margin-top: 110px;
+}
+
+.post-detail .content h4 {
+  font-size: 18px;
+  line-height: 1.4;
+  scroll-margin-top: 110px;
 }
 
 .post-detail .content h2,
-.post-detail .content h3 {
+.post-detail .content h3,
+.post-detail .content h4 {
   color: var(--secondary);
   margin: 24px 0 12px;
 }
@@ -206,6 +215,46 @@
 .author-date {
   font-size: 13px;
   color: #999;
+}
+
+.post-toc {
+  background: #f7f6f3;
+  border: 1px solid #ebe7e1;
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+
+.post-toc .toc-title {
+  font-size: 16px;
+  color: var(--secondary);
+  margin: 0 0 12px;
+}
+
+.post-toc .toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.post-toc .toc-item a {
+  color: #3b3b3b;
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.post-toc .toc-item a:hover {
+  color: var(--secondary);
+}
+
+.post-toc .toc-item.level-3 {
+  padding-left: 16px;
+}
+
+.post-toc .toc-item.level-4 {
+  padding-left: 28px;
 }
 
 /* Bloco de citação destacado */
@@ -345,6 +394,10 @@
 
   .post-detail .content h3 {
     font-size: 18px;
+  }
+
+  .post-detail .content h4 {
+    font-size: 16px;
   }
 
   .post-detail .description,

@@ -264,7 +264,7 @@ export function useQuillUpload({ setUploading }) {
   const quillModules = useMemo(() => ({
     toolbar: {
       container: [
-        [{ header: [2, 3, false] }],
+        [{ header: [2, 3, 4, false] }],
         ["bold", "italic", "underline", "strike"],
         [{ script: "sub" }, { script: "super" }],
         ["blockquote"],
