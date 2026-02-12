@@ -2,6 +2,9 @@ import { useMemo, useRef, useCallback, useState } from "react";
 import { Quill } from "react-quill";
 
 let quillFormatsRegistered = false;
+const MAX_IMAGE_FILE_SIZE = 5 * 1024 * 1024;
+const MAX_VIDEO_FILE_SIZE = 25 * 1024 * 1024;
+const DEFAULT_BUTTON_URL = "https://wa.me/5591985807373?text=Ol%C3%A1%20Dra.%20Lueine%2C%20gostaria%20de%20agendar%20uma%20consulta.";
 
 function registerQuillFormats() {
   if (quillFormatsRegistered) return;
@@ -34,6 +37,8 @@ function registerQuillFormats() {
       img.setAttribute("src", value?.src || "");
       if (value?.alt) img.setAttribute("alt", value.alt);
       if (value?.title) img.setAttribute("title", value.title);
+      img.setAttribute("loading", "lazy");
+      img.setAttribute("decoding", "async");
       node.dataset.alt = value?.alt || "";
       node.dataset.caption = value?.caption || "";
       node.dataset.source = value?.source || "";
@@ -110,9 +115,72 @@ const readFileAsDataUrl = (file) => new Promise((resolve, reject) => {
   reader.readAsDataURL(file);
 });
 
-const normalizeYoutubeUrl = (rawUrl) => {
+const getSafeInsertIndex = (quill) => {
+  const range = quill.getSelection(true);
+  if (range && typeof range.index === "number") return range.index;
+  return Math.max(quill.getLength() - 1, 0);
+};
+
+const parseUrl = (value) => {
   try {
-    const url = new URL(rawUrl);
+    return new URL(value);
+  } catch {
+    return null;
+  }
+};
+
+const normalizeExternalUrl = (rawUrl) => {
+  const parsed = parseUrl(rawUrl.trim());
+  if (!parsed) return "";
+  if (!["http:", "https:"].includes(parsed.protocol)) return "";
+  return parsed.toString();
+};
+
+const normalizeButtonUrl = (rawUrl) => {
+  const value = rawUrl.trim();
+  if (!value) return "";
+  if (value.startsWith("/") || value.startsWith("#")) return value;
+
+  const parsed = parseUrl(value);
+  if (!parsed) return "";
+  if (!["http:", "https:", "mailto:", "tel:"].includes(parsed.protocol)) return "";
+  return parsed.toString();
+};
+
+const validateMediaFile = (file, type) => {
+  if (!file) {
+    return type === "image"
+      ? "Selecione um arquivo de imagem."
+      : "Selecione um arquivo de video.";
+  }
+
+  if (type === "image") {
+    if (!file.type.startsWith("image/")) {
+      return "Arquivo invalido. Use um formato de imagem.";
+    }
+    if (file.size > MAX_IMAGE_FILE_SIZE) {
+      return "A imagem deve ter no maximo 5MB.";
+    }
+  }
+
+  if (type === "video") {
+    if (!file.type.startsWith("video/")) {
+      return "Arquivo invalido. Use um formato de video.";
+    }
+    if (file.size > MAX_VIDEO_FILE_SIZE) {
+      return "O video deve ter no maximo 25MB.";
+    }
+  }
+
+  return "";
+};
+
+const normalizeYoutubeUrl = (rawUrl) => {
+  const normalizedUrl = normalizeExternalUrl(rawUrl);
+  if (!normalizedUrl) return "";
+
+  try {
+    const url = new URL(normalizedUrl);
     const host = url.hostname.replace("www.", "");
     if (host === "youtube.com" || host === "m.youtube.com") {
       const id = url.searchParams.get("v");
@@ -122,11 +190,11 @@ const normalizeYoutubeUrl = (rawUrl) => {
       const id = url.pathname.replace("/", "");
       if (id) return `https://www.youtube.com/embed/${id}`;
     }
-    if (rawUrl.includes("/embed/")) return rawUrl;
-  } catch (err) {
-    return rawUrl;
+    if (normalizedUrl.includes("/embed/")) return normalizedUrl;
+  } catch {
+    return "";
   }
-  return rawUrl;
+  return normalizedUrl;
 };
 
 export function useQuillUpload({ setUploading }) {
@@ -136,17 +204,19 @@ export function useQuillUpload({ setUploading }) {
   registerQuillFormats();
 
   const insertFigureImage = useCallback(({ src, alt, caption, source }) => {
-    const quill = quillRef.current.getEditor();
-    const range = quill.getSelection(true);
-    quill.insertEmbed(range.index, "figureImage", { src, alt, caption, source });
-    quill.setSelection(range.index + 1);
+    const quill = quillRef.current?.getEditor();
+    if (!quill) return;
+
+    const index = getSafeInsertIndex(quill);
+    quill.insertEmbed(index, "figureImage", { src, alt, caption, source });
+    quill.setSelection(index + 1);
   }, []);
 
   const openModal = useCallback((type) => {
     setMediaModal({
       open: true,
       type,
-      sourceType: type === "button" ? "url" : "url",
+      sourceType: "url",
       fields: {
         url: "",
         file: null,
@@ -154,7 +224,7 @@ export function useQuillUpload({ setUploading }) {
         caption: "",
         source: "",
         buttonText: type === "button" ? "Agende sua consulta" : "",
-        buttonUrl: "https://wa.me/5591985807373?text=Ol%C3%A1%20Dra.%20Lueine%2C%20gostaria%20de%20agendar%20uma%20consulta."
+        buttonUrl: type === "button" ? DEFAULT_BUTTON_URL : ""
       },
       errors: {}
     });
@@ -191,23 +261,43 @@ export function useQuillUpload({ setUploading }) {
 
   const validateModal = useCallback(() => {
     const errors = {};
+    const rawUrl = mediaModal.fields.url.trim();
+    const buttonText = mediaModal.fields.buttonText.trim();
+    const buttonUrl = mediaModal.fields.buttonUrl.trim();
+
     if (mediaModal.type === "image") {
       if (mediaModal.sourceType === "url") {
-        if (!mediaModal.fields.url) errors.url = "Informe a URL da imagem.";
-      } else if (!mediaModal.fields.file) {
-        errors.file = "Selecione um arquivo de imagem.";
+        if (!rawUrl) {
+          errors.url = "Informe a URL da imagem.";
+        } else if (!normalizeExternalUrl(rawUrl)) {
+          errors.url = "Use uma URL valida iniciando com http:// ou https://.";
+        }
+      } else {
+        const fileError = validateMediaFile(mediaModal.fields.file, "image");
+        if (fileError) errors.file = fileError;
       }
     }
+
     if (mediaModal.type === "video") {
       if (mediaModal.sourceType === "url") {
-        if (!mediaModal.fields.url) errors.url = "Informe a URL do video.";
-      } else if (!mediaModal.fields.file) {
-        errors.file = "Selecione um arquivo de video.";
+        if (!rawUrl) {
+          errors.url = "Informe a URL do video.";
+        } else if (!normalizeYoutubeUrl(rawUrl)) {
+          errors.url = "Use uma URL valida iniciando com http:// ou https://.";
+        }
+      } else {
+        const fileError = validateMediaFile(mediaModal.fields.file, "video");
+        if (fileError) errors.file = fileError;
       }
     }
+
     if (mediaModal.type === "button") {
-      if (!mediaModal.fields.buttonText) errors.buttonText = "Informe o texto do botao.";
-      if (!mediaModal.fields.buttonUrl) errors.buttonUrl = "Informe o link do botao.";
+      if (!buttonText) errors.buttonText = "Informe o texto do botao.";
+      if (!buttonUrl) {
+        errors.buttonUrl = "Informe o link do botao.";
+      } else if (!normalizeButtonUrl(buttonUrl)) {
+        errors.buttonUrl = "Use um link valido (https://, mailto:, tel:, / ou #).";
+      }
     }
 
     setMediaModal((prev) => ({ ...prev, errors }));
@@ -215,14 +305,22 @@ export function useQuillUpload({ setUploading }) {
   }, [mediaModal]);
 
   const submitModal = useCallback(async () => {
+    const quill = quillRef.current?.getEditor();
+    if (!quill) return;
     if (!validateModal()) return;
+
     setUploading(true);
 
     try {
       if (mediaModal.type === "image") {
-        const { alt, caption, source } = mediaModal.fields;
+        const alt = mediaModal.fields.alt.trim();
+        const caption = mediaModal.fields.caption.trim();
+        const source = mediaModal.fields.source.trim();
+
         if (mediaModal.sourceType === "url") {
-          insertFigureImage({ src: mediaModal.fields.url, alt, caption, source });
+          const src = normalizeExternalUrl(mediaModal.fields.url);
+          if (!src) throw new Error("invalid-image-url");
+          insertFigureImage({ src, alt, caption, source });
         } else {
           const dataUrl = await readFileAsDataUrl(mediaModal.fields.file);
           insertFigureImage({ src: dataUrl, alt, caption, source });
@@ -230,31 +328,46 @@ export function useQuillUpload({ setUploading }) {
       }
 
       if (mediaModal.type === "video") {
-        const quill = quillRef.current.getEditor();
-        const range = quill.getSelection(true);
+        const index = getSafeInsertIndex(quill);
+
         if (mediaModal.sourceType === "url") {
           const videoUrl = normalizeYoutubeUrl(mediaModal.fields.url);
-          quill.insertEmbed(range.index, "video", videoUrl);
+          if (!videoUrl) throw new Error("invalid-video-url");
+          quill.insertEmbed(index, "video", videoUrl);
         } else {
           const dataUrl = await readFileAsDataUrl(mediaModal.fields.file);
-          quill.insertEmbed(range.index, "video", dataUrl);
+          quill.insertEmbed(index, "video", dataUrl);
         }
-        quill.setSelection(range.index + 1);
+        quill.setSelection(index + 1);
       }
 
       if (mediaModal.type === "button") {
-        const quill = quillRef.current.getEditor();
-        const range = quill.getSelection(true);
-        quill.insertText(range.index, mediaModal.fields.buttonText, "button", mediaModal.fields.buttonUrl);
-        quill.setSelection(range.index + mediaModal.fields.buttonText.length);
+        const buttonText = mediaModal.fields.buttonText.trim();
+        const buttonUrl = normalizeButtonUrl(mediaModal.fields.buttonUrl);
+        if (!buttonText || !buttonUrl) throw new Error("invalid-button");
+
+        const index = getSafeInsertIndex(quill);
+        quill.insertText(index, buttonText, "button", buttonUrl);
+        quill.setSelection(index + buttonText.length);
       }
 
       closeModal();
     } catch (err) {
       console.error(err);
+      let formError = "Nao foi possivel inserir a midia. Tente novamente.";
+      if (err?.message === "invalid-image-url") {
+        formError = "URL da imagem invalida.";
+      }
+      if (err?.message === "invalid-video-url") {
+        formError = "URL do video invalida.";
+      }
+      if (err?.message === "invalid-button") {
+        formError = "Dados do botao invalidos.";
+      }
+
       setMediaModal((prev) => ({
         ...prev,
-        errors: { form: "Nao foi possivel inserir a midia. Tente novamente." }
+        errors: { ...prev.errors, form: formError }
       }));
     } finally {
       setUploading(false);
@@ -278,10 +391,12 @@ export function useQuillUpload({ setUploading }) {
         video: () => openModal("video"),
         button: () => openModal("button"),
         spacer: () => {
-          const quill = quillRef.current.getEditor();
-          const range = quill.getSelection(true);
-          quill.insertEmbed(range.index, "spacer", true);
-          quill.setSelection(range.index + 1);
+          const quill = quillRef.current?.getEditor();
+          if (!quill) return;
+
+          const index = getSafeInsertIndex(quill);
+          quill.insertEmbed(index, "spacer", true);
+          quill.setSelection(index + 1);
         }
       }
     }

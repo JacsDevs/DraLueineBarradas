@@ -4,7 +4,7 @@ import { uploadFileOptimized } from "../services/admin/uploads";
 import { slugify } from "../utils/slugify";
 import { fetchPosts as fetchPostsService, savePost as savePostService, deletePost as deletePostService, deleteFeaturedImage } from "../services/admin/posts";
 
-export function usePosts({ user, userProfile, setUploading }) {
+export function usePosts({ user, setUploading }) {
   const [posts, setPosts] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [isEditing, setIsEditing] = useState(null);
@@ -15,6 +15,7 @@ export function usePosts({ user, userProfile, setUploading }) {
 
   const [featuredImage, setFeaturedImage] = useState("");
   const [featuredFile, setFeaturedFile] = useState(null);
+  const [featuredLinkDraft, setFeaturedLinkDraft] = useState("");
   const featuredPreviewRef = useRef("");
 
   const revokeFeaturedPreview = useCallback(() => {
@@ -27,6 +28,15 @@ export function usePosts({ user, userProfile, setUploading }) {
   useEffect(() => {
     return () => revokeFeaturedPreview();
   }, [revokeFeaturedPreview]);
+
+  const isValidImageUrl = useCallback((value) => {
+    try {
+      const parsed = new URL(value);
+      return parsed.protocol === "http:" || parsed.protocol === "https:";
+    } catch {
+      return false;
+    }
+  }, []);
 
   const dataUrlToBlob = useCallback((dataUrl) => {
     const [header, base64] = dataUrl.split(",");
@@ -126,20 +136,60 @@ export function usePosts({ user, userProfile, setUploading }) {
     featuredPreviewRef.current = objectUrl;
     setFeaturedImage(objectUrl);
     setFeaturedFile(file);
+    setFeaturedLinkDraft("");
   }, [revokeFeaturedPreview]);
+
+  const handleFeaturedLinkChange = useCallback((value) => {
+    setFeaturedLinkDraft(value);
+  }, []);
+
+  const handleFeaturedLinkApply = useCallback(() => {
+    const link = featuredLinkDraft.trim();
+
+    if (!link || !isValidImageUrl(link)) {
+      alert("Informe um link de imagem valido (http:// ou https://).");
+      return;
+    }
+
+    revokeFeaturedPreview();
+    setFeaturedImage(link);
+    setFeaturedFile(null);
+    setFeaturedLinkDraft(link);
+  }, [featuredLinkDraft, isValidImageUrl, revokeFeaturedPreview]);
+
+  const clearFeaturedImage = useCallback(() => {
+    revokeFeaturedPreview();
+    setFeaturedImage("");
+    setFeaturedFile(null);
+    setFeaturedLinkDraft("");
+  }, [revokeFeaturedPreview]);
+
+  const resetForm = useCallback(() => {
+    setIsEditing(null);
+    setTitle("");
+    setSummary("");
+    setContent("");
+    clearFeaturedImage();
+    setShowForm(false);
+  }, [clearFeaturedImage]);
 
   const handleSavePost = useCallback(async () => {
     if (!user) return;
 
-    if (!isEditing && (!title || !summary || !content || !featuredFile)) {
+    if (!isEditing && (!title.trim() || !summary.trim() || !content.trim() || !featuredImage.trim())) {
       alert("Título, resumo, imagem e conteúdo são obrigatórios!");
+      return;
+    }
+
+    if (!featuredFile && featuredImage.trim() && !isValidImageUrl(featuredImage.trim())) {
+      alert("A imagem destacada precisa ser um link valido.");
       return;
     }
 
     setUploading(true);
 
     try {
-      let url = featuredImage;
+      let url = featuredImage.trim();
 
       if (isEditing && featuredFile) {
         const post = posts.find(p => p.id === isEditing);
@@ -169,11 +219,11 @@ export function usePosts({ user, userProfile, setUploading }) {
       const updatedContent = await uploadEmbeddedMedia(content);
 
       const data = {
-        ...(title && { title }),
-        ...(summary && { summary }),
+        ...(title.trim() && { title: title.trim() }),
+        ...(summary.trim() && { summary: summary.trim() }),
         ...(updatedContent && { content: updatedContent }),
         ...(url && { featuredImage: url }),
-        ...(title && { slug: slugify(title) }),
+        ...(title.trim() && { slug: slugify(title.trim()) }),
         authorId: user.uid,
         date: serverTimestamp()
       };
@@ -189,7 +239,7 @@ export function usePosts({ user, userProfile, setUploading }) {
       setUploading(false);
       setFeaturedFile(null);
     }
-  }, [user, isEditing, title, summary, content, featuredFile, featuredImage, posts, userProfile, setUploading, fetchPosts, uploadEmbeddedMedia, revokeFeaturedPreview]);
+  }, [user, isEditing, title, summary, content, featuredFile, featuredImage, isValidImageUrl, posts, setUploading, fetchPosts, uploadEmbeddedMedia, resetForm]);
 
   const handleDelete = useCallback(async (id) => {
     const post = posts.find(p => p.id === id);
@@ -214,19 +264,9 @@ export function usePosts({ user, userProfile, setUploading }) {
     setContent(cleanEditorHtml(post.content));
     setFeaturedImage(post.featuredImage || "");
     setFeaturedFile(null);
+    setFeaturedLinkDraft(post.featuredImage || "");
     setShowForm(true);
   }, [cleanEditorHtml, revokeFeaturedPreview]);
-
-  const resetForm = useCallback(() => {
-    revokeFeaturedPreview();
-    setIsEditing(null);
-    setTitle("");
-    setSummary("");
-    setContent("");
-    setFeaturedImage("");
-    setFeaturedFile(null);
-    setShowForm(false);
-  }, [revokeFeaturedPreview]);
 
   return {
     posts,
@@ -243,6 +283,10 @@ export function usePosts({ user, userProfile, setUploading }) {
     setFeaturedImage,
     featuredFile,
     setFeaturedFile,
+    featuredLinkDraft,
+    handleFeaturedLinkChange,
+    handleFeaturedLinkApply,
+    clearFeaturedImage,
     handleFeaturedImageSelect,
     handleSavePost,
     handleDelete,

@@ -27,9 +27,13 @@ export default function TestimonialsSection() {
     },
   ]
 
+  const apiKey = import.meta.env.VITE_GOOGLE_API_KEY
+  const placeId = import.meta.env.VITE_PLACE_ID
+  const hasGooglePlacesConfig = Boolean(apiKey && placeId)
+
   const [testimonials, setTestimonials] = useState(fallbackTestimonials)
   const [placeUrl, setPlaceUrl] = useState("https://maps.app.goo.gl/e5MtxNupxjszhWMD6")
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(hasGooglePlacesConfig)
 
   const [itemsPerPage, setItemsPerPage] = useState(3)
   const [page, setPage] = useState(0)
@@ -38,13 +42,7 @@ export default function TestimonialsSection() {
   const touchEndX = useRef(0)
 
   useEffect(() => {
-    const apiKey = import.meta.env.VITE_GOOGLE_API_KEY
-    const placeId = import.meta.env.VITE_PLACE_ID
-
-    if (!apiKey || !placeId) {
-      setLoading(false)
-      return
-    }
+    if (!hasGooglePlacesConfig) return
 
     const loadGoogleMapsScript = () =>
       new Promise((resolve, reject) => {
@@ -114,13 +112,13 @@ export default function TestimonialsSection() {
             setLoading(false)
           }
         )
-      } catch (error) {
+      } catch {
         setLoading(false)
       }
     }
 
     loadReviews()
-  }, [])
+  }, [apiKey, hasGooglePlacesConfig, placeId])
 
   useEffect(() => {
     const handleResize = () => {

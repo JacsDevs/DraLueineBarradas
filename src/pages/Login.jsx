@@ -20,7 +20,7 @@ export default function Login() {
       setLoading(true);
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/admin");
-    } catch (err) {
+    } catch {
       alert("Email ou senha inválidos. Tente novamente.");
     } finally {
       setLoading(false);
@@ -38,7 +38,7 @@ export default function Login() {
       setResetLoading(true);
       await sendPasswordResetEmail(auth, email);
       alert("Enviamos um link de recuperaçãoo para o seu email.");
-    } catch (err) {
+    } catch {
       alert("Não foi possível enviar o link. Verifique o email e tente novamente.");
     } finally {
       setResetLoading(false);
@@ -95,4 +95,5 @@ export default function Login() {
     </div>
   );
 }
+
 

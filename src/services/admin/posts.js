@@ -12,6 +12,31 @@ import {
 } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
 
+function canDeleteFromStorage(location) {
+  if (!location || typeof location !== "string") return false;
+
+  if (location.startsWith("gs://")) return true;
+
+  if (location.startsWith("http://") || location.startsWith("https://")) {
+    return (
+      location.includes("firebasestorage.googleapis.com")
+      || location.includes("storage.googleapis.com")
+    );
+  }
+
+  return true;
+}
+
+async function safeDeleteStorageObject(location) {
+  if (!canDeleteFromStorage(location)) return;
+
+  try {
+    await deleteObject(ref(storage, location));
+  } catch (error) {
+    console.warn("Nao foi possivel remover arquivo no Storage:", error?.message || error);
+  }
+}
+
 export async function fetchPosts({ userId } = {}) {
   const baseRef = collection(db, "posts");
   const ref = userId ? query(baseRef, where("authorId", "==", userId)) : baseRef;
@@ -30,7 +55,7 @@ export async function savePost({ isEditingId, data }) {
 
 export async function deletePost({ id, featuredImage }) {
   if (featuredImage) {
-    await deleteObject(ref(storage, featuredImage));
+    await safeDeleteStorageObject(featuredImage);
   }
 
   const commentsSnapshot = await getDocs(collection(db, "posts", id, "comments"));
@@ -51,6 +76,6 @@ export async function deletePost({ id, featuredImage }) {
 
 export async function deleteFeaturedImage(featuredImage) {
   if (featuredImage) {
-    await deleteObject(ref(storage, featuredImage));
+    await safeDeleteStorageObject(featuredImage);
   }
 }

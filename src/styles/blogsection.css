@@ -61,7 +61,7 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
-  min-height: 3rem; /
+  min-height: 3rem;
 }
 
 .blog-title-link {
