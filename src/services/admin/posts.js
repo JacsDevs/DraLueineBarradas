@@ -41,8 +41,13 @@ export async function fetchPosts({ userId } = {}) {
   const baseRef = collection(db, "posts");
   const ref = userId ? query(baseRef, where("authorId", "==", userId)) : baseRef;
   const snapshot = await getDocs(ref);
-  const list = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-  return list.sort((a, b) => (b.date?.seconds || 0) - (a.date?.seconds || 0));
+  const list = snapshot.docs.map((docItem) => ({ id: docItem.id, ...docItem.data() }));
+
+  return list.sort((a, b) => {
+    const bTime = b.updatedAt?.seconds || b.date?.seconds || b.createdAt?.seconds || 0;
+    const aTime = a.updatedAt?.seconds || a.date?.seconds || a.createdAt?.seconds || 0;
+    return bTime - aTime;
+  });
 }
 
 export async function savePost({ isEditingId, data }) {

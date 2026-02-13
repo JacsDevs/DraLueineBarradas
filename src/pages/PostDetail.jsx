@@ -18,6 +18,7 @@ import { FaXTwitter } from "react-icons/fa6";
 import "../styles/postdetail.css";
 import { Helmet } from "react-helmet-async";
 import { buildPostSlugId, extractIdFromSlugId } from "../utils/slugify";
+import { isDraftPost, isPublishedPost } from "../utils/postStatus";
 
 const buildSrcSet = (src) => (src ? `${src} 1x, ${src} 2x` : undefined);
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -251,6 +252,11 @@ export default function PostDetail() {
       }
 
       const postData = postSnap.data();
+      if (isDraftPost(postData)) {
+        setPost(null);
+        return;
+      }
+
       setPost({ id, ...postData });
       setAuthor({ displayName: "", photoURL: "" });
 
@@ -276,13 +282,15 @@ export default function PostDetail() {
         setRelatedPosts([]);
         return;
       }
-      const q = query(collection(db, "posts"), orderBy("date", "desc"), limit(6));
+      const q = query(collection(db, "posts"), orderBy("date", "desc"), limit(24));
       const snapshot = await getDocs(q);
       const list = snapshot.docs.map((docItem) => ({
         id: docItem.id,
         ...docItem.data()
       }));
-      const filtered = list.filter((item) => item.id !== post.id).slice(0, 3);
+      const filtered = list
+        .filter((item) => isPublishedPost(item) && item.id !== post.id)
+        .slice(0, 3);
       setRelatedPosts(filtered);
     }
 

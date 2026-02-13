@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+ï»¿import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { db } from "../services/firebase";
 import { buildPostSlugId } from "../utils/slugify";
+import { isPublishedPost } from "../utils/postStatus";
 import "../styles/blogsection.css";
 
 const buildSrcSet = (src) => (src ? `${src} 1x, ${src} 2x` : undefined);
@@ -15,21 +16,21 @@ export default function BlogSection() {
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
 
-  /* ========== BUSCAR POSTS ========== */
   useEffect(() => {
     async function fetchPosts() {
-      const q = query(collection(db, "posts"), orderBy("date", "desc"), limit(6));
+      const q = query(collection(db, "posts"), orderBy("date", "desc"), limit(24));
       const snapshot = await getDocs(q);
-      const list = snapshot.docs.map(doc => ({
+      const list = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data()
       }));
-      setPosts(list);
+
+      setPosts(list.filter((post) => isPublishedPost(post)).slice(0, 6));
     }
+
     fetchPosts();
   }, []);
 
-  /* ========== RESPONSIVO ========== */
   useEffect(() => {
     const handleResize = () => {
       setItemsPerPage(window.innerWidth < 768 ? 1 : 3);
@@ -44,17 +45,17 @@ export default function BlogSection() {
   const hasPosts = posts.length > 0;
   const totalPages = hasPosts ? Math.ceil(posts.length / itemsPerPage) : 0;
 
-  /* ========== SWIPE MOBILE ========== */
-  const handleTouchStart = (e) => {
-    touchStartX.current = e.touches[0].clientX;
+  const handleTouchStart = (event) => {
+    touchStartX.current = event.touches[0].clientX;
   };
 
-  const handleTouchMove = (e) => {
-    touchEndX.current = e.touches[0].clientX;
+  const handleTouchMove = (event) => {
+    touchEndX.current = event.touches[0].clientX;
   };
 
   const handleTouchEnd = () => {
     const distance = touchStartX.current - touchEndX.current;
+
     if (Math.abs(distance) > 50) {
       if (distance > 0 && page < totalPages - 1) {
         setPage(page + 1);
@@ -78,15 +79,12 @@ export default function BlogSection() {
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <div
-            className="carousel-track"
-            style={{ transform: `translateX(-${page * 100}%)` }}
-          >
+          <div className="carousel-track" style={{ transform: `translateX(-${page * 100}%)` }}>
             {Array.from({ length: totalPages }).map((_, index) => (
               <div className="carousel-page" key={index}>
                 {posts
                   .slice(index * itemsPerPage, index * itemsPerPage + itemsPerPage)
-                  .map(post => {
+                  .map((post) => {
                     const postUrl = `/post/${buildPostSlugId({
                       title: post.title,
                       id: post.id,
@@ -128,15 +126,14 @@ export default function BlogSection() {
         <p className="blog-empty">Nenhum post publicado ainda.</p>
       )}
 
-      {/* INDICADOR EM LINHAS */}
       {totalPages > 1 && (
         <div className="carousel-indicator">
-          {Array.from({ length: totalPages }).map((_, i) => (
+          {Array.from({ length: totalPages }).map((_, index) => (
             <button
-              key={i}
-              className={`indicator-line ${i === page ? "active" : ""}`}
-              onClick={() => setPage(i)}
-              aria-label={`Página ${i + 1}`}
+              key={index}
+              className={`indicator-line ${index === page ? "active" : ""}`}
+              onClick={() => setPage(index)}
+              aria-label={`Pagina ${index + 1}`}
             />
           ))}
         </div>

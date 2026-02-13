@@ -77,8 +77,8 @@ function registerQuillFormats() {
   }
 
   icons.button =
-    "<svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" aria-hidden=\"true\">" +
-    "<path d=\"M6 6h9a4 4 0 010 8H8v4H6V6zm2 2v4h7a2 2 0 000-4H8z\" fill=\"currentColor\"/>" +
+    "<svg viewBox=\"0 0 448 512\" width=\"18\" height=\"18\" aria-hidden=\"true\">" +
+    "<path d=\"M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zM48 80h352v352H48V80zm256 160h-56v-56c0-4.4-3.6-8-8-8h-32c-4.4 0-8 3.6-8 8v56h-56c-4.4 0-8 3.6-8 8v32c0 4.4 3.6 8 8 8h56v56c0 4.4 3.6 8 8 8h32c4.4 0 8-3.6 8-8v-56h56c4.4 0 8-3.6 8-8v-32c0-4.4-3.6-8-8-8z\" fill=\"currentColor\"/>" +
     "</svg>";
 
   icons.spacer =
@@ -195,6 +195,82 @@ const normalizeYoutubeUrl = (rawUrl) => {
     return "";
   }
   return normalizedUrl;
+};
+
+const setTooltipLabel = (element, label) => {
+  if (!element || !label) return;
+  element.setAttribute("title", label);
+  element.setAttribute("aria-label", label);
+};
+
+const applyHeaderPickerTooltips = (toolbar) => {
+  const headerPicker = toolbar.querySelector(".ql-picker.ql-header");
+  if (!headerPicker) return;
+
+  const headerLabel = headerPicker.querySelector(".ql-picker-label");
+  setTooltipLabel(headerLabel, "Nivel de titulo");
+
+  const labelsByValue = {
+    "2": "Titulo H2",
+    "3": "Titulo H3",
+    "4": "Titulo H4",
+    "": "Texto normal"
+  };
+
+  headerPicker.querySelectorAll(".ql-picker-item").forEach((item) => {
+    const value = item.getAttribute("data-value") || "";
+    setTooltipLabel(item, labelsByValue[value] || "Titulo");
+  });
+};
+
+const applyAlignPickerTooltips = (toolbar) => {
+  const alignPicker = toolbar.querySelector(".ql-picker.ql-align");
+  if (!alignPicker) return;
+
+  const alignLabel = alignPicker.querySelector(".ql-picker-label");
+  setTooltipLabel(alignLabel, "Alinhamento");
+
+  const labelsByValue = {
+    "": "Alinhar a esquerda",
+    center: "Centralizar",
+    right: "Alinhar a direita",
+    justify: "Justificar"
+  };
+
+  alignPicker.querySelectorAll(".ql-picker-item").forEach((item) => {
+    const value = item.getAttribute("data-value") || "";
+    setTooltipLabel(item, labelsByValue[value] || "Alinhamento");
+  });
+};
+
+const applyToolbarTooltips = (toolbar) => {
+  setTooltipLabel(toolbar.querySelector("button.ql-bold"), "Negrito");
+  setTooltipLabel(toolbar.querySelector("button.ql-italic"), "Italico");
+  setTooltipLabel(toolbar.querySelector("button.ql-underline"), "Sublinhado");
+  setTooltipLabel(toolbar.querySelector("button.ql-strike"), "Tachado");
+  setTooltipLabel(toolbar.querySelector("button.ql-blockquote"), "Citacao");
+  setTooltipLabel(toolbar.querySelector("button.ql-link"), "Inserir link");
+  setTooltipLabel(toolbar.querySelector("button.ql-button"), "Inserir botao");
+  setTooltipLabel(toolbar.querySelector("button.ql-image"), "Inserir imagem");
+  setTooltipLabel(toolbar.querySelector("button.ql-video"), "Inserir video");
+  setTooltipLabel(toolbar.querySelector("button.ql-spacer"), "Inserir espaco");
+  setTooltipLabel(toolbar.querySelector("button.ql-clean"), "Limpar formatacao");
+
+  toolbar.querySelectorAll("button.ql-script").forEach((button) => {
+    const value = button.value || button.getAttribute("value");
+    setTooltipLabel(button, value === "super" ? "Sobrescrito" : "Subscrito");
+  });
+
+  toolbar.querySelectorAll("button.ql-list").forEach((button) => {
+    const value = button.value || button.getAttribute("value");
+    setTooltipLabel(
+      button,
+      value === "ordered" ? "Lista numerada" : "Lista com marcadores"
+    );
+  });
+
+  applyHeaderPickerTooltips(toolbar);
+  applyAlignPickerTooltips(toolbar);
 };
 
 export function useQuillUpload({ setUploading }) {
@@ -421,6 +497,15 @@ export function useQuillUpload({ setUploading }) {
     "spacer"
   ];
 
+  const attachToolbarTooltips = useCallback(() => {
+    const quill = quillRef.current?.getEditor();
+    const toolbar = quill?.getModule("toolbar")?.container;
+    if (!toolbar) return false;
+
+    applyToolbarTooltips(toolbar);
+    return true;
+  }, []);
+
   return {
     quillRef,
     quillModules,
@@ -430,6 +515,7 @@ export function useQuillUpload({ setUploading }) {
     submitModal,
     updateField,
     updateFile,
-    updateSourceType
+    updateSourceType,
+    attachToolbarTooltips
   };
 }

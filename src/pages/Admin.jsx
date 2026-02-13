@@ -8,6 +8,14 @@ import PostList from "../components/admin/PostList";
 import { useAuthProfile } from "../hooks/useAuthProfile";
 import { usePosts } from "../hooks/usePosts";
 import { useQuillUpload } from "../hooks/useQuillUpload";
+import { POST_STATUSES, timestampToMillis } from "../utils/postStatus";
+import {
+  FaRegEdit,
+  FaRegFileAlt,
+  FaRegNewspaper,
+  FaSignOutAlt,
+  FaPlus
+} from "react-icons/fa";
 
 export default function Admin() {
   const [uploading, setUploading] = useState(false);
@@ -34,6 +42,12 @@ export default function Admin() {
     showForm,
     setShowForm,
     isEditing,
+    editingStatus,
+    activePostTab,
+    setActivePostTab,
+    postTotals,
+    postStats,
+    postsLoading,
     title,
     setTitle,
     summary,
@@ -42,15 +56,27 @@ export default function Admin() {
     setContent,
     featuredImage,
     featuredLinkDraft,
+    canPublish,
+    canSaveDraft,
+    publishingDraftId,
+    bulkActionType,
+    selectedPostIds,
+    selectedPostsCount,
+    allVisiblePostsSelected,
     handleFeaturedLinkChange,
     handleFeaturedLinkApply,
     clearFeaturedImage,
+    togglePostSelection,
+    toggleSelectAllPosts,
+    clearSelectedPosts,
     handleFeaturedImageSelect,
     handleSavePost,
+    handlePublishDraft,
+    handlePublishSelectedDrafts,
     handleDelete,
+    handleDeleteSelectedPosts,
     startEdit,
-    resetForm,
-    fetchPosts
+    resetForm
   } = usePosts({ user, setUploading });
 
   const {
@@ -62,12 +88,9 @@ export default function Admin() {
     submitModal,
     updateField,
     updateFile,
-    updateSourceType
+    updateSourceType,
+    attachToolbarTooltips
   } = useQuillUpload({ setUploading });
-
-  useEffect(() => {
-    if (user) fetchPosts();
-  }, [user, fetchPosts]);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 760px)");
@@ -98,64 +121,63 @@ export default function Admin() {
   }, [isSidebarOpen]);
 
   const dashboardStats = useMemo(() => {
-    const now = new Date();
-
     const formatDate = (timestamp) => {
-      if (!timestamp?.seconds) return "--";
+      const millis = timestampToMillis(timestamp);
+      if (!millis) return "--";
+
       return new Intl.DateTimeFormat("pt-BR", {
         day: "2-digit",
         month: "short",
         year: "numeric"
-      }).format(new Date(timestamp.seconds * 1000));
+      }).format(new Date(millis));
     };
 
-    const totalPosts = posts.length;
-    const postsThisMonth = posts.filter((post) => {
-      if (!post.date?.seconds) return false;
-      const publishDate = new Date(post.date.seconds * 1000);
-      return (
-        publishDate.getMonth() === now.getMonth()
-        && publishDate.getFullYear() === now.getFullYear()
-      );
-    }).length;
-
-    const postsWithFeaturedImage = posts.filter((post) => Boolean(post.featuredImage)).length;
-    const latestPost = posts.find((post) => Boolean(post.date?.seconds));
+    const totalPosts = postStats.totalPublished;
+    const draftsTotal = postStats.totalDrafts;
+    const postsThisMonth = postStats.postsThisMonth;
+    const latestPost = postStats.latestPublishedPost;
 
     return [
       {
+        icon: "posts",
         label: "Total de posts",
         value: String(totalPosts),
         note: totalPosts ? "Conteudos publicados" : "Nenhum conteudo publicado"
       },
       {
+        icon: "drafts",
+        label: "Rascunhos",
+        value: String(draftsTotal),
+        note: draftsTotal ? "Conteudos em preparacao" : "Nenhum rascunho salvo"
+      },
+      {
+        icon: "month",
         label: "Publicados no mes",
         value: String(postsThisMonth),
         note: "Ritmo editorial atual"
       },
       {
-        label: "Com imagem de capa",
-        value: `${postsWithFeaturedImage}/${totalPosts || 0}`,
-        note: "Padrao visual dos artigos"
-      },
-      {
+        icon: "latest",
         label: "Ultima publicacao",
-        value: latestPost ? formatDate(latestPost.date) : "--",
+        value: latestPost ? formatDate(latestPost.publishedAt || latestPost.date) : "--",
         note: latestPost?.title || "Publique para atualizar este indicador"
       }
     ];
-  }, [posts]);
+  }, [postStats]);
 
   const hasDraftChanges = Boolean(title || summary || content || featuredImage);
   const hasProfilePhoto = Boolean(userProfile.photoURL);
-  const editorActionTitle = isEditing ? "Editar post" : "Novo post";
+  const editorActionTitle = isEditing
+    ? (editingStatus === POST_STATUSES.DRAFT ? "Editar rascunho" : "Editar post")
+    : "Novo post";
   const editorActionDescription = isEditing
     ? "Revise o conteudo e atualize as informacoes antes de salvar."
     : "Estruture o conteudo com clareza para manter o blog organizado e consistente.";
 
-  const handleOpenPostList = () => {
+  const handleOpenPostList = (tab = "published") => {
     if (showForm && hasDraftChanges && !window.confirm("Descartar alteracoes do post?")) return;
     resetForm();
+    setActivePostTab(tab);
     setShowForm(false);
     setIsSidebarOpen(false);
   };
@@ -165,6 +187,14 @@ export default function Admin() {
     resetForm();
     setShowForm(true);
     setIsSidebarOpen(false);
+  };
+
+  const handleSavePublishedFromForm = async () => {
+    await handleSavePost(POST_STATUSES.PUBLISHED);
+  };
+
+  const handleSaveDraftFromForm = async () => {
+    await handleSavePost(POST_STATUSES.DRAFT);
   };
 
   const handlePickProfileFile = () => {
@@ -272,28 +302,29 @@ export default function Admin() {
         <nav className="admin-sidebar-nav" aria-label="Navegacao do painel">
           <button
             type="button"
-            className={`admin-side-btn ${!showForm ? "is-active" : ""}`}
-            onClick={handleOpenPostList}
+            className={`admin-side-btn ${!showForm && activePostTab === "published" ? "is-active" : ""}`}
+            onClick={() => handleOpenPostList("published")}
           >
+            <FaRegNewspaper className="side-btn-icon" aria-hidden="true" />
             Gerenciar posts
+          </button>
+          <button
+            type="button"
+            className={`admin-side-btn ${!showForm && activePostTab === "drafts" ? "is-active" : ""}`}
+            onClick={() => handleOpenPostList("drafts")}
+          >
+            <FaRegEdit className="side-btn-icon" aria-hidden="true" />
+            Rascunhos
           </button>
           <button
             type="button"
             className={`admin-side-btn ${showForm ? "is-active" : ""}`}
             onClick={handleOpenNewPost}
           >
-            {isEditing ? "Editando post" : "Novo post"}
+            <FaPlus className="side-btn-icon" aria-hidden="true" />
+            {isEditing ? (editingStatus === POST_STATUSES.DRAFT ? "Editando rascunho" : "Editando post") : "Novo post"}
           </button>
         </nav>
-
-        <div className="admin-sidebar-stats">
-          {dashboardStats.slice(0, 3).map((item) => (
-            <article key={item.label} className="admin-sidebar-stat">
-              <span>{item.label}</span>
-              <strong>{item.value}</strong>
-            </article>
-          ))}
-        </div>
 
         <button
           type="button"
@@ -303,6 +334,7 @@ export default function Admin() {
             signOut(auth);
           }}
         >
+          <FaSignOutAlt aria-hidden="true" />
           Sair
         </button>
       </aside>
@@ -331,7 +363,10 @@ export default function Admin() {
 
           {showForm ? (
             <header className="admin-editor-header">
-              <span className="admin-chip">Area editorial</span>
+              <span className="admin-chip">
+                <FaRegFileAlt aria-hidden="true" />
+                Area editorial
+              </span>
               <h1>{editorActionTitle}</h1>
               <p>{editorActionDescription}</p>
             </header>
@@ -342,12 +377,15 @@ export default function Admin() {
           {showForm && (
             <PostForm
               isEditing={isEditing}
+              editingStatus={editingStatus}
               hideHeading
               title={title}
               summary={summary}
               content={content}
               featuredImage={featuredImage}
               featuredLinkDraft={featuredLinkDraft}
+              canPublish={canPublish}
+              canSaveDraft={canSaveDraft}
               uploading={uploading}
               onTitleChange={setTitle}
               onSummaryChange={setSummary}
@@ -356,7 +394,8 @@ export default function Admin() {
               onFeaturedLinkChange={handleFeaturedLinkChange}
               onFeaturedLinkApply={handleFeaturedLinkApply}
               onRemoveFeatured={clearFeaturedImage}
-              onSavePost={handleSavePost}
+              onSavePost={handleSavePublishedFromForm}
+              onSaveDraft={handleSaveDraftFromForm}
               onCancel={() => {
                 if (hasDraftChanges && !window.confirm("Descartar alteracoes do post?")) return;
                 resetForm();
@@ -364,6 +403,7 @@ export default function Admin() {
               quillRef={quillRef}
               quillModules={quillModules}
               quillFormats={quillFormats}
+              onAttachQuillTooltips={attachToolbarTooltips}
               mediaModal={mediaModal}
               onMediaClose={closeModal}
               onMediaSubmit={submitModal}
@@ -376,9 +416,24 @@ export default function Admin() {
           {!showForm && (
             <PostList
               posts={posts}
+              activeTab={activePostTab}
+              totals={postTotals}
+              isLoading={postsLoading || postStats.loading}
+              bulkActionType={bulkActionType}
+              selectedPostIds={selectedPostIds}
+              selectedPostsCount={selectedPostsCount}
+              allVisiblePostsSelected={allVisiblePostsSelected}
+              onTabChange={setActivePostTab}
               onNewPost={handleOpenNewPost}
+              onTogglePostSelection={togglePostSelection}
+              onToggleSelectAllPosts={toggleSelectAllPosts}
+              onClearSelectedPosts={clearSelectedPosts}
+              onPublishSelectedDrafts={handlePublishSelectedDrafts}
+              onDeleteSelectedPosts={handleDeleteSelectedPosts}
               onEdit={startEdit}
               onDelete={handleDelete}
+              onPublishDraft={handlePublishDraft}
+              publishingDraftId={publishingDraftId}
             />
           )}
         </section>

@@ -1,17 +1,21 @@
 import { useEffect, useRef, useState, Suspense, lazy } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 import "react-quill/dist/quill.snow.css";
+import { FaPaperPlane, FaRegSave, FaTimes } from "react-icons/fa";
 
 const ReactQuill = lazy(() => import("react-quill"));
 
 export default function PostForm({
   isEditing,
+  editingStatus,
   hideHeading = false,
   title,
   summary,
   content,
   featuredImage,
   featuredLinkDraft,
+  canPublish,
+  canSaveDraft,
   uploading,
   onTitleChange,
   onSummaryChange,
@@ -21,10 +25,12 @@ export default function PostForm({
   onFeaturedLinkApply,
   onRemoveFeatured,
   onSavePost,
+  onSaveDraft,
   onCancel,
   quillRef,
   quillModules,
   quillFormats,
+  onAttachQuillTooltips,
   mediaModal,
   onMediaClose,
   onMediaSubmit,
@@ -75,11 +81,27 @@ export default function PostForm({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [mediaModal?.open, onMediaClose, onMediaSubmit, uploading]);
 
+  useEffect(() => {
+    if (!onAttachQuillTooltips) return;
+
+    let attempts = 0;
+    const timer = window.setInterval(() => {
+      const applied = onAttachQuillTooltips();
+      attempts += 1;
+
+      if (applied || attempts >= 25) {
+        window.clearInterval(timer);
+      }
+    }, 120);
+
+    return () => window.clearInterval(timer);
+  }, [onAttachQuillTooltips]);
+
   return (
     <div className={`post-form${hideHeading ? " no-heading" : ""}`}>
       {!hideHeading && (
         <div className="post-form-header">
-          <h3>{isEditing ? "Editar post" : "Novo post"}</h3>
+          <h3>{isEditing ? (editingStatus === "draft" ? "Editar rascunho" : "Editar post") : "Novo post"}</h3>
           <p>Estruture o conteudo com clareza para manter o blog organizado e consistente.</p>
         </div>
       )}
@@ -158,7 +180,7 @@ export default function PostForm({
 
       <div className="post-form-block">
         <div className="post-block-header">
-          <label className="form-label" htmlFor="post-content">Texto do post</label>
+          <label className="form-label" htmlFor="post-content">Conteúdo do post</label>
           <span className="form-helper">Use o editor para formatacao, midias e botoes de CTA.</span>
         </div>
 
@@ -169,6 +191,7 @@ export default function PostForm({
             className={`quill-editor${isQuillStuck ? " is-stuck" : ""}`}
             ref={quillRef}
             theme="snow"
+            placeholder="Insira o texto aqui"
             value={content}
             onChange={onContentChange}
             modules={quillModules}
@@ -371,11 +394,24 @@ export default function PostForm({
           type="button"
           className="admin-btn primary"
           onClick={onSavePost}
-          disabled={uploading || (!isEditing && (!featuredImage?.trim() || !title?.trim() || !summary?.trim() || !content?.trim()))}
+          disabled={uploading || !canPublish}
         >
-          {isEditing ? "Salvar alteracoes" : "Publicar"}
+          <FaPaperPlane aria-hidden="true" />
+          {isEditing ? "Salvar e publicar" : "Publicar"}
         </button>
-        <button type="button" className="admin-btn cancel" onClick={onCancel}>Cancelar</button>
+        <button
+          type="button"
+          className="admin-btn draft"
+          onClick={onSaveDraft}
+          disabled={uploading || !canSaveDraft}
+        >
+          <FaRegSave aria-hidden="true" />
+          {isEditing && editingStatus === "draft" ? "Salvar rascunho" : "Salvar como rascunho"}
+        </button>
+        <button type="button" className="admin-btn cancel" onClick={onCancel}>
+          <FaTimes aria-hidden="true" />
+          Cancelar
+        </button>
       </div>
     </div>
   );
