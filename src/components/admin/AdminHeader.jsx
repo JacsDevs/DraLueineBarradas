@@ -13,8 +13,8 @@ export default function AdminHeader({ stats }) {
       <div className="admin-header-main">
         <div className="admin-intro">
           <span className="admin-chip">Painel administrativo</span>
-          <h1>Dashboard de Conteudo</h1>
-          <p>Gerencie publicacoes, acompanhe indicadores e mantenha seu perfil atualizado.</p>
+          <h1>Dashboard de Conteúdo</h1>
+          <p>Gerencie publicações, acompanhe indicadores e mantenha seu perfil atualizado.</p>
         </div>
       </div>
 

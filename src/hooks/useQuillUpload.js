@@ -72,7 +72,7 @@ function registerQuillFormats() {
 
   class Spacer extends BlockEmbed {
     static blotName = "spacer";
-    static tagName = "div";
+    static tagName = "p";
     static className = "quill-spacer";
   }
 

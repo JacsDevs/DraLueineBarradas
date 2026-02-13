@@ -161,14 +161,37 @@ export function usePosts({ user, setUploading }) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
 
+    const normalizeLegacySpacerDivs = () => {
+      const legacySpacers = Array.from(doc.querySelectorAll("div.quill-spacer"));
+      legacySpacers.forEach((legacySpacer) => {
+        const paragraphSpacer = doc.createElement("p");
+        paragraphSpacer.classList.add("quill-spacer");
+        const spacerContent = legacySpacer.innerHTML.trim();
+        paragraphSpacer.innerHTML = spacerContent || "<br>";
+        legacySpacer.replaceWith(paragraphSpacer);
+      });
+    };
+
     const removeEmptyParagraphs = () => {
       const paragraphs = Array.from(doc.querySelectorAll("p"));
       paragraphs.forEach((paragraph) => {
+        const isSpacerParagraph = paragraph.classList.contains("quill-spacer");
         const hasOnlyBreak = paragraph.innerHTML.trim() === "<br>";
         const hasNbsp = paragraph.innerHTML.includes("&nbsp;");
         const isEmpty = paragraph.textContent.trim() === "" && !paragraph.querySelector("img, video, iframe");
 
-        if ((hasOnlyBreak || isEmpty) && !hasNbsp) {
+        // Keep line breaks from Enter as explicit spacer paragraphs.
+        if (hasOnlyBreak) {
+          paragraph.classList.add("quill-spacer");
+          return;
+        }
+
+        if (isSpacerParagraph && isEmpty) {
+          if (!paragraph.innerHTML.trim()) paragraph.innerHTML = "<br>";
+          return;
+        }
+
+        if (isEmpty && !hasNbsp) {
           paragraph.remove();
         }
       });
@@ -182,6 +205,7 @@ export function usePosts({ user, setUploading }) {
         while (
           previous
           && previous.tagName === "P"
+          && !previous.classList.contains("quill-spacer")
           && previous.textContent.trim() === ""
           && !previous.querySelector("img, video, iframe")
         ) {
@@ -192,6 +216,7 @@ export function usePosts({ user, setUploading }) {
       });
     };
 
+    normalizeLegacySpacerDivs();
     removeEmptyParagraphs();
     removeEmptyBeforeHeadings();
 

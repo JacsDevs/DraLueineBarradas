@@ -141,23 +141,23 @@ export default function Admin() {
         icon: "posts",
         label: "Total de posts",
         value: String(totalPosts),
-        note: totalPosts ? "Conteudos publicados" : "Nenhum conteudo publicado"
+        note: totalPosts ? "Conteúdos publicados" : "Nenhum conteúdo publicado"
       },
       {
         icon: "drafts",
         label: "Rascunhos",
         value: String(draftsTotal),
-        note: draftsTotal ? "Conteudos em preparacao" : "Nenhum rascunho salvo"
+        note: draftsTotal ? "Conteúdos em preparação" : "Nenhum rascunho salvo"
       },
       {
         icon: "month",
-        label: "Publicados no mes",
+        label: "Publicados no mês",
         value: String(postsThisMonth),
         note: "Ritmo editorial atual"
       },
       {
         icon: "latest",
-        label: "Ultima publicacao",
+        label: "Última publicação",
         value: latestPost ? formatDate(latestPost.publishedAt || latestPost.date) : "--",
         note: latestPost?.title || "Publique para atualizar este indicador"
       }
@@ -170,11 +170,11 @@ export default function Admin() {
     ? (editingStatus === POST_STATUSES.DRAFT ? "Editar rascunho" : "Editar post")
     : "Novo post";
   const editorActionDescription = isEditing
-    ? "Revise o conteudo e atualize as informacoes antes de salvar."
-    : "Estruture o conteudo com clareza para manter o blog organizado e consistente.";
+    ? "Revise o conteúdo e atualize as informações antes de salvar."
+    : "Estruture o conteúdo com clareza para manter o blog organizado e consistente.";
 
   const handleOpenPostList = (tab = "published") => {
-    if (showForm && hasDraftChanges && !window.confirm("Descartar alteracoes do post?")) return;
+    if (showForm && hasDraftChanges && !window.confirm("Descartar alterações do post?")) return;
     resetForm();
     setActivePostTab(tab);
     setShowForm(false);
@@ -182,7 +182,7 @@ export default function Admin() {
   };
 
   const handleOpenNewPost = () => {
-    if (showForm && hasDraftChanges && !window.confirm("Descartar alteracoes do post?")) return;
+    if (showForm && hasDraftChanges && !window.confirm("Descartar alterações do post?")) return;
     resetForm();
     setShowForm(true);
     setIsSidebarOpen(false);
@@ -207,7 +207,7 @@ export default function Admin() {
   };
 
   const handleCancelProfileEdit = () => {
-    if (hasProfileChanged() && !window.confirm("Descartar alteracoes do perfil?")) return;
+    if (hasProfileChanged() && !window.confirm("Descartar alterações do perfil?")) return;
     setUserProfile(originalProfile);
     resetProfileEditState();
     setEditingProfile(false);
@@ -364,7 +364,7 @@ export default function Admin() {
             <header className="admin-editor-header">
               <span className="admin-chip">
                 <FaRegFileAlt aria-hidden="true" />
-                Area editorial
+                Área editorial
               </span>
               <h1>{editorActionTitle}</h1>
               <p>{editorActionDescription}</p>
@@ -396,7 +396,7 @@ export default function Admin() {
               onSavePost={handleSavePublishedFromForm}
               onSaveDraft={handleSaveDraftFromForm}
               onCancel={() => {
-                if (hasDraftChanges && !window.confirm("Descartar alteracoes do post?")) return;
+                if (hasDraftChanges && !window.confirm("Descartar alterações do post?")) return;
                 resetForm();
               }}
               quillRef={quillRef}

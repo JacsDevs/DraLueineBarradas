@@ -102,17 +102,17 @@ export default function PostForm({
       {!hideHeading && (
         <div className="post-form-header">
           <h3>{isEditing ? (editingStatus === "draft" ? "Editar rascunho" : "Editar post") : "Novo post"}</h3>
-          <p>Estruture o conteudo com clareza para manter o blog organizado e consistente.</p>
+          <p>Estruture o conteúdo com clareza para manter o blog organizado e consistente.</p>
         </div>
       )}
 
       <div className="post-form-block">
-        <label className="form-label" htmlFor="post-title">Titulo do post</label>
+        <label className="form-label" htmlFor="post-title">Título do post</label>
         <TextareaAutosize
           id="post-title"
           className="auto-textarea"
           value={title}
-          placeholder="Titulo"
+          placeholder="Título"
           onChange={(e) => onTitleChange(e.target.value)}
         />
 
@@ -181,7 +181,7 @@ export default function PostForm({
       <div className="post-form-block">
         <div className="post-block-header">
           <label className="form-label" htmlFor="post-content">Conteúdo do post</label>
-          <span className="form-helper">Use o editor para formatacao, midias e botoes de CTA.</span>
+          <span className="form-helper">Use o editor para formatação, mídias e botões de CTA.</span>
         </div>
 
         <div ref={quillStickySentinelRef} className="quill-sticky-sentinel" aria-hidden="true" />
@@ -199,7 +199,7 @@ export default function PostForm({
           />
         </Suspense>
 
-        {uploading && <p className="uploading-hint">Enviando midia...</p>}
+        {uploading && <p className="uploading-hint">Enviando mídia...</p>}
       </div>
 
       {mediaModal?.open && (
@@ -336,7 +336,7 @@ export default function PostForm({
             {mediaModal.type === "button" && (
               <>
                 <label className="quill-modal-field">
-                  Texto do botao
+                  Texto do botão
                   <input
                     type="text"
                     value={mediaModal.fields.buttonText}
@@ -348,7 +348,7 @@ export default function PostForm({
                   )}
                 </label>
                 <label className="quill-modal-field">
-                  Link do botao
+                  Link do botão
                   <input
                     type="url"
                     value={mediaModal.fields.buttonUrl}

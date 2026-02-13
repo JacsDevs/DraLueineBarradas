@@ -73,7 +73,7 @@ export default function PostList({
         <div className="posts-title-group">
           <h3>
             {isDraftTab ? <FaRegEdit aria-hidden="true" /> : <FaRegNewspaper aria-hidden="true" />}
-            {isDraftTab ? "Rascunhos" : "Conteudos publicados"}
+            {isDraftTab ? "Rascunhos" : "Conteúdos publicados"}
           </h3>
           <p>{totalItems} {itemLabel}</p>
         </div>
