@@ -51,7 +51,6 @@ export default function PostList({
   onNewPost,
   onTogglePostSelection,
   onToggleSelectAllPosts,
-  onClearSelectedPosts,
   onPublishSelectedDrafts,
   onDeleteSelectedPosts,
   onEdit,
@@ -144,14 +143,6 @@ export default function PostList({
             >
               <FaTrashAlt aria-hidden="true" />
               {isBulkDeleting ? "Excluindo..." : "Excluir selecionados"}
-            </button>
-            <button
-              type="button"
-              className="bulk-btn clear"
-              onClick={onClearSelectedPosts}
-              disabled={!selectedPostsCount || isBusy}
-            >
-              Limpar
             </button>
           </div>
         </div>

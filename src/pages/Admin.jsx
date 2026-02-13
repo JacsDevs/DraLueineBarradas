@@ -68,7 +68,6 @@ export default function Admin() {
     clearFeaturedImage,
     togglePostSelection,
     toggleSelectAllPosts,
-    clearSelectedPosts,
     handleFeaturedImageSelect,
     handleSavePost,
     handlePublishDraft,
@@ -427,7 +426,6 @@ export default function Admin() {
               onNewPost={handleOpenNewPost}
               onTogglePostSelection={togglePostSelection}
               onToggleSelectAllPosts={toggleSelectAllPosts}
-              onClearSelectedPosts={clearSelectedPosts}
               onPublishSelectedDrafts={handlePublishSelectedDrafts}
               onDeleteSelectedPosts={handleDeleteSelectedPosts}
               onEdit={startEdit}

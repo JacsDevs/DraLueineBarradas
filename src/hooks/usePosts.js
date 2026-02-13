@@ -289,10 +289,6 @@ export function usePosts({ user, setUploading }) {
     });
   }, [posts]);
 
-  const clearSelectedPosts = useCallback(() => {
-    setSelectedPostIds([]);
-  }, []);
-
   const resetForm = useCallback(() => {
     setIsEditing(null);
     setEditingStatus(POST_STATUSES.PUBLISHED);
@@ -623,7 +619,6 @@ export function usePosts({ user, setUploading }) {
     clearFeaturedImage,
     togglePostSelection,
     toggleSelectAllPosts,
-    clearSelectedPosts,
     handleFeaturedImageSelect,
     handleSavePost,
     handlePublishDraft,
