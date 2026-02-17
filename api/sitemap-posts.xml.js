@@ -1,4 +1,3 @@
-import { collection, getDocs } from "firebase-admin/firestore";
 import { getDb } from "./_lib/firebaseAdmin.js";
 
 const XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
@@ -117,7 +116,7 @@ export default async function handler(request, response) {
 
   try {
     const db = getDb();
-    const snapshot = await getDocs(collection(db, "posts"));
+    const snapshot = await db.collection("posts").get();
     const allPosts = snapshot.docs.map((docItem) => ({ id: docItem.id, ...docItem.data() }));
     const publishedPosts = allPosts
       .filter(isPublishedPost)
