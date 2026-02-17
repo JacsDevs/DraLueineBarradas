@@ -14,3 +14,26 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+## Sitemap dinamico na Vercel
+
+O sitemap principal fica em `public/sitemap.xml` e aponta para `https://dralueinebarradas.com.br/api/sitemap-posts.xml`.
+
+A rota `api/sitemap-posts.xml.js`:
+- consulta os posts no Firestore;
+- filtra apenas posts publicados (`status !== "draft"`);
+- gera XML com home + URLs de posts.
+
+### Variaveis de ambiente (Vercel)
+
+Configure no projeto da Vercel:
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_CLIENT_EMAIL`
+- `FIREBASE_PRIVATE_KEY` (cole a chave privada completa; `\n` sera convertido automaticamente)
+- `SITE_URL` (opcional, default: `https://dralueinebarradas.com.br`)
+
+### Atualizacao periodica
+
+`vercel.json` inclui um cron para chamar o sitemap dinamico a cada 6 horas:
+
+`0 */6 * * *  ->  /api/sitemap-posts.xml`
