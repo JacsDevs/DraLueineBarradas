@@ -34,6 +34,6 @@ Configure no projeto da Vercel:
 
 ### Atualizacao periodica
 
-`vercel.json` inclui um cron para chamar o sitemap dinamico a cada 6 horas:
+`vercel.json` inclui um cron para chamar o sitemap dinamico 1 vez por dia:
 
-`0 */6 * * *  ->  /api/sitemap-posts.xml`
+`0 5 * * *  ->  /api/sitemap-posts.xml`
