@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useRef, useMemo } from "react";
 import { serverTimestamp } from "firebase/firestore";
 import { uploadFileOptimized } from "../services/admin/uploads";
 import { slugify } from "../utils/slugify";
+import { sanitizeRichHtml } from "../utils/sanitizeHtml";
 import {
   fetchPosts as fetchPostsService,
   savePost as savePostService,
@@ -220,7 +221,7 @@ export function usePosts({ user, setUploading }) {
     removeEmptyParagraphs();
     removeEmptyBeforeHeadings();
 
-    return doc.body.innerHTML;
+    return sanitizeRichHtml(doc.body.innerHTML);
   }, []);
 
   const uploadEmbeddedMedia = useCallback(async (html) => {

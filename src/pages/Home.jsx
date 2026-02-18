@@ -176,7 +176,7 @@ export default function Home(){
             <div className="hero-actions">
               <div className="hero-location">
                 <PiMapPinAreaThin size={16} color="#FFF" />
-                <span>Atendimento em Bragança - PA</span>
+                <span>Atendimento em Bragança - Pará</span>
               </div>
               <div>
                 <WhatsAppButton

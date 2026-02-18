@@ -19,6 +19,7 @@ import "../styles/postdetail.css";
 import { Helmet } from "react-helmet-async";
 import { buildPostSlugId, extractIdFromSlugId } from "../utils/slugify";
 import { isDraftPost, isPublishedPost } from "../utils/postStatus";
+import { sanitizeRichHtml } from "../utils/sanitizeHtml";
 
 const buildSrcSet = (src) => (src ? `${src} 1x, ${src} 2x` : undefined);
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -346,8 +347,9 @@ export default function PostDetail() {
   const { contentHtml, tocItems } = useMemo(() => {
     if (!post?.content) return { contentHtml: "", tocItems: [] };
 
+    const safeContent = sanitizeRichHtml(post.content);
     const parser = new DOMParser();
-    const doc = parser.parseFromString(post.content, "text/html");
+    const doc = parser.parseFromString(safeContent, "text/html");
     const headings = Array.from(doc.querySelectorAll("h2, h3, h4"));
     const counts = new Map();
     const items = headings.map((heading) => {
@@ -365,7 +367,7 @@ export default function PostDetail() {
       };
     }).filter(Boolean);
 
-    return { contentHtml: doc.body.innerHTML, tocItems: items };
+    return { contentHtml: sanitizeRichHtml(doc.body.innerHTML), tocItems: items };
   }, [post]);
 
   const submitComment = useCallback(async (payload) => {
