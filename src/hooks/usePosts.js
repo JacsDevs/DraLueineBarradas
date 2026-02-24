@@ -143,6 +143,21 @@ export function usePosts({ user, setUploading }) {
     }
   }, []);
 
+  const isYoutubeEmbedUrl = useCallback((value) => {
+    try {
+      const parsed = new URL(value);
+      const host = parsed.hostname.replace(/^www\./, "");
+      const youtubeHosts = new Set(["youtube.com", "m.youtube.com", "youtube-nocookie.com"]);
+      return youtubeHosts.has(host) && parsed.pathname.includes("/embed/");
+    } catch {
+      return false;
+    }
+  }, []);
+
+  const isDirectVideoFileUrl = useCallback((value) => (
+    /^https?:\/\/.+\.(mp4|webm|ogg|mov|m4v)(\?.*)?(#.*)?$/i.test(value)
+  ), []);
+
   const dataUrlToBlob = useCallback((dataUrl) => {
     const [header, base64] = dataUrl.split(",");
     const mimeMatch = header.match(/data:(.*);base64/);
@@ -229,14 +244,33 @@ export function usePosts({ user, setUploading }) {
 
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
-    const mediaNodes = Array.from(doc.querySelectorAll("img, video"));
+    const mediaNodes = Array.from(doc.querySelectorAll("img, video, iframe"));
+
+    const buildVideoNode = (src) => {
+      const video = doc.createElement("video");
+      video.setAttribute("src", src);
+      video.setAttribute("controls", "true");
+      video.setAttribute("preload", "metadata");
+      video.setAttribute("playsinline", "true");
+      return video;
+    };
 
     for (let i = 0; i < mediaNodes.length; i += 1) {
       const node = mediaNodes[i];
+      const tagName = node.tagName.toLowerCase();
       const src = node.getAttribute("src");
-      if (!src || !src.startsWith("data:")) continue;
+      if (!src) continue;
 
-      const isImage = node.tagName.toLowerCase() === "img";
+      if (tagName === "iframe" && !src.startsWith("data:")) {
+        if (!isYoutubeEmbedUrl(src) && isDirectVideoFileUrl(src)) {
+          node.replaceWith(buildVideoNode(src));
+        }
+        continue;
+      }
+
+      if (!src.startsWith("data:")) continue;
+
+      const isImage = tagName === "img";
       const { blob, mime } = dataUrlToBlob(src);
       const extension = mime.split("/")[1] || "bin";
       const fileName = `${Date.now()}_${i}.${extension}`;
@@ -246,15 +280,36 @@ export function usePosts({ user, setUploading }) {
       const url = await uploadFileOptimized(file, path, {
         maxWidth: 1200,
         maxHeight: 1200,
-        maxSizeMB: 2,
         isImage
       });
 
-      node.setAttribute("src", url);
+      if (tagName === "iframe") {
+        node.replaceWith(buildVideoNode(url));
+      } else {
+        node.setAttribute("src", url);
+      }
     }
 
     return cleanEditorHtml(doc.body.innerHTML);
-  }, [cleanEditorHtml, dataUrlToBlob]);
+  }, [cleanEditorHtml, dataUrlToBlob, isDirectVideoFileUrl, isYoutubeEmbedUrl]);
+
+  const extractStorageMediaUrls = useCallback((html) => {
+    if (!html) return new Set();
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    const mediaNodes = Array.from(doc.querySelectorAll("img[src], video[src], source[src], iframe[src]"));
+    const urls = new Set();
+
+    mediaNodes.forEach((node) => {
+      const src = (node.getAttribute("src") || "").trim();
+      if (!src) return;
+      if (!/^https?:\/\//i.test(src) && !src.startsWith("gs://")) return;
+      urls.add(src);
+    });
+
+    return urls;
+  }, []);
 
   const handleFeaturedImageSelect = useCallback((event) => {
     const file = event.target.files[0];
@@ -372,40 +427,64 @@ export function usePosts({ user, setUploading }) {
       return;
     }
 
+    const existingPost = isEditing ? getCachedPostById(isEditing) : null;
+    const existingStatus = existingPost ? getPostStatus(existingPost) : editingStatus;
+
+    if (
+      nextStatus === POST_STATUSES.DRAFT
+      && isEditing
+      && existingStatus === POST_STATUSES.PUBLISHED
+      && !window.confirm("Salvar como rascunho vai remover este post da area publica. Deseja continuar?")
+    ) {
+      return;
+    }
+
     setUploading(true);
 
     try {
-      const existingPost = isEditing ? getCachedPostById(isEditing) : null;
       const previousFeaturedImage = existingPost?.featuredImage?.trim() || "";
+      const previousPublishedAt = existingPost?.publishedAt || existingPost?.date || null;
       let url = localFeaturedImage;
+      let featuredImageToDelete = "";
 
       if (featuredFile) {
-        if (previousFeaturedImage) {
-          try {
-            await deleteFeaturedImage(previousFeaturedImage);
-          } catch (error) {
-            console.warn(error?.message || error);
-          }
-        }
-
         url = await uploadFileOptimized(
           featuredFile,
           `blog/featured/${Date.now()}_${featuredFile.name}`,
-          { maxWidth: 1200, maxHeight: 800, maxSizeMB: 2, isImage: true }
+          { maxWidth: 1200, maxHeight: 800, isImage: true }
         );
-      }
 
-      if (isEditing && !featuredFile && !url && previousFeaturedImage) {
-        try {
-          await deleteFeaturedImage(previousFeaturedImage);
-        } catch (error) {
-          console.warn(error?.message || error);
+        if (previousFeaturedImage && previousFeaturedImage !== url) {
+          featuredImageToDelete = previousFeaturedImage;
         }
       }
 
+      if (isEditing && !featuredFile && !url && previousFeaturedImage) {
+        featuredImageToDelete = previousFeaturedImage;
+      }
+
+      if (isEditing && !featuredFile && url && previousFeaturedImage && previousFeaturedImage !== url) {
+        featuredImageToDelete = previousFeaturedImage;
+      }
+
       const updatedContent = await uploadEmbeddedMedia(content);
+      const previousEmbeddedMediaUrls = isEditing
+        ? extractStorageMediaUrls(existingPost?.content || "")
+        : new Set();
+      const currentEmbeddedMediaUrls = extractStorageMediaUrls(updatedContent || "");
+      const removedEmbeddedMediaUrls = Array.from(previousEmbeddedMediaUrls).filter((mediaUrl) => (
+        !currentEmbeddedMediaUrls.has(mediaUrl) && mediaUrl !== (url || "")
+      ));
+
       const willPublish = nextStatus === POST_STATUSES.PUBLISHED;
-      const publishTimestamp = willPublish ? serverTimestamp() : null;
+      const shouldKeepPublishDate = Boolean(
+        isEditing
+        && existingStatus === POST_STATUSES.PUBLISHED
+        && previousPublishedAt
+      );
+      const publishTimestamp = willPublish
+        ? (shouldKeepPublishDate ? previousPublishedAt : serverTimestamp())
+        : null;
       const data = {
         title: localTitle,
         summary: localSummary,
@@ -425,6 +504,22 @@ export function usePosts({ user, setUploading }) {
 
       await savePostService({ isEditingId: isEditing, data });
 
+      if (featuredImageToDelete) {
+        try {
+          await deleteFeaturedImage(featuredImageToDelete);
+        } catch (error) {
+          console.warn(error?.message || error);
+        }
+      }
+
+      for (const mediaUrl of removedEmbeddedMediaUrls) {
+        try {
+          await deleteFeaturedImage(mediaUrl);
+        } catch (error) {
+          console.warn(error?.message || error);
+        }
+      }
+
       resetForm();
       await refreshPostsAfterMutation(willPublish ? POST_TABS.PUBLISHED : POST_TABS.DRAFTS);
     } catch (error) {
@@ -442,9 +537,11 @@ export function usePosts({ user, setUploading }) {
     featuredImage,
     featuredFile,
     isEditing,
+    editingStatus,
     isValidImageUrl,
     setUploading,
     uploadEmbeddedMedia,
+    extractStorageMediaUrls,
     resetForm,
     getCachedPostById,
     refreshPostsAfterMutation

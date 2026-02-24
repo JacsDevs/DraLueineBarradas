@@ -2,8 +2,6 @@ import { useMemo, useRef, useCallback, useState } from "react";
 import { Quill } from "react-quill";
 
 let quillFormatsRegistered = false;
-const MAX_IMAGE_FILE_SIZE = 5 * 1024 * 1024;
-const MAX_VIDEO_FILE_SIZE = 25 * 1024 * 1024;
 const DEFAULT_BUTTON_URL = "https://wa.me/5591985807373?text=Ol%C3%A1%20Dra.%20Lueine%2C%20gostaria%20de%20agendar%20uma%20consulta.";
 
 function registerQuillFormats() {
@@ -76,6 +74,28 @@ function registerQuillFormats() {
     static className = "quill-spacer";
   }
 
+  class FileVideo extends BlockEmbed {
+    static blotName = "fileVideo";
+    static tagName = "video";
+    static className = "quill-video-file";
+
+    static create(value) {
+      const node = super.create();
+      const src = typeof value === "string" ? value : value?.src || "";
+      node.setAttribute("src", src);
+      node.setAttribute("controls", "true");
+      node.setAttribute("preload", "metadata");
+      node.setAttribute("playsinline", "true");
+      return node;
+    }
+
+    static value(node) {
+      return {
+        src: node.getAttribute("src") || ""
+      };
+    }
+  }
+
   icons.button =
     "<svg viewBox=\"0 0 448 512\" width=\"18\" height=\"18\" aria-hidden=\"true\">" +
     "<path d=\"M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zM48 80h352v352H48V80zm256 160h-56v-56c0-4.4-3.6-8-8-8h-32c-4.4 0-8 3.6-8 8v56h-56c-4.4 0-8 3.6-8 8v32c0 4.4 3.6 8 8 8h56v56c0 4.4 3.6 8 8 8h32c4.4 0 8-3.6 8-8v-56h56c4.4 0 8-3.6 8-8v-32c0-4.4-3.6-8-8-8z\" fill=\"currentColor\"/>" +
@@ -89,6 +109,7 @@ function registerQuillFormats() {
   Quill.register(ButtonLink);
   Quill.register(FigureImage);
   Quill.register(Spacer);
+  Quill.register(FileVideo);
   quillFormatsRegistered = true;
 }
 
@@ -158,43 +179,40 @@ const validateMediaFile = (file, type) => {
     if (!file.type.startsWith("image/")) {
       return "Arquivo invalido. Use um formato de imagem.";
     }
-    if (file.size > MAX_IMAGE_FILE_SIZE) {
-      return "A imagem deve ter no maximo 5MB.";
-    }
   }
 
   if (type === "video") {
     if (!file.type.startsWith("video/")) {
       return "Arquivo invalido. Use um formato de video.";
     }
-    if (file.size > MAX_VIDEO_FILE_SIZE) {
-      return "O video deve ter no maximo 25MB.";
-    }
   }
 
   return "";
 };
 
-const normalizeYoutubeUrl = (rawUrl) => {
+const normalizeVideoUrl = (rawUrl) => {
   const normalizedUrl = normalizeExternalUrl(rawUrl);
-  if (!normalizedUrl) return "";
+  if (!normalizedUrl) return { kind: "", url: "" };
 
   try {
     const url = new URL(normalizedUrl);
     const host = url.hostname.replace("www.", "");
     if (host === "youtube.com" || host === "m.youtube.com") {
       const id = url.searchParams.get("v");
-      if (id) return `https://www.youtube.com/embed/${id}`;
+      if (id) return { kind: "youtube", url: `https://www.youtube.com/embed/${id}` };
     }
     if (host === "youtu.be") {
       const id = url.pathname.replace("/", "");
-      if (id) return `https://www.youtube.com/embed/${id}`;
+      if (id) return { kind: "youtube", url: `https://www.youtube.com/embed/${id}` };
     }
-    if (normalizedUrl.includes("/embed/")) return normalizedUrl;
+    if ((host === "youtube.com" || host === "m.youtube.com" || host === "youtube-nocookie.com")
+      && normalizedUrl.includes("/embed/")) {
+      return { kind: "youtube", url: normalizedUrl };
+    }
   } catch {
-    return "";
+    return { kind: "", url: "" };
   }
-  return normalizedUrl;
+  return { kind: "file", url: normalizedUrl };
 };
 
 const setTooltipLabel = (element, label) => {
@@ -358,7 +376,7 @@ export function useQuillUpload({ setUploading }) {
       if (mediaModal.sourceType === "url") {
         if (!rawUrl) {
           errors.url = "Informe a URL do video.";
-        } else if (!normalizeYoutubeUrl(rawUrl)) {
+        } else if (!normalizeVideoUrl(rawUrl).url) {
           errors.url = "Use uma URL valida iniciando com http:// ou https://.";
         }
       } else {
@@ -407,12 +425,17 @@ export function useQuillUpload({ setUploading }) {
         const index = getSafeInsertIndex(quill);
 
         if (mediaModal.sourceType === "url") {
-          const videoUrl = normalizeYoutubeUrl(mediaModal.fields.url);
-          if (!videoUrl) throw new Error("invalid-video-url");
-          quill.insertEmbed(index, "video", videoUrl);
+          const normalizedVideo = normalizeVideoUrl(mediaModal.fields.url);
+          if (!normalizedVideo.url) throw new Error("invalid-video-url");
+
+          if (normalizedVideo.kind === "youtube") {
+            quill.insertEmbed(index, "video", normalizedVideo.url);
+          } else {
+            quill.insertEmbed(index, "fileVideo", { src: normalizedVideo.url });
+          }
         } else {
           const dataUrl = await readFileAsDataUrl(mediaModal.fields.file);
-          quill.insertEmbed(index, "video", dataUrl);
+          quill.insertEmbed(index, "fileVideo", { src: dataUrl });
         }
         quill.setSelection(index + 1);
       }
@@ -494,6 +517,7 @@ export function useQuillUpload({ setUploading }) {
     "image",
     "figureImage",
     "video",
+    "fileVideo",
     "spacer"
   ];
 

@@ -2,9 +2,8 @@ import { storage } from "../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 export async function uploadFileOptimized(file, path, options = {}) {
-  const { maxWidth = 1200, maxHeight = 1200, maxSizeMB = 2, isImage = true } = options;
+  const { maxWidth = 1200, maxHeight = 1200, isImage = true } = options;
   if (!file) throw new Error("Nenhum arquivo selecionado");
-  if (file.size > maxSizeMB * 1024 * 1024) throw new Error(`Arquivo maior que ${maxSizeMB}MB`);
 
   let uploadFile = file;
   if (isImage) uploadFile = await convertImageToWebP(file, maxWidth, maxHeight);
@@ -42,10 +41,21 @@ export function convertImageToWebP(file, width, height) {
       const ctx = canvas.getContext("2d");
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       canvas.toBlob(
-        (blob) => resolve(new File([blob], file.name.split(".")[0] + ".webp", { type: "image/webp" })),
+        (blob) => {
+          if (!blob) {
+            resolve(file);
+            return;
+          }
+
+          resolve(new File([blob], `${file.name.split(".")[0]}.webp`, { type: "image/webp" }));
+        },
         "image/webp",
         0.8
       );
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      resolve(file);
     };
   });
 }

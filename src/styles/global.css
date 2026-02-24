@@ -36,14 +36,14 @@ h2 {
 }
 
 h1,h2,h3{
-  color:var(--primary);
+  color:var(--secondary);
 }
 
 p {
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.6;
   margin-bottom: 18px;
-  color: #222;
+  color: #444;
 }
 
 .label {
@@ -541,6 +541,7 @@ button:focus-visible {
   flex-direction: row;
   gap: 60px;
   align-items: center;
+  margin-bottom: 30px;
 }
 
 /* IMAGEM */
@@ -578,8 +579,8 @@ button:focus-visible {
 }
 
 .procedure-list li {
-  font-size: 15px;
-  color: #333;
+  font-size: 14px;
+  color: #444;
   margin-bottom: 14px;
   padding-left: 30px;
   position: relative;
@@ -628,12 +629,16 @@ button:focus-visible {
 }
 
 /* SOBRE MIM */
+.about .section-header {
+  text-align: center;
+}
+
 .about-container {
   max-width: 1200px;
   margin: auto;
   display: grid;
   grid-template-columns: 1fr 1.1fr;
-  gap: 80px;
+  gap: 60px;
   align-items: center;
 }
 
@@ -680,7 +685,7 @@ button:focus-visible {
   border-radius: 999px;
   border: 1px solid rgba(0,0,0,.25);
   font-size: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .about-content p {
@@ -689,7 +694,7 @@ button:focus-visible {
 
 /* BOTÃO */
 .about-button {
-  margin-top: 28px;
+  margin-top: 40px;
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -700,6 +705,12 @@ button:focus-visible {
   text-decoration: none;
   font-weight: 600;
   transition: .3s;
+}
+
+.about .about-button {
+  width: fit-content;
+  margin-inline: auto;
+  display: flex;
 }
 
 .about-button:hover {

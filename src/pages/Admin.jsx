@@ -7,6 +7,7 @@ import PostForm from "../components/admin/PostForm";
 import PostList from "../components/admin/PostList";
 import { useAuthProfile } from "../hooks/useAuthProfile";
 import { usePosts } from "../hooks/usePosts";
+import { usePostComments } from "../hooks/usePostComments";
 import { useQuillUpload } from "../hooks/useQuillUpload";
 import { POST_STATUSES, timestampToMillis } from "../utils/postStatus";
 import {
@@ -77,6 +78,29 @@ export default function Admin() {
     startEdit,
     resetForm
   } = usePosts({ user, setUploading });
+
+  const {
+    activeCommentsPostId,
+    comments,
+    commentsTotal,
+    commentsLoading,
+    commentsError,
+    replyParentId,
+    replyMessage,
+    submittingReply,
+    deletingCommentId,
+    setReplyMessage,
+    toggleCommentsForPost,
+    closeComments,
+    startReply,
+    cancelReply,
+    submitReply,
+    deleteComment
+  } = usePostComments({
+    user,
+    posts,
+    adminDisplayName: userProfile.displayName
+  });
 
   const {
     quillRef,
@@ -184,8 +208,14 @@ export default function Admin() {
   const handleOpenNewPost = () => {
     if (showForm && hasDraftChanges && !window.confirm("Descartar alterações do post?")) return;
     resetForm();
+    closeComments();
     setShowForm(true);
     setIsSidebarOpen(false);
+  };
+
+  const handleEditPost = (post) => {
+    closeComments();
+    startEdit(post);
   };
 
   const handleSavePublishedFromForm = async () => {
@@ -428,10 +458,25 @@ export default function Admin() {
               onToggleSelectAllPosts={toggleSelectAllPosts}
               onPublishSelectedDrafts={handlePublishSelectedDrafts}
               onDeleteSelectedPosts={handleDeleteSelectedPosts}
-              onEdit={startEdit}
+              onEdit={handleEditPost}
               onDelete={handleDelete}
               onPublishDraft={handlePublishDraft}
               publishingDraftId={publishingDraftId}
+              activeCommentsPostId={activeCommentsPostId}
+              comments={comments}
+              commentsTotal={commentsTotal}
+              commentsLoading={commentsLoading}
+              commentsError={commentsError}
+              replyParentId={replyParentId}
+              replyMessage={replyMessage}
+              submittingReply={submittingReply}
+              deletingCommentId={deletingCommentId}
+              onToggleComments={toggleCommentsForPost}
+              onStartReply={startReply}
+              onCancelReply={cancelReply}
+              onReplyMessageChange={setReplyMessage}
+              onSubmitReply={submitReply}
+              onDeleteComment={deleteComment}
             />
           )}
         </section>

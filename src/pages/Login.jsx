@@ -13,7 +13,8 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  async function handleLogin() {
+  async function handleLogin(event) {
+    event?.preventDefault();
     if (loading) return;
 
     try {
@@ -47,7 +48,7 @@ export default function Login() {
 
   return (
     <div className="admin-login-wrapper">
-      <div className="admin-login-card">
+      <form className="admin-login-card" onSubmit={handleLogin}>
         <span className="label">ÁREA ADMINISTRATIVA</span>
         <h3>Acesso Restrito</h3>
 
@@ -75,11 +76,7 @@ export default function Login() {
           </button>
         </div>
 
-        <button
-          className="btn admin-btn"
-          onClick={handleLogin}
-          disabled={loading}
-        >
+        <button className="btn admin-btn" type="submit" disabled={loading}>
           {loading ? <span className="loader"></span> : "Entrar"}
         </button>
 
@@ -91,7 +88,7 @@ export default function Login() {
         >
           {resetLoading ? "Enviando..." : "Esqueci minha senha"}
         </button>
-      </div>
+      </form>
     </div>
   );
 }

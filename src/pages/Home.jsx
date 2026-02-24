@@ -176,7 +176,7 @@ export default function Home(){
             <div className="hero-actions">
               <div className="hero-location">
                 <PiMapPinAreaThin size={16} color="#FFF" />
-                <span>Atendimento em Bragança - Pará</span>
+                <span>Atendimento em Bragança - PA</span>
               </div>
               <div>
                 <WhatsAppButton
@@ -522,6 +522,13 @@ export default function Home(){
       </section>
 
       <section id="sobre" className="about">
+        <header className="section-header">
+          <span className="label">SOBRE MIM</span>
+          <h2>Conheça a Dra. Lueine Barradas</h2>
+          <div className="about-crm">
+            CRM PA 18364
+          </div>
+        </header>
         <div className="about-container">
 
           {/* IMAGEM */}
@@ -539,15 +546,6 @@ export default function Home(){
           {/* TEXTO */}
           <div className="about-content">
 
-            <header className="section-header">
-              <span className="label">SOBRE MIM</span>
-              <h2>Conheça a <br /> Dra. Lueine Barradas</h2>
-            </header>
-
-            <div className="about-crm">
-              CRM PA 18364
-            </div>
-
             <div className="about-image-mobile">
               <img
                 src={DraLueine}
@@ -560,27 +558,33 @@ export default function Home(){
             </div>
 
             <p>
-              Médica formada pela Universidade do Vale do Itajaí (UNIVALI), com atuação em Medicina de Família e Comunidade e foco em medicina preventiva e cuidado integral à saúde.
+              Sou médica formada pela Universidade do Vale do Itajaí (UNIVALI), com atuação em cardiologia clínica, dedicada ao cuidado cardiovascular, à medicina preventiva e ao acompanhamento integral da saúde ao longo do tempo.
             </p>
 
             <p>
-              Atua em Bragança - Pará, acompanhando pacientes de forma individualizada, com um olhar atento não apenas para a doença, mas para a pessoa como um todo.
+              Atendo em Bragança, no Pará, acompanhando pacientes de forma individualizada, com foco na prevenção e no controle de doenças cardiovasculares, como hipertensão, dislipidemias e outros fatores de risco que impactam diretamente a qualidade e a expectativa de vida.
             </p>
 
             <p>
-              Acredita que cuidar da saúde vai além de tratar sintomas. Por isso, mantém atualização contínua e atualmente realiza pós-graduação em Cardiologia e Imunização Humana, integrando prevenção, diagnóstico e acompanhamento ao longo do tempo.
+              Meu trabalho em cardiologia vai além da prescrição de medicamentos ou da análise isolada de exames. A consulta é estruturada para compreender o paciente como um todo — hábitos de vida, rotina, estresse, sono, alimentação, contexto emocional e histórico clínico — entendendo que o coração responde diretamente a tudo isso.
             </p>
 
             <p>
-              Seu trabalho é baseado na escuta qualificada, na construção de vínculo e na elaboração de planos de cuidado que façam sentido para a realidade de cada paciente.
+              Atualmente realizo pós-graduação em Cardiologia e Imunização Humana, integrando avaliação criteriosa, interpretação adequada de exames, acompanhamento contínuo e estratégias de prevenção, com base em evidências e condutas seguras.
             </p>
-            <WhatsAppButton
-              className="about-button"
-            />
+            
+            <p>
+              Acredito que o cuidado cardiológico eficaz é construído com escuta, vínculo e acompanhamento próximo. Por isso, ofereço um atendimento claro, humano e comprometido com resultados reais, ajudando meus pacientes a reduzir riscos, prevenir complicações e viver com mais saúde e tranquilidade.
+            </p>
 
+            <p>
+              Se você busca um cuidado cardiológico atento, responsável e personalizado, será um prazer caminhar ao seu lado.
+            </p>
           </div>
-
         </div>
+        <WhatsAppButton
+          className="about-button"
+        />
       </section>
 
       <TestimonialsSection/>
