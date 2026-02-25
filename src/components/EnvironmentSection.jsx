@@ -44,16 +44,21 @@ export default function EnvironmentSection() {
 
         {/* IMAGEM COM SETAS */}
         <div className="env-image-main">
-          <img
-            src={images[currentIndex]}
-            alt="Ambiente do consultório"
-          />
+          {images.map((image, index) => (
+            <img
+              key={image}
+              src={image}
+              alt="Ambiente do consultorio"
+              className={`env-slide ${index === currentIndex ? "is-active" : ""}`}
+              aria-hidden={index !== currentIndex}
+            />
+          ))}
 
-          <button className="arrow left" onClick={prevImage}>
+          <button type="button" className="arrow left" onClick={prevImage}>
             <IoChevronBack />
           </button>
 
-          <button className="arrow right" onClick={nextImage}>
+          <button type="button" className="arrow right" onClick={nextImage}>
             <IoChevronForward />
           </button>
         </div>
@@ -62,3 +67,4 @@ export default function EnvironmentSection() {
     </section>
   );
 }
+

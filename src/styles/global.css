@@ -30,6 +30,27 @@ section{
   margin:auto;
 }
 
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
 h2 {
   font-size: 36px;
   margin: 20px 0;
@@ -58,6 +79,7 @@ p {
   min-width: 100%;
   padding: 0;
   position: relative;
+  overflow: hidden;
   background: linear-gradient(
       to right,
       rgba(0,0,0,.8),
@@ -79,7 +101,27 @@ p {
   align-items: center;
   position: relative;
   z-index: 2;
-  overflow-x: hidden;
+  overflow: hidden;
+}
+
+.hero-text,
+.hero-image,
+.hero-card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: hero-reveal 0.75s ease-out forwards;
+}
+
+.hero-text {
+  animation-delay: 0.1s;
+}
+
+.hero-image {
+  animation-delay: 0.25s;
+}
+
+.hero-card {
+  animation-delay: 0.4s;
 }
 
 /* TEXTO */
@@ -214,6 +256,27 @@ p {
 @keyframes bounce {
   0%,100% { transform: translate(-50%, 0); }
   50% { transform: translate(-50%, 8px); }
+}
+
+@keyframes hero-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-text,
+  .hero-image,
+  .hero-card {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
 }
 
 /* RESPONSIVO */
@@ -692,6 +755,15 @@ button:focus-visible {
   max-width: 520px;
 }
 
+.about-space {
+  margin-bottom: 0;
+}
+
+.about-keyword {
+  font-weight: 600;
+  color: var(--secondary);
+}
+
 /* BOTÃO */
 .about-button {
   margin-top: 40px;
@@ -755,16 +827,29 @@ button:focus-visible {
 /* Imagens */
 .env-image-main {
   position: relative;
+  height: 400px;
   border-radius: 24px;
+  overflow: hidden;
 }
 
-.env-image-main img {
+.env-image-main .env-slide {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: 400px;
+  height: 100%;
   object-fit: cover;
   border-radius: 24px;
-  display: block;
   box-shadow: 0 10px 30px rgba(0,0,0,.12);
+  opacity: 0;
+  transform: scale(1.02);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  pointer-events: none;
+}
+
+.env-image-main .env-slide.is-active {
+  opacity: 1;
+  transform: scale(1);
+  z-index: 1;
 }
 
 /* Bloco Inferior Direito */
@@ -775,30 +860,12 @@ button:focus-visible {
   margin-bottom: 30px;
 }
 
-
-
-
-
-.env-image-main {
-  position: relative;
-  border-radius: 24px;
-  overflow: hidden;
-}
-
-.env-image-main img {
-  width: 100%;
-  height: 400px;
-  object-fit: cover;
-  border-radius: 24px;
-  display: block;
-  box-shadow: 0 10px 30px rgba(0,0,0,.12);
-}
-
 /* SETAS */
 .env-image-main .arrow {
   color: #fff;
   position: absolute;
   top: 50%;
+  z-index: 2;
   transform: translateY(-50%);
   background: var(--secondary);
   border: none;

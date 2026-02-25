@@ -6,25 +6,11 @@ export default function TestimonialsSection() {
   const fallbackTestimonials = [
     {
       id: 1,
-      name: "Paciente XXX",
+      name: "Giovani Farias",
       text:
-        "Atendimento extremamente atencioso e humanizado. Me senti acolhida desde o inÃ­cio da consulta.",
+        "Estou em um processo de emagrecimento com a Dra. Lueine. Estamos indo bem, já se foram 7 quilos em 40 dias.",
       rating: 5,
-    },
-    {
-      id: 2,
-      name: "Paciente XXX",
-      text:
-        "Profissional excelente, muito cuidadosa e detalhista. A consulta foi completa e me trouxe muita seguranÃ§a.",
-      rating: 5,
-    },
-    {
-      id: 3,
-      name: "Paciente XXX",
-      text:
-        "Atendimento diferenciado, com foco na prevenÃ§Ã£o e no cuidado individual. Recomendo com total confianÃ§a.",
-      rating: 5,
-    },
+    }
   ]
 
   const apiKey = import.meta.env.VITE_GOOGLE_API_KEY

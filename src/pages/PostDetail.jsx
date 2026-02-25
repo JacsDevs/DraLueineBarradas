@@ -230,6 +230,8 @@ function ShareButtons({
 export default function PostDetail() {
   const { slugId } = useParams();
   const [post, setPost] = useState(null);
+  const [postLoading, setPostLoading] = useState(true);
+  const [postNotFound, setPostNotFound] = useState(false);
   const [author, setAuthor] = useState({ displayName: "", photoURL: "" });
   const [relatedPosts, setRelatedPosts] = useState([]);
   const [comments, setComments] = useState([]);
@@ -239,38 +241,53 @@ export default function PostDetail() {
 
   useEffect(() => {
     async function load() {
-      const id = extractIdFromSlugId(slugId);
-      if (!id) {
-        setPost(null);
-        return;
-      }
+      setPostLoading(true);
+      setPostNotFound(false);
 
-      const postRef = doc(db, "posts", id);
-      const postSnap = await getDoc(postRef);
-      if (!postSnap.exists()) {
-        setPost(null);
-        return;
-      }
+      try {
+        const id = extractIdFromSlugId(slugId);
+        if (!id) {
+          setPost(null);
+          setPostNotFound(true);
+          return;
+        }
 
-      const postData = postSnap.data();
-      if (isDraftPost(postData)) {
-        setPost(null);
-        return;
-      }
+        const postRef = doc(db, "posts", id);
+        const postSnap = await getDoc(postRef);
+        if (!postSnap.exists()) {
+          setPost(null);
+          setPostNotFound(true);
+          return;
+        }
 
-      setPost({ id, ...postData });
-      setAuthor({ displayName: "", photoURL: "" });
+        const postData = postSnap.data();
+        if (isDraftPost(postData)) {
+          setPost(null);
+          setPostNotFound(true);
+          return;
+        }
 
-      if (postData.authorId) {
+        setPost({ id, ...postData });
+        setPostNotFound(false);
+        setAuthor({ displayName: "", photoURL: "" });
+
+        if (!postData.authorId) return;
+
         const userRef = doc(db, "users", postData.authorId);
         const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
-          const userData = userSnap.data() || {};
-          setAuthor({
-            displayName: userData.displayName || "",
-            photoURL: userData.photoURL || ""
-          });
-        }
+        if (!userSnap.exists()) return;
+
+        const userData = userSnap.data() || {};
+        setAuthor({
+          displayName: userData.displayName || "",
+          photoURL: userData.photoURL || ""
+        });
+      } catch (error) {
+        console.error(error);
+        setPost(null);
+        setPostNotFound(true);
+      } finally {
+        setPostLoading(false);
       }
     }
 
@@ -394,7 +411,7 @@ export default function PostDetail() {
     [comments]
   );
 
-  if (!post) {
+  if (postLoading) {
     return (
       <>
         <div className="skeleton skeleton-img" />
@@ -405,6 +422,16 @@ export default function PostDetail() {
           <div className="skeleton skeleton-text" style={{ width: "60%" }} />
         </section>
       </>
+    );
+  }
+
+  if (postNotFound || !post) {
+    return (
+      <section className="post-detail">
+        <h1>Post não encontrado</h1>
+        <p>Este conteúdo não está disponível no momento.</p>
+        <Link to="/">Voltar para a página inicial</Link>
+      </section>
     );
   }
 
@@ -540,7 +567,7 @@ export default function PostDetail() {
           )}
           <div
             className="content"
-            dangerouslySetInnerHTML={{ __html: contentHtml || post.content }}
+            dangerouslySetInnerHTML={{ __html: contentHtml }}
           />
 
           <section className="comments-section" aria-labelledby="comments-title">

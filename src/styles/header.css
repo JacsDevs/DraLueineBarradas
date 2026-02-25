@@ -3,15 +3,23 @@
   top: 0;
   width: 100%;
   z-index: 1000;
+}
 
+.header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-
   background: rgba(0, 0, 0, 0.3);
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .nav {
+  position: relative;
+  z-index: 1;
   max-width: 1200px;
   margin: 0 auto;
   padding: 16px 0px;
@@ -68,19 +76,49 @@
 /* HAMBURGER */
 .hamburger {
   display: none;
-  flex-direction: column;
-  gap: 5px;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  position: relative;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 10px;
+  padding: 0;
 }
 
 .hamburger span {
+  position: absolute;
   width: 26px;
   height: 2px;
+  border-radius: 999px;
   background: #FFF;
-  transition: 0.3s;
+  transition: transform 0.3s ease, opacity 0.25s ease;
+}
+
+.hamburger span:nth-child(1) {
+  transform: translateY(-7px);
+}
+
+.hamburger span:nth-child(2) {
+  transform: translateY(0);
+}
+
+.hamburger span:nth-child(3) {
+  transform: translateY(7px);
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: translateY(0) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: translateY(0) rotate(-45deg);
 }
 
 .hamburger:focus-visible {
@@ -99,8 +137,10 @@
     top: 100%;
     right: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.3);
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
 
     flex-direction: column;
     align-items: center;

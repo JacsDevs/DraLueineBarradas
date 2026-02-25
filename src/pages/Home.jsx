@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import FAQSection from "../components/FAQSection";
 import avaliacaomedica1 from "../assets/avaliacao-medica-1.webp"
 import avaliacaomedica2 from "../assets/avaliacao-medica-2.webp"
@@ -33,6 +33,49 @@ export default function Home(){
         });
       }
     }
+  }, []);
+
+  useLayoutEffect(() => {
+    const sections = Array.from(
+      document.querySelectorAll("main > section:not(.hero)")
+    );
+
+    if (!sections.length) {
+      return;
+    }
+
+    sections.forEach((section, index) => {
+      section.classList.add("scroll-reveal");
+      section.style.setProperty("--reveal-delay", `${Math.min(index * 60, 240)}ms`);
+    });
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    if (prefersReducedMotion || !("IntersectionObserver" in window)) {
+      sections.forEach((section) => section.classList.add("is-visible"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries, currentObserver) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            currentObserver.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.18,
+        rootMargin: "0px 0px -8% 0px",
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    return () => observer.disconnect();
   }, []);
 
   return(
@@ -558,11 +601,11 @@ export default function Home(){
             </div>
 
             <p>
-              Sou médica formada pela Universidade do Vale do Itajaí (UNIVALI), com atuação em cardiologia clínica, dedicada ao cuidado cardiovascular, à medicina preventiva e ao acompanhamento integral da saúde ao longo do tempo.
+              Sou médica formada pela Universidade do Vale do Itajaí (UNIVALI), com atuação em <span className="about-keyword">cardiologia clínica</span>, dedicada ao <span className="about-keyword">cuidado cardiovascular</span>, à <span className="about-keyword">medicina preventiva</span> e ao <span className="about-keyword">acompanhamento integral</span> da saúde ao longo do tempo.
             </p>
 
             <p>
-              Atendo em Bragança, no Pará, acompanhando pacientes de forma individualizada, com foco na prevenção e no controle de doenças cardiovasculares, como hipertensão, dislipidemias e outros fatores de risco que impactam diretamente a qualidade e a expectativa de vida.
+              Atendo em Bragança, no Pará, acompanhando pacientes de <span className="about-keyword">forma individualizada</span>, com foco na prevenção e no controle de doenças cardiovasculares, como hipertensão, dislipidemias e outros fatores de risco que impactam diretamente a qualidade e a expectativa de vida.
             </p>
 
             <p>
@@ -574,11 +617,11 @@ export default function Home(){
             </p>
             
             <p>
-              Acredito que o cuidado cardiológico eficaz é construído com escuta, vínculo e acompanhamento próximo. Por isso, ofereço um atendimento claro, humano e comprometido com resultados reais, ajudando meus pacientes a reduzir riscos, prevenir complicações e viver com mais saúde e tranquilidade.
+              Acredito que o cuidado cardiológico eficaz é construído com escuta, vínculo e acompanhamento próximo. Por isso, ofereço um <span className="about-keyword">atendimento claro</span>, <span className="about-keyword">humano e comprometido</span> com resultados reais, ajudando meus pacientes a reduzir riscos, prevenir complicações e viver com mais saúde e tranquilidade.
             </p>
 
-            <p>
-              Se você busca um cuidado cardiológico atento, responsável e personalizado, será um prazer caminhar ao seu lado.
+            <p className="about-space">
+              Se você busca um <span className="about-keyword">cuidado cardiológico</span> atento, responsável e personalizado, será um prazer caminhar ao seu lado.
             </p>
           </div>
         </div>
