@@ -49,6 +49,16 @@ export default function Home(){
       section.style.setProperty("--reveal-delay", `${Math.min(index * 60, 240)}ms`);
     });
 
+    const revealIfInView = () => {
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top < viewportHeight * 0.92) {
+          section.classList.add("is-visible");
+        }
+      });
+    };
+
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
@@ -72,6 +82,9 @@ export default function Home(){
         rootMargin: "0px 0px -8% 0px",
       }
     );
+
+    // Evita tela em branco em mobile: revela o que já está no viewport no load
+    revealIfInView();
 
     sections.forEach((section) => observer.observe(section));
 
