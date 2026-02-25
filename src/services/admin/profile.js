@@ -22,7 +22,6 @@ export async function saveUserProfile({ user, userProfile }) {
     {
       displayName: userProfile.displayName,
       photoURL: userProfile.photoURL,
-      email: user.email,
       updatedAt: serverTimestamp()
     },
     { merge: true }

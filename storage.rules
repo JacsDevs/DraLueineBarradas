@@ -1,0 +1,20 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Imagens do Blog (Destaque e conteudo do Quill)
+    match /blog/{allPaths=**} {
+      // Publico para leitura (para os leitores verem as fotos)
+      allow read: if true;
+      // Apenas admins logados podem fazer upload/deletar
+      allow write: if request.auth != null;
+    }
+
+    // Avatares de Usuario
+    match /users/{userId}/{allPaths=**} {
+      allow read: if true;
+      // Apenas o dono da conta pode trocar sua propria foto
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}

@@ -1,0 +1,78 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidEmail(email) {
+      return email is string
+        && email.size() <= 120
+        && email.matches('^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$');
+    }
+
+    function hasValidCommentFields() {
+      return request.resource.data.keys().hasAll([
+          'name', 'email', 'message', 'parentId', 'createdAt'
+        ]) &&
+        request.resource.data.keys().hasOnly([
+          'name', 'email', 'message', 'parentId', 'createdAt', 'isAdminReply'
+        ]) &&
+        request.resource.data.name is string &&
+        request.resource.data.name.size() >= 2 &&
+        request.resource.data.name.size() <= 80 &&
+        isValidEmail(request.resource.data.email) &&
+        request.resource.data.message is string &&
+        request.resource.data.message.size() >= 1 &&
+        request.resource.data.message.size() <= 2000 &&
+        (
+          !request.resource.data.keys().hasAny(['isAdminReply']) ||
+          (
+            request.resource.data.isAdminReply is bool &&
+            request.resource.data.isAdminReply == true &&
+            isSignedIn()
+          )
+        ) &&
+        request.resource.data.createdAt == request.time;
+    }
+
+    function isValidParent(postId) {
+      return request.resource.data.parentId == null ||
+        (
+          request.resource.data.parentId is string &&
+          request.resource.data.parentId.size() > 0 &&
+          exists(/databases/$(database)/documents/posts/$(postId)/comments/$(request.resource.data.parentId)) &&
+          get(/databases/$(database)/documents/posts/$(postId)/comments/$(request.resource.data.parentId)).data.parentId == null
+        );
+    }
+
+    // Posts do Blog
+    match /posts/{postId} {
+      allow read: if true;
+      allow write: if isSignedIn();
+
+      // Comentarios do post
+      match /comments/{commentId} {
+        allow read: if true;
+
+        // Publico pode comentar/responder (com validacao de campos)
+        allow create: if hasValidCommentFields()
+          && exists(/databases/$(database)/documents/posts/$(postId))
+          && isValidParent(postId);
+
+        // Nao permite edicao de comentario por visitante
+        allow update: if false;
+
+        // Remocao para usuario autenticado (moderacao/admin)
+        allow delete: if isSignedIn();
+      }
+    }
+
+    // Perfil do Administrador
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if isSignedIn() && request.auth.uid == userId;
+    }
+  }
+}

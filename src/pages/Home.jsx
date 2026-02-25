@@ -78,7 +78,8 @@ export default function Home(){
         });
       },
       {
-        threshold: 0.18,
+        // Seções muito altas (ex.: "serviços" no mobile) podem nunca atingir ratio alto.
+        threshold: 0.01,
         rootMargin: "0px 0px -8% 0px",
       }
     );
