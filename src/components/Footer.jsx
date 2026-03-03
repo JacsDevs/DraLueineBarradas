@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+﻿import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo-principal-lueine.svg";
 import "../styles/footer.css";
 import { FaInstagram, FaWhatsapp } from "react-icons/fa";
@@ -8,36 +8,22 @@ export default function Footer() {
 
   const handleScrollTo = (id) => {
     if (window.location.pathname !== "/") {
-      navigate("/");
-      // espera a navegação e depois rola
-      setTimeout(() => {
-        const element = document.getElementById(id);
-        if (!element) return;
-
-        const headerOffset = 90;
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition =
-          elementPosition + window.pageYOffset - headerOffset;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: "smooth",
-        });
-      }, 100);
-    } else {
-      const element = document.getElementById(id);
-      if (!element) return;
-
-      const headerOffset = 90;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition =
-        elementPosition + window.pageYOffset - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
+      navigate(`/#${id}`);
+      return;
     }
+
+    const element = document.getElementById(id);
+    if (!element) return;
+
+    const headerOffset = 90;
+    const elementPosition = element.getBoundingClientRect().top;
+    const offsetPosition =
+      elementPosition + window.pageYOffset - headerOffset;
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -57,8 +43,10 @@ export default function Footer() {
             <ul>
               <li><button onClick={() => handleScrollTo("inicio")}>Início</button></li>
               <li><button onClick={() => handleScrollTo("servicos")}>Serviços</button></li>
-              <li><button onClick={() => handleScrollTo("depoimentos")}>Depoimentos</button></li>
-              <li><button onClick={() => handleScrollTo("contato")}>Agendar consulta</button></li>
+              <li><button onClick={() => handleScrollTo("consulta")}>Consulta</button></li>
+              <li><button onClick={() => handleScrollTo("sobre")}>Sobre</button></li>
+              <li><button onClick={() => handleScrollTo("blog")}>Artigos</button></li>
+              <li><button onClick={() => handleScrollTo("contato")}>Contato</button></li>
             </ul>
           </div>
 

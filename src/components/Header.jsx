@@ -10,25 +10,25 @@ export default function Header() {
   const buttonRef = useRef(null);
 
   const handleScrollTo = (id) => {
-    if (window.location.pathname !== '/') {
-      // Navega para a página inicial
-      navigate('/');
-    } else {
-      // Rola para a seção, se já estiver na home
-      const element = document.getElementById(id);
-      if (!element) return;
-
-      const headerOffset = 90;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
+    if (window.location.pathname !== "/") {
+      navigate(`/#${id}`);
+      setOpen(false);
+      return;
     }
 
-    setOpen(false); // Fecha o menu mobile
+    const element = document.getElementById(id);
+    if (!element) return;
+
+    const headerOffset = 90;
+    const elementPosition = element.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: "smooth",
+    });
+
+    setOpen(false);
   };
 
   useEffect(() => {
@@ -104,3 +104,4 @@ export default function Header() {
     </header>
   );
 }
+
