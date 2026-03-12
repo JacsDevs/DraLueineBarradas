@@ -414,7 +414,7 @@ export default function PostDetail() {
   if (postLoading) {
     return (
       <>
-        <div className="skeleton skeleton-img" />
+        {/* <div className="skeleton skeleton-img" /> */}
         <section className="post-detail">
           <div className="skeleton skeleton-title" />
           <div className="skeleton skeleton-text" />
@@ -508,6 +508,7 @@ export default function PostDetail() {
         </script>
       </Helmet>
 
+      {/*
       {post.featuredImage && (
         <div className="featured-image-full">
           <img
@@ -518,6 +519,7 @@ export default function PostDetail() {
           />
         </div>
       )}
+      */}
 
       <div className="post-body">
         <article className="post-detail" aria-live="polite">

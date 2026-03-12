@@ -1,5 +1,3 @@
-import { FaWhatsapp } from "react-icons/fa";
-
 export default function WhatsAppButton({
   text = "Agende sua consulta",
   className = "",
@@ -16,7 +14,6 @@ export default function WhatsAppButton({
       className={className}
     >
       {text}
-      <FaWhatsapp size={20} />
     </a>
   );
 }

@@ -274,6 +274,8 @@ export default function Home(){
         </div>
       </section>
 
+      <TestimonialsSection/>
+
       <section id="servicos">
 
         <header className="section-header">
@@ -643,8 +645,6 @@ export default function Home(){
           className="about-button"
         />
       </section>
-
-      <TestimonialsSection/>
 
       <FAQSection/>
 

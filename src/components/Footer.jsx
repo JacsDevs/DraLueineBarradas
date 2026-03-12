@@ -1,7 +1,7 @@
 ﻿import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo-principal-lueine.svg";
 import "../styles/footer.css";
-import { FaInstagram, FaWhatsapp } from "react-icons/fa";
+import { FaInstagram } from "react-icons/fa";
 
 export default function Footer() {
   const navigate = useNavigate();
@@ -60,7 +60,6 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="footer-icons"
               >
-                <FaWhatsapp className="footer-icon" />
                 (91) 98580-7373
               </a>
             </p>

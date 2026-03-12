@@ -64,7 +64,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) 250px;
   max-width: 1100px;
-  margin: 40px auto 60px;
+  margin: 104px auto 60px;
   padding: 20px;
   gap: 38px;
   align-items: start;
@@ -699,7 +699,7 @@
 
   .post-body {
     grid-template-columns: 1fr;
-    margin: 20px auto 40px;
+    margin: 92px auto 40px;
     gap: 20px;
   }
 
