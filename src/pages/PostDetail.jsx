@@ -20,6 +20,7 @@ import { Helmet } from "react-helmet-async";
 import { buildPostSlugId, extractIdFromSlugId } from "../utils/slugify";
 import { isDraftPost, isPublishedPost } from "../utils/postStatus";
 import { sanitizeRichHtml } from "../utils/sanitizeHtml";
+import FloatingWhatsAppButton from "../components/FloatingWhatsAppButton";
 
 const buildSrcSet = (src) => (src ? `${src} 1x, ${src} 2x` : undefined);
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -414,7 +415,7 @@ export default function PostDetail() {
   if (postLoading) {
     return (
       <>
-        {/* <div className="skeleton skeleton-img" /> */}
+        <div className="skeleton skeleton-img" />
         <section className="post-detail">
           <div className="skeleton skeleton-title" />
           <div className="skeleton skeleton-text" />
@@ -508,7 +509,6 @@ export default function PostDetail() {
         </script>
       </Helmet>
 
-      {/*
       {post.featuredImage && (
         <div className="featured-image-full">
           <img
@@ -517,13 +517,15 @@ export default function PostDetail() {
             sizes="100vw"
             alt={post.title}
           />
+          <div className="featured-image-full__content">
+            <h1 className="featured-image-full__title">{post.title}</h1>
+          </div>
         </div>
       )}
-      */}
 
-      <div className="post-body">
+      <div className={`post-body${post.featuredImage ? "" : " no-featured-image"}`}>
         <article className="post-detail" aria-live="polite">
-          <h1>{post.title}</h1>
+          {!post.featuredImage && <h1>{post.title}</h1>}
           <p className="description">{post.summary}</p>
 
           <div className="meta">
@@ -707,6 +709,8 @@ export default function PostDetail() {
           )}
         </section>
       </div>
+
+      <FloatingWhatsAppButton resetKey={slugId} />
     </>
   );
 }

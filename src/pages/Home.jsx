@@ -219,13 +219,10 @@ export default function Home(){
 
           {/* TEXTO */}
           <div className="hero-text">
-            <span className="hero-label">DRA. LUEINE BARRADAS</span>
+            <span className="hero-label">CUIDADO E COMPROMISSO</span>
 
-            <h1>
-              CUIDADO E <br />
-              <span>COMPROMISSO</span>
-            </h1>
-
+            <h1>DRA. LUEINE BARRADAS</h1>
+            <span className="hero-label">CRM PA 18364</span>
             <p>
               Meu propósito como médica é alinhar o cuidado humanizado e a excelência técnica para garantir saúde e qualidade de vida para você.
             </p>
