@@ -311,7 +311,7 @@
   color: #666;
 }
 
-.post-detail .content iframe {
+.post-detail .content iframe.rich-embed-video {
   width: 100%;
   height: auto;
   aspect-ratio: 16 / 9;
@@ -463,6 +463,80 @@
 
 .post-detail .content blockquote p {
   margin: 0;
+}
+
+.post-detail .content blockquote.instagram-media {
+  width: 100%;
+  max-width: 540px;
+  margin: 24px auto !important;
+  min-height: 700px;
+  padding: 0 !important;
+  border: 1px solid #e8e1d9 !important;
+  border-radius: 18px !important;
+  background: #fff !important;
+  color: inherit !important;
+  overflow: hidden;
+}
+
+.post-detail .content blockquote.instagram-media[data-instgrm-type="reel"] {
+  min-height: 920px;
+}
+
+.post-detail .content blockquote.instagram-media a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: inherit;
+  padding: 18px;
+  color: var(--secondary);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+}
+
+.post-detail .content blockquote.instagram-media a:hover {
+  color: #8a3b58;
+}
+
+.post-detail .content .instagram-fallback {
+  width: 100%;
+  max-width: 540px;
+  margin: 24px auto;
+  border: 1px solid #e8e1d9;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.post-detail .content .instagram-fallback-frame {
+  width: 100%;
+  display: block;
+  border: 0;
+  background: #fff;
+  min-height: 700px;
+}
+
+.post-detail .content .instagram-fallback--reel .instagram-fallback-frame {
+  min-height: 920px;
+}
+
+@media (max-width: 768px) {
+  .post-detail .content blockquote.instagram-media {
+    min-height: 620px;
+  }
+
+  .post-detail .content blockquote.instagram-media[data-instgrm-type="reel"] {
+    min-height: 760px;
+  }
+
+  .post-detail .content .instagram-fallback-frame {
+    min-height: 620px;
+  }
+
+  .post-detail .content .instagram-fallback--reel .instagram-fallback-frame {
+    min-height: 760px;
+  }
 }
 
 .comments-section {

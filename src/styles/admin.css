@@ -1633,6 +1633,37 @@
   margin: 18px 0;
 }
 
+.ql-editor .quill-instagram {
+  display: grid;
+  gap: 10px;
+  margin: 18px 0;
+  padding: 16px 18px;
+  border: 1px solid #e1d4da;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #fff8fb, #f7f0f4);
+}
+
+.ql-editor .quill-instagram::before {
+  content: "Instagram";
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #8a3b58;
+}
+
+.ql-editor .quill-instagram a {
+  color: #5d2337;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  word-break: break-word;
+}
+
+.ql-editor .quill-instagram a:hover {
+  text-decoration: underline;
+}
+
 .quill-editor .ql-editor p,
 .quill-editor .ql-editor ol,
 .quill-editor .ql-editor ul,

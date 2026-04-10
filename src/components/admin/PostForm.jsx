@@ -213,11 +213,12 @@ export default function PostForm({
             <h4>
               {mediaModal.type === "image" && "Inserir imagem"}
               {mediaModal.type === "video" && "Inserir video"}
+              {mediaModal.type === "instagram" && "Inserir Instagram"}
               {mediaModal.type === "button" && "Inserir botao"}
             </h4>
             <p className="quill-modal-helper">Esc fecha a janela e Ctrl/Command + Enter confirma.</p>
 
-            {mediaModal.type !== "button" && (
+            {(mediaModal.type === "image" || mediaModal.type === "video") && (
               <div className="quill-modal-tabs">
                 <button
                   type="button"
@@ -331,6 +332,20 @@ export default function PostForm({
                   </label>
                 )}
               </>
+            )}
+
+            {mediaModal.type === "instagram" && (
+              <label className="quill-modal-field">
+                URL do post ou reel
+                <input
+                  type="url"
+                  value={mediaModal.fields.url}
+                  onChange={(e) => onMediaFieldChange("url", e.target.value)}
+                  placeholder="https://www.instagram.com/p/..."
+                  disabled={uploading}
+                />
+                {mediaModal.errors.url && <span className="quill-modal-error">{mediaModal.errors.url}</span>}
+              </label>
             )}
 
             {mediaModal.type === "button" && (

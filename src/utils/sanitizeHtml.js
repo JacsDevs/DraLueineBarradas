@@ -1,4 +1,5 @@
 import DOMPurify from "dompurify";
+import { normalizeInstagramUrl } from "./instagram";
 
 const ABSOLUTE_LINK_PROTOCOLS = new Set(["http:", "https:", "mailto:", "tel:"]);
 const ABSOLUTE_MEDIA_PROTOCOLS = new Set(["http:", "https:"]);
@@ -19,6 +20,8 @@ const PURIFY_CONFIG = Object.freeze({
     "controls",
     "data-alt",
     "data-caption",
+    "data-instgrm-permalink",
+    "data-instgrm-version",
     "data-source",
     "decoding",
     "frameborder",
@@ -76,6 +79,44 @@ const isAllowedIframeSrc = (value) => {
   return parsed.pathname.includes("/embed/");
 };
 
+const normalizeInstagramEmbedNode = (node, doc) => {
+  const permalink = normalizeInstagramUrl(
+    (node.getAttribute("data-instgrm-permalink") || node.querySelector("a[href]")?.getAttribute("href") || "").trim()
+  );
+
+  if (!permalink) {
+    node.remove();
+    return;
+  }
+
+  if (!["DIV", "BLOCKQUOTE"].includes(node.tagName)) {
+    node.remove();
+    return;
+  }
+
+  if (node.tagName === "DIV") {
+    node.classList.add("quill-instagram");
+  }
+
+  if (node.tagName === "BLOCKQUOTE") {
+    node.classList.add("instagram-media");
+  }
+
+  node.setAttribute("data-instgrm-permalink", permalink);
+  node.setAttribute("data-instgrm-version", "14");
+
+  let anchor = node.querySelector("a");
+  if (!anchor) {
+    anchor = doc.createElement("a");
+    node.replaceChildren(anchor);
+  }
+
+  anchor.setAttribute("href", permalink);
+  anchor.setAttribute("target", "_blank");
+  anchor.setAttribute("rel", "noopener noreferrer");
+  anchor.textContent = (anchor.textContent || "").trim() || "Ver no Instagram";
+};
+
 export function sanitizeRichHtml(html) {
   if (!html) return "";
 
@@ -110,9 +151,14 @@ export function sanitizeRichHtml(html) {
       return;
     }
 
+    iframe.classList.add("rich-embed-video");
     iframe.setAttribute("loading", "lazy");
     iframe.setAttribute("allowfullscreen", "true");
     iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+  });
+
+  doc.querySelectorAll("div.quill-instagram, blockquote.instagram-media").forEach((node) => {
+    normalizeInstagramEmbedNode(node, doc);
   });
 
   return doc.body.innerHTML;

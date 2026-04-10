@@ -7,19 +7,29 @@ export default function FAQSection() {
 
   const faqs = [
     {
-      question: "Quais são os métodos de pagamento aceitos?",
-      answer:
-        "Aceitamos Pix, cartão de crédito, cartão de débito e dinheiro, para sua maior comodidade."
-    },
-    {
       question: "Quanto tempo dura a consulta?",
       answer:
-        "A consulta tem duração aproximada de 60 minutos, pois envolve uma avaliação clínica detalhada, incluindo histórico médico, fatores de risco cardiovasculares, hábitos de vida e definição de um plano de cuidado individualizado."
+        "A consulta tem duração aproximada de 60 minutos. Esse tempo é dedicado a uma avaliação cuidadosa e completa, incluindo seu histórico de saúde, fatores de risco, hábitos de vida e definição de um plano de cuidado individualizado, pensado especialmente para você."
     },
     {
-      question: "Há contato telefônico após a consulta?",
+      question: "Você atende crianças?",
       answer:
-        "O contato é realizado exclusivamente para orientações administrativas e esclarecimento de dúvidas pontuais, quando necessário. Demandas clínicas são avaliadas em consulta, garantindo segurança e qualidade do cuidado."
+        "Meu atendimento é direcionado ao público adulto, com foco em prevenção e acompanhamento da saúde cardiovascular ao longo da vida."
+    },
+    {
+      question: "Você atende por plano de saúde?",
+      answer:
+        "Atualmente, não atendo por planos de saúde. O modelo de atendimento é particular, permitindo uma consulta mais completa, com tempo adequado, escuta atenta e cuidado individualizado."
+    },
+    {
+      question: "Você realiza consulta online?",
+      answer:
+        "Sim, realizo teleconsulta. Essa modalidade permite maior comodidade e continuidade no acompanhamento, especialmente para organização de exames, orientação de tratamento e seguimento clínico."
+    },
+    {
+      question: "Como funciona o retorno?",
+      answer:
+        "Cada consulta é estruturada para ser completa e resolutiva. Por isso, não trabalhamos com consulta de retorno vinculada. Quando necessário, um novo atendimento pode ser agendado, garantindo sempre um cuidado individualizado e adequado a cada momento do paciente."
     },
   ];
 

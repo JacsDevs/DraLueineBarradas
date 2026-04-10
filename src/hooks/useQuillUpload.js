@@ -1,5 +1,6 @@
 import { useMemo, useRef, useCallback, useState } from "react";
 import { Quill } from "react-quill";
+import { normalizeInstagramUrl } from "../utils/instagram";
 
 let quillFormatsRegistered = false;
 const DEFAULT_BUTTON_URL = "https://wa.me/5591985807373?text=Ol%C3%A1%20Dra.%20Lueine%2C%20gostaria%20de%20agendar%20uma%20consulta.";
@@ -96,6 +97,37 @@ function registerQuillFormats() {
     }
   }
 
+  class InstagramEmbed extends BlockEmbed {
+    static blotName = "instagramEmbed";
+    static tagName = "div";
+    static className = "quill-instagram";
+
+    static create(value) {
+      const node = super.create();
+      const url = typeof value === "string" ? value : value?.url || "";
+      node.setAttribute("contenteditable", "false");
+      node.setAttribute("data-instgrm-permalink", url);
+      node.setAttribute("data-instgrm-version", "14");
+
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("target", "_blank");
+      link.setAttribute("rel", "noopener noreferrer");
+      link.textContent = url || "Ver no Instagram";
+      node.appendChild(link);
+
+      return node;
+    }
+
+    static value(node) {
+      return {
+        url: node.getAttribute("data-instgrm-permalink")
+          || node.querySelector("a")?.getAttribute("href")
+          || ""
+      };
+    }
+  }
+
   icons.button =
     "<svg viewBox=\"0 0 448 512\" width=\"18\" height=\"18\" aria-hidden=\"true\">" +
     "<path d=\"M400 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zM48 80h352v352H48V80zm256 160h-56v-56c0-4.4-3.6-8-8-8h-32c-4.4 0-8 3.6-8 8v56h-56c-4.4 0-8 3.6-8 8v32c0 4.4 3.6 8 8 8h56v56c0 4.4 3.6 8 8 8h32c4.4 0 8-3.6 8-8v-56h56c4.4 0 8-3.6 8-8v-32c0-4.4-3.6-8-8-8z\" fill=\"currentColor\"/>" +
@@ -106,10 +138,18 @@ function registerQuillFormats() {
     "<path d=\"M4 7h16v2H4V7zm0 8h16v2H4v-2z\" fill=\"currentColor\"/>" +
     "</svg>";
 
+  icons.instagram =
+    "<svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" aria-hidden=\"true\">" +
+    "<rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"5\" ry=\"5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/>" +
+    "<circle cx=\"12\" cy=\"12\" r=\"4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/>" +
+    "<circle cx=\"17.5\" cy=\"6.5\" r=\"1.25\" fill=\"currentColor\"/>" +
+    "</svg>";
+
   Quill.register(ButtonLink);
   Quill.register(FigureImage);
   Quill.register(Spacer);
   Quill.register(FileVideo);
+  Quill.register(InstagramEmbed);
   quillFormatsRegistered = true;
 }
 
@@ -271,6 +311,7 @@ const applyToolbarTooltips = (toolbar) => {
   setTooltipLabel(toolbar.querySelector("button.ql-button"), "Inserir botao");
   setTooltipLabel(toolbar.querySelector("button.ql-image"), "Inserir imagem");
   setTooltipLabel(toolbar.querySelector("button.ql-video"), "Inserir video");
+  setTooltipLabel(toolbar.querySelector("button.ql-instagram"), "Inserir Instagram");
   setTooltipLabel(toolbar.querySelector("button.ql-spacer"), "Inserir espaco");
   setTooltipLabel(toolbar.querySelector("button.ql-clean"), "Limpar formatacao");
 
@@ -385,6 +426,14 @@ export function useQuillUpload({ setUploading }) {
       }
     }
 
+    if (mediaModal.type === "instagram") {
+      if (!rawUrl) {
+        errors.url = "Informe a URL do post ou reel do Instagram.";
+      } else if (!normalizeInstagramUrl(rawUrl)) {
+        errors.url = "Use uma URL valida do Instagram (post ou reel publico).";
+      }
+    }
+
     if (mediaModal.type === "button") {
       if (!buttonText) errors.buttonText = "Informe o texto do botao.";
       if (!buttonUrl) {
@@ -440,6 +489,15 @@ export function useQuillUpload({ setUploading }) {
         quill.setSelection(index + 1);
       }
 
+      if (mediaModal.type === "instagram") {
+        const instagramUrl = normalizeInstagramUrl(mediaModal.fields.url);
+        if (!instagramUrl) throw new Error("invalid-instagram-url");
+
+        const index = getSafeInsertIndex(quill);
+        quill.insertEmbed(index, "instagramEmbed", { url: instagramUrl });
+        quill.setSelection(index + 1);
+      }
+
       if (mediaModal.type === "button") {
         const buttonText = mediaModal.fields.buttonText.trim();
         const buttonUrl = normalizeButtonUrl(mediaModal.fields.buttonUrl);
@@ -459,6 +517,9 @@ export function useQuillUpload({ setUploading }) {
       }
       if (err?.message === "invalid-video-url") {
         formError = "URL do video invalida.";
+      }
+      if (err?.message === "invalid-instagram-url") {
+        formError = "URL do Instagram invalida.";
       }
       if (err?.message === "invalid-button") {
         formError = "Dados do botao invalidos.";
@@ -482,12 +543,13 @@ export function useQuillUpload({ setUploading }) {
         ["blockquote"],
         [{ align: [] }],
         [{ list: "ordered" }, { list: "bullet" }],
-        ["link", "button", "image", "video", "spacer"],
+        ["link", "button", "image", "video", "instagram", "spacer"],
         ["clean"]
       ],
       handlers: {
         image: () => openModal("image"),
         video: () => openModal("video"),
+        instagram: () => openModal("instagram"),
         button: () => openModal("button"),
         spacer: () => {
           const quill = quillRef.current?.getEditor();
@@ -518,6 +580,7 @@ export function useQuillUpload({ setUploading }) {
     "figureImage",
     "video",
     "fileVideo",
+    "instagramEmbed",
     "spacer"
   ];
 

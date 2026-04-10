@@ -18,12 +18,19 @@ import { FaXTwitter } from "react-icons/fa6";
 import "../styles/postdetail.css";
 import { Helmet } from "react-helmet-async";
 import { buildPostSlugId, extractIdFromSlugId } from "../utils/slugify";
+import {
+  buildInstagramEmbedUrl,
+  getInstagramResourceType,
+  normalizeInstagramUrl
+} from "../utils/instagram";
 import { isDraftPost, isPublishedPost } from "../utils/postStatus";
 import { sanitizeRichHtml } from "../utils/sanitizeHtml";
 import FloatingWhatsAppButton from "../components/FloatingWhatsAppButton";
 
 const buildSrcSet = (src) => (src ? `${src} 1x, ${src} 2x` : undefined);
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const INSTAGRAM_EMBED_SCRIPT_ID = "instagram-embed-script";
+const INSTAGRAM_EMBED_SCRIPT_SRC = "https://www.instagram.com/embed.js";
 const commentDateFormatter = new Intl.DateTimeFormat("pt-BR", {
   day: "2-digit",
   month: "2-digit",
@@ -63,6 +70,63 @@ const buildCommentThreads = (items) => {
     ...item,
     replies: repliesByParent.get(item.id) || []
   }));
+};
+
+const replaceInstagramPlaceholders = (doc) => {
+  const placeholders = Array.from(doc.querySelectorAll("div.quill-instagram[data-instgrm-permalink]"));
+
+  placeholders.forEach((placeholder) => {
+    const permalink = normalizeInstagramUrl(placeholder.getAttribute("data-instgrm-permalink") || "");
+    if (!permalink) {
+      placeholder.remove();
+      return;
+    }
+
+    const blockquote = doc.createElement("blockquote");
+    blockquote.classList.add("instagram-media");
+    blockquote.setAttribute("data-instgrm-permalink", permalink);
+    blockquote.setAttribute("data-instgrm-version", "14");
+    blockquote.setAttribute("data-instgrm-captioned", "true");
+    blockquote.setAttribute("data-instgrm-type", getInstagramResourceType(permalink));
+
+    const anchor = doc.createElement("a");
+    anchor.setAttribute("href", permalink);
+    anchor.setAttribute("target", "_blank");
+    anchor.setAttribute("rel", "noopener noreferrer");
+    anchor.textContent = "Ver no Instagram";
+
+    blockquote.appendChild(anchor);
+    placeholder.replaceWith(blockquote);
+  });
+};
+
+const renderInstagramIframeFallbacks = () => {
+  const blocks = Array.from(document.querySelectorAll(".post-detail .content blockquote.instagram-media"));
+
+  blocks.forEach((block) => {
+    if (block.querySelector("iframe")) return;
+
+    const permalink = normalizeInstagramUrl(block.getAttribute("data-instgrm-permalink") || "");
+    const embedUrl = buildInstagramEmbedUrl(permalink);
+    const resourceType = getInstagramResourceType(permalink) || "p";
+    if (!embedUrl) return;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = `instagram-fallback instagram-fallback--${resourceType}`;
+
+    const iframe = document.createElement("iframe");
+    iframe.className = "instagram-fallback-frame";
+    iframe.setAttribute("src", embedUrl);
+    iframe.setAttribute("title", "Instagram");
+    iframe.setAttribute("loading", "lazy");
+    iframe.setAttribute("frameborder", "0");
+    iframe.setAttribute("scrolling", "no");
+    iframe.setAttribute("allowtransparency", "true");
+    iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+
+    wrapper.appendChild(iframe);
+    block.replaceWith(wrapper);
+  });
 };
 
 function CommentForm({
@@ -362,12 +426,13 @@ export default function PostDetail() {
     };
   }, [post?.id]);
 
-  const { contentHtml, tocItems } = useMemo(() => {
-    if (!post?.content) return { contentHtml: "", tocItems: [] };
+  const { contentHtml, tocItems, hasInstagramEmbeds } = useMemo(() => {
+    if (!post?.content) return { contentHtml: "", tocItems: [], hasInstagramEmbeds: false };
 
     const safeContent = sanitizeRichHtml(post.content);
     const parser = new DOMParser();
     const doc = parser.parseFromString(safeContent, "text/html");
+    replaceInstagramPlaceholders(doc);
     const headings = Array.from(doc.querySelectorAll("h2, h3, h4"));
     const counts = new Map();
     const items = headings.map((heading) => {
@@ -385,8 +450,63 @@ export default function PostDetail() {
       };
     }).filter(Boolean);
 
-    return { contentHtml: sanitizeRichHtml(doc.body.innerHTML), tocItems: items };
+    const htmlWithEmbeds = sanitizeRichHtml(doc.body.innerHTML);
+
+    return {
+      contentHtml: htmlWithEmbeds,
+      tocItems: items,
+      hasInstagramEmbeds: htmlWithEmbeds.includes("instagram-media")
+    };
   }, [post]);
+
+  useEffect(() => {
+    if (!hasInstagramEmbeds || typeof window === "undefined") return undefined;
+
+    let fallbackTimer = 0;
+
+    const processEmbeds = () => {
+      window.requestAnimationFrame(() => {
+        if (window.instgrm?.Embeds?.process) {
+          window.instgrm.Embeds.process();
+        }
+      });
+    };
+
+    const scheduleFallback = () => {
+      window.clearTimeout(fallbackTimer);
+      fallbackTimer = window.setTimeout(() => {
+        renderInstagramIframeFallbacks();
+      }, 1800);
+    };
+
+    if (window.instgrm?.Embeds?.process) {
+      processEmbeds();
+      scheduleFallback();
+      return () => window.clearTimeout(fallbackTimer);
+    }
+
+    let script = document.getElementById(INSTAGRAM_EMBED_SCRIPT_ID);
+    const handleLoad = () => {
+      processEmbeds();
+      scheduleFallback();
+    };
+
+    if (!script) {
+      script = document.createElement("script");
+      script.id = INSTAGRAM_EMBED_SCRIPT_ID;
+      script.src = INSTAGRAM_EMBED_SCRIPT_SRC;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+
+    script.addEventListener("load", handleLoad);
+    scheduleFallback();
+
+    return () => {
+      window.clearTimeout(fallbackTimer);
+      script.removeEventListener("load", handleLoad);
+    };
+  }, [contentHtml, hasInstagramEmbeds]);
 
   const submitComment = useCallback(async (payload) => {
     if (!post?.id) {

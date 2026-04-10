@@ -6,6 +6,7 @@
     }
   ],
   "rewrites": [
+    { "source": "/post/(.*)", "destination": "/api/post-ssr?slugId=$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
