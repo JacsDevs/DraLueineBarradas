@@ -1,5 +1,11 @@
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: AdsBot-Google-Mobile
+Allow: /
+
 User-agent: *
 Allow: /
 Disallow: /admin
 
-Sitemap: https://dralueinebarradas.com.br/sitemap.xml
+Sitemap: https://www.dralueinebarradas.com.br/sitemap.xml
