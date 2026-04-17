@@ -17,7 +17,7 @@ If you are developing a production application, we recommend using TypeScript wi
 
 ## Sitemap dinamico na Vercel
 
-O sitemap principal fica em `public/sitemap.xml` e aponta para `https://dralueinebarradas.com.br/api/sitemap-posts.xml`.
+O sitemap principal fica em `public/sitemap.xml` e aponta para `https://www.dralueinebarradas.com.br/api/sitemap-posts.xml`.
 
 A rota `api/sitemap-posts.xml.js`:
 - consulta os posts no Firestore;
@@ -30,7 +30,7 @@ Configure no projeto da Vercel:
 - `FIREBASE_PROJECT_ID`
 - `FIREBASE_CLIENT_EMAIL`
 - `FIREBASE_PRIVATE_KEY` (cole a chave privada completa; `\n` sera convertido automaticamente)
-- `SITE_URL` (opcional, default: `https://dralueinebarradas.com.br`)
+- `SITE_URL` (opcional, default: `https://www.dralueinebarradas.com.br`)
 
 ### Atualizacao periodica
 

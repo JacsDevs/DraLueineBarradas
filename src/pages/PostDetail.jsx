@@ -308,6 +308,7 @@ export default function PostDetail() {
     async function load() {
       setPostLoading(true);
       setPostNotFound(false);
+      setAuthor({ displayName: "", photoURL: "" });
 
       try {
         const id = extractIdFromSlugId(slugId);
@@ -334,19 +335,6 @@ export default function PostDetail() {
 
         setPost({ id, ...postData });
         setPostNotFound(false);
-        setAuthor({ displayName: "", photoURL: "" });
-
-        if (!postData.authorId) return;
-
-        const userRef = doc(db, "users", postData.authorId);
-        const userSnap = await getDoc(userRef);
-        if (!userSnap.exists()) return;
-
-        const userData = userSnap.data() || {};
-        setAuthor({
-          displayName: userData.displayName || "",
-          photoURL: userData.photoURL || ""
-        });
       } catch (error) {
         console.error(error);
         setPost(null);
@@ -358,6 +346,31 @@ export default function PostDetail() {
 
     load();
   }, [slugId]);
+
+  useEffect(() => {
+    async function loadAuthor() {
+      if (!post?.authorId) {
+        setAuthor({ displayName: "", photoURL: "" });
+        return;
+      }
+
+      try {
+        const userRef = doc(db, "users", post.authorId);
+        const userSnap = await getDoc(userRef);
+        if (!userSnap.exists()) return;
+
+        const userData = userSnap.data() || {};
+        setAuthor({
+          displayName: userData.displayName || "",
+          photoURL: userData.photoURL || ""
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    loadAuthor();
+  }, [post?.authorId]);
 
   useEffect(() => {
     async function fetchRelatedPosts() {
@@ -556,7 +569,7 @@ export default function PostDetail() {
     );
   }
 
-  const baseUrl = "https://dralueinebarradas.com.br";
+  const baseUrl = "https://www.dralueinebarradas.com.br";
   const slugPath = buildPostSlugId({ title: post.title, id: post.id, slug: post.slug });
   const canonicalUrl = typeof window !== "undefined"
     ? window.location.href

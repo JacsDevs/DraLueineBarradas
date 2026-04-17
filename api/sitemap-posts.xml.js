@@ -2,7 +2,7 @@ import { getDb } from "./_lib/firebaseAdmin.js";
 
 const XML_HEADER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 const SITE_URL = normalizeSiteUrl(
-  globalThis.process?.env?.SITE_URL || "https://dralueinebarradas.com.br"
+  globalThis.process?.env?.SITE_URL || "https://www.dralueinebarradas.com.br"
 );
 const ROOT_ENTRY = {
   loc: `${SITE_URL}/`,

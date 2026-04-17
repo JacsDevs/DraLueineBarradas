@@ -15,6 +15,7 @@ import { LuStethoscope, LuHeartPulse, LuActivity, LuClipboardCheck, LuShieldBan,
  } from "react-icons/lu";
 
 const buildSrcSet = (src) => (src ? `${src} 1x, ${src} 2x` : undefined);
+const SITE_URL = "https://www.dralueinebarradas.com.br";
 
 export default function Home(){
 
@@ -111,7 +112,7 @@ export default function Home(){
         <meta name="geo.placename" content="Bragança" />
         <meta name="geo.position" content="-1.0488685;-46.7686801" />
         <meta name="ICBM" content="-1.0488685, -46.7686801" />
-        <link rel="canonical" href="https://dralueinebarradas.com.br/" />
+        <link rel="canonical" href={`${SITE_URL}/`} />
         <meta property="og:locale" content="pt_BR" />
         <meta property="og:site_name" content="Dra. Lueine Barradas" />
         <meta property="og:title" content="Dra. Lueine Barradas | Clínica Geral e Cardiologia Clínica em Bragança, PA" />
@@ -120,7 +121,7 @@ export default function Home(){
           content="Clínica geral e cardiologia clínica em Bragança, Pará. Consultas cardiológicas, check-up e prevenção cardiovascular com a Dra. Lueine Barradas."
         />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://dralueinebarradas.com.br/" />
+        <meta property="og:url" content={`${SITE_URL}/`} />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="Dra. Lueine Barradas | Clínica Geral e Cardiologia Clínica em Bragança, PA" />
         <meta
@@ -134,10 +135,10 @@ export default function Home(){
               "@graph": [
                 {
                   "@type": "MedicalClinic",
-                  "@id": "https://dralueinebarradas.com.br/#clinic",
+                  "@id": "${SITE_URL}/#clinic",
                   "name": "Dra. Lueine Barradas",
-                  "url": "https://dralueinebarradas.com.br/",
-                  "image": "https://dralueinebarradas.com.br/favicon.ico",
+                  "url": "${SITE_URL}/",
+                  "image": "${SITE_URL}/favicon.ico",
                   "telephone": "+55 91 98580-7373",
                   "address": {
                     "@type": "PostalAddress",
@@ -169,16 +170,16 @@ export default function Home(){
                 },
                 {
                   "@type": "Physician",
-                  "@id": "https://dralueinebarradas.com.br/#physician",
+                  "@id": "${SITE_URL}/#physician",
                   "name": "Dra. Lueine Barradas",
-                  "url": "https://dralueinebarradas.com.br/",
-                  "image": "https://dralueinebarradas.com.br/favicon.ico",
+                  "url": "${SITE_URL}/",
+                  "image": "${SITE_URL}/favicon.ico",
                   "medicalSpecialty": ["Cardiology", "GeneralPractice"],
-                  "worksFor": { "@id": "https://dralueinebarradas.com.br/#clinic" }
+                  "worksFor": { "@id": "${SITE_URL}/#clinic" }
                 },
                 {
                   "@type": "FAQPage",
-                  "@id": "https://dralueinebarradas.com.br/#faq",
+                  "@id": "${SITE_URL}/#faq",
                   "mainEntity": [
                     {
                       "@type": "Question",
