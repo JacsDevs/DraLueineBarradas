@@ -108,8 +108,8 @@ function isPublishedPost(post) {
 }
 
 export default async function handler(request, response) {
-  if (request.method !== "GET") {
-    response.setHeader("Allow", "GET");
+  if (!["GET", "HEAD"].includes(request.method)) {
+    response.setHeader("Allow", "GET, HEAD");
     response.status(405).json({ error: "Method Not Allowed" });
     return;
   }
@@ -153,7 +153,12 @@ export default async function handler(request, response) {
 
     response.setHeader("Content-Type", "application/xml; charset=utf-8");
     response.setHeader("Cache-Control", "public, s-maxage=3600, stale-while-revalidate=86400");
-    response.status(200).send(buildXml(entries));
+    response.status(200);
+    if (request.method === "HEAD") {
+      response.end();
+      return;
+    }
+    response.send(buildXml(entries));
   } catch (error) {
     console.error("Failed to generate sitemap:", error);
     response.status(500).json({ error: "Failed to generate sitemap" });

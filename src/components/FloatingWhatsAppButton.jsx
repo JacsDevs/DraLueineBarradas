@@ -9,13 +9,12 @@ export default function FloatingWhatsAppButton({
   message = "Olá Dra. Lueine, gostaria de agendar uma consulta.",
   resetKey = ""
 }) {
-  const [isHintVisible, setIsHintVisible] = useState(true);
+  const [hiddenResetKey, setHiddenResetKey] = useState(null);
+  const isHintVisible = hiddenResetKey !== resetKey;
 
   useEffect(() => {
-    setIsHintVisible(true);
-
     const timerId = window.setTimeout(() => {
-      setIsHintVisible(false);
+      setHiddenResetKey(resetKey);
     }, AUTO_HIDE_DELAY_MS);
 
     return () => {

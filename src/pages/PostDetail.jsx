@@ -571,9 +571,7 @@ export default function PostDetail() {
 
   const baseUrl = "https://www.dralueinebarradas.com.br";
   const slugPath = buildPostSlugId({ title: post.title, id: post.id, slug: post.slug });
-  const canonicalUrl = typeof window !== "undefined"
-    ? window.location.href
-    : `${baseUrl}/post/${slugPath}`;
+  const canonicalUrl = `${baseUrl}/post/${slugPath}`;
   const shareText = encodeURIComponent(`Confira este post: ${post.title}`);
   const rawDescription = post.summary || post.content || "";
   const metaDescription = rawDescription

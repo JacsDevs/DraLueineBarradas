@@ -112,6 +112,7 @@ export default function Home(){
         <meta name="geo.placename" content="Bragança" />
         <meta name="geo.position" content="-1.0488685;-46.7686801" />
         <meta name="ICBM" content="-1.0488685, -46.7686801" />
+        <link rel="preload" as="image" href={dralueinebarradas} fetchPriority="high" />
         <link rel="canonical" href={`${SITE_URL}/`} />
         <meta property="og:locale" content="pt_BR" />
         <meta property="og:site_name" content="Dra. Lueine Barradas" />

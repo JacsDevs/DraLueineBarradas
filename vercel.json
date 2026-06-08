@@ -6,6 +6,7 @@
     }
   ],
   "rewrites": [
+    { "source": "/post/:slugId", "destination": "/api/post-html?slugId=:slugId" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
